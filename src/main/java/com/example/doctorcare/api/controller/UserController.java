@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("api/")
 public class UserController {
 
@@ -19,6 +20,7 @@ public class UserController {
     private UserDetailsServiceImpl userDetailsService;
 
     @GetMapping("users")
+
     public List<UserEntity> getUsers(){
         return (List<UserEntity>) this.userDetailsService.findAll();
     }

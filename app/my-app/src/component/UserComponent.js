@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import UserService from "../services/UserService";
+import axios from "axios";
 
+const USER_REST_API_URL='http://localhost:8080/api/users';
 class UserComponent extends Component {
 
     constructor(props, context) {
@@ -11,14 +13,20 @@ class UserComponent extends Component {
 
     }
 
-    componentDidMount() {
-        UserService.getUsers().then((response) => {
+    async componentDidMount() {
+        await axios.get(USER_REST_API_URL).then(r => {
             this.setState({
-                user: response.data
+                users: r.data
             })
-        })
+        }).catch(reason => console.log(reason))
+        console.log(this.state.users)
     }
-
+     /*componentDidMount() {
+         fetch(USER_REST_API_URL)
+             .then(response => response.json())
+             .then(data => this.setState({users: data,}));
+     }
+*/
     render() {
         return (
             <div>
