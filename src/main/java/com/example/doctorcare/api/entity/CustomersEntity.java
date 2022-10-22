@@ -1,6 +1,7 @@
-package com.mycompany.spring_mvc_project_final.entities;
+package com.example.doctorcare.api.entity;
 
-import com.mycompany.spring_mvc_project_final.enums.Gender;
+
+import com.example.doctorcare.api.enums.Gender;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

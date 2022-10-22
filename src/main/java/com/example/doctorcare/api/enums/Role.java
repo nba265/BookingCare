@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.spring_mvc_project_final.enums;
+package com.example.doctorcare.api.enums;
 
 public enum Role {
     ROLE_USER, ROLE_ADMIN, ROLE_DOCTOR, ROLE_MANAGER;

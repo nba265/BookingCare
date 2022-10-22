@@ -1,7 +1,7 @@
-package com.mycompany.spring_mvc_project_final.service;
+package com.example.doctorcare.api.service;
 
-import com.mycompany.spring_mvc_project_final.entities.UserRoleEntity;
-import com.mycompany.spring_mvc_project_final.repository.UserRoleRepository;
+import com.example.doctorcare.api.entity.UserRoleEntity;
+import com.example.doctorcare.api.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

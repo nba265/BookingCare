@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.spring_mvc_project_final.repository;
+package com.example.doctorcare.api.repository;
 
-import com.mycompany.spring_mvc_project_final.entities.UserRoleEntity;
+import com.example.doctorcare.api.entity.UserRoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

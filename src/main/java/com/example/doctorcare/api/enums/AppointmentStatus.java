@@ -1,4 +1,4 @@
-package com.mycompany.spring_mvc_project_final.enums;
+package com.example.doctorcare.api.enums;
 
 public enum AppointmentStatus {
     PENDING, COMPLETE, CANCEL

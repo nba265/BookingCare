@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.spring_mvc_project_final.entities;
+package com.example.doctorcare.api.entity;
 
-import com.mycompany.spring_mvc_project_final.enums.Gender;
-import com.mycompany.spring_mvc_project_final.enums.UserStatus;
+
+import com.example.doctorcare.api.enums.Gender;
+import com.example.doctorcare.api.enums.UserStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -76,8 +76,7 @@ public class UserEntity implements Serializable {
     public UserEntity() {
     }
 
-    public UserEntity(Integer id, String email, String password, String address, String fullName, Gender gender, String phone, String degree, String nationality, String experience, UserStatus status, LocalDate createDate, Set<UserRoleEntity> userRoles) {
-        this.id = id;
+    public UserEntity(String email, String password, String address, String fullName, Gender gender, String phone, String degree, String nationality, String experience, UserStatus status, LocalDate createDate, Set<UserRoleEntity> userRoles) {
         this.email = email;
         this.password = password;
         this.address = address;

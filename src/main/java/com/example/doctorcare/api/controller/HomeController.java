@@ -1,4 +1,4 @@
-package com.mycompany.spring_mvc_project_final.controller;
+package com.example.doctorcare.api.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,8 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     @GetMapping({"/index","/"})
-    public String home(){
+    public String index(){
         System.out.println("asdds");
         return "index";
+    }
+    @GetMapping({"/home"})
+    public String home(){
+        System.out.println("kakakkaka");
+        return "home";
     }
 }

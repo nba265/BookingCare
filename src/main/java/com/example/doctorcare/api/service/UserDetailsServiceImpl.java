@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.spring_mvc_project_final.service;
+package com.example.doctorcare.api.service;
 
-import com.mycompany.spring_mvc_project_final.entities.UserEntity;
-import com.mycompany.spring_mvc_project_final.entities.UserRoleEntity;
-import com.mycompany.spring_mvc_project_final.enums.UserStatus;
-import com.mycompany.spring_mvc_project_final.repository.UserRepository;
-import com.mycompany.spring_mvc_project_final.repository.UserRoleRepository;
+
+import com.example.doctorcare.api.entity.UserEntity;
+import com.example.doctorcare.api.entity.UserRoleEntity;
+import com.example.doctorcare.api.enums.UserStatus;
+import com.example.doctorcare.api.repository.UserRepository;
+import com.example.doctorcare.api.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,4 +1,4 @@
-package com.mycompany.spring_mvc_project_final.entities;
+package com.example.doctorcare.api.entity;
 
 import javax.persistence.*;
 import java.util.Set;

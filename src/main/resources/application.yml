@@ -1,1 +1,13 @@
 
+spring:
+  application:
+    name: project-news
+  # Profile
+  profiles:
+    active: dev
+server:
+  port: 8080
+
+  servlet:
+    session:
+      timeout: 5m

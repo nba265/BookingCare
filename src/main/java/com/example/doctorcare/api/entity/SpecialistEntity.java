@@ -1,7 +1,4 @@
-package com.mycompany.spring_mvc_project_final.entities;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+package com.example.doctorcare.api.entity;
 
 import javax.persistence.*;
 import java.util.Set;
