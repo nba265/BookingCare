@@ -5,7 +5,7 @@
  */
 package com.example.doctorcare.api.repository;
 
-import com.example.doctorcare.api.entity.UserRoleEntity;
+import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

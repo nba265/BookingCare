@@ -6,7 +6,7 @@
 package com.example.doctorcare.api.repository;
 
 
-import com.example.doctorcare.api.entity.UserEntity;
+import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.UserStatus;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

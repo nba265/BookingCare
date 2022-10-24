@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.doctorcare.api.entity;
+package com.example.doctorcare.api.domain.entity;
 
 
 import com.example.doctorcare.api.enums.Gender;
@@ -67,7 +67,7 @@ public class UserEntity implements Serializable {
     private HospitalCilinicEntity hospitalCilinicMangager;
 
     @ManyToOne(cascade =  CascadeType.ALL)
-    @JoinColumn(name = "hospitalCilinic_id")
+    @JoinColumn(name = "hospital_cilinic_id")
     private HospitalCilinicEntity hospitalCilinicDoctor;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "doctor")

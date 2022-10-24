@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.doctorcare.api.entity;
+package com.example.doctorcare.api.domain.entity;
 
 
 
@@ -22,7 +22,7 @@ public class UserRoleEntity implements Serializable {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    private Role role = Role.ROLE_USER;
+    private Role role;
 
     @ManyToMany(mappedBy = "userRoles")
     private Set<UserEntity> users;

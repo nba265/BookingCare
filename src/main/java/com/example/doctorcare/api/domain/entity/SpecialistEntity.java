@@ -1,4 +1,4 @@
-package com.example.doctorcare.api.entity;
+package com.example.doctorcare.api.domain.entity;
 
 import javax.persistence.*;
 import java.util.Set;

@@ -1,8 +1,5 @@
 package com.example.doctorcare;
 
-import com.example.doctorcare.api.entity.UserEntity;
-import com.example.doctorcare.api.enums.Role;
-import com.example.doctorcare.api.enums.UserStatus;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

@@ -1,4 +1,4 @@
-package com.example.doctorcare.api.entity;
+package com.example.doctorcare.api.domain.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
 

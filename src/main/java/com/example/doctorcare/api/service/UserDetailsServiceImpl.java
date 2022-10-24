@@ -6,8 +6,8 @@
 package com.example.doctorcare.api.service;
 
 
-import com.example.doctorcare.api.entity.UserEntity;
-import com.example.doctorcare.api.entity.UserRoleEntity;
+import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.UserStatus;
 import com.example.doctorcare.api.repository.UserRepository;
 import com.example.doctorcare.api.repository.UserRoleRepository;

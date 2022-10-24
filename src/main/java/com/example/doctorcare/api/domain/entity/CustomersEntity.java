@@ -1,4 +1,4 @@
-package com.example.doctorcare.api.entity;
+package com.example.doctorcare.api.domain.entity;
 
 
 import com.example.doctorcare.api.enums.Gender;
