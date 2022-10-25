@@ -22,6 +22,6 @@ public interface UserRepository extends CrudRepository<UserEntity, Integer> {
             UserStatus status);
     Optional<UserEntity> findByEmail(String email);
 
-    @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1",nativeQuery = false)
-    Set<UserEntity> findByHospitalCilinicId(Long id);
+    @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 and u.specialist.id = ?2",nativeQuery = false)
+    Set<UserEntity> findDoctorByHospitalCilinicAndSpecialist(Long hosId, Long specId);
 }

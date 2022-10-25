@@ -35,9 +35,15 @@ public class HospitalCilinicService {
         return hospitalCilinics;
     }
 
-    public List<User> findAllDoctorInHospitalCilinic(Long id){
+    public List<User> findDoctorByHospitalCilinicAndSpecialist(Long hosId,Long specId){
         List<User> users = new ArrayList<>();
-        userRepository.findByHospitalCilinicId(id).forEach(userEntity -> users.add(userMapper.convertToDto(userEntity)));
+        userRepository.findDoctorByHospitalCilinicAndSpecialist(hosId,specId).forEach(userEntity -> users.add(userMapper.convertToDto(userEntity)));
         return users;
+    }
+
+    public List<HospitalCilinic> findByKeywords(String keyword){
+        List<HospitalCilinic> hospitalCilinics = new ArrayList<>();
+        hospitalCilinicRepository.findByKeywords(keyword).forEach(hospitalCilinicEntity -> hospitalCilinics.add(hospitalCilinicMapper.convertToDto(hospitalCilinicEntity)));
+        return hospitalCilinics;
     }
 }
