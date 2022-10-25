@@ -1,5 +1,6 @@
 package com.example.doctorcare.api.controller;
 
+import com.example.doctorcare.api.domain.dto.HospitalCilinic;
 import com.example.doctorcare.api.service.HospitalCilinicService;
 import com.example.doctorcare.api.service.SpecialistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class HospitalCilinicController {
             return new ResponseEntity<>(hospitalCilinicService.findDoctorByHospitalCilinicAndSpecialist(hosId,specId),HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -44,7 +45,7 @@ public class HospitalCilinicController {
             return new ResponseEntity<>(hospitalCilinicService.findByKeywords(keyword),HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -56,5 +57,13 @@ public class HospitalCilinicController {
             e.printStackTrace();
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/createHospitalCilinic")
+    public ResponseEntity<?> createHospitalCilinic(@RequestParam("name")String name ){
+            HospitalCilinic hospitalCilinic = new HospitalCilinic();
+            hospitalCilinic.setName(name);
+            hospitalCilinicService.save(hospitalCilinic);
+        return new ResponseEntity<>(null,HttpStatus.OK);
     }
 }
