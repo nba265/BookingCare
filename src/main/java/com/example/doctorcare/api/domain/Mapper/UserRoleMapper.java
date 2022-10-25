@@ -21,7 +21,9 @@ public class UserRoleMapper extends BaseMapper<UserRoleEntity, UserRole> {
         UserRoleEntity userRoleEntity = new UserRoleEntity();
         if (dto != null) {
             BeanUtils.copyProperties(dto, userRoleEntity, "users");
-            userRoleEntity.setUsers(userMapper.convertToEntitySet(dto.getUsers()));
+            if (dto.getUsers() != null && !dto.getUsers().isEmpty()){
+                userRoleEntity.setUsers(userMapper.convertToEntitySet(dto.getUsers()));
+            }
         }
         return userRoleEntity;
     }

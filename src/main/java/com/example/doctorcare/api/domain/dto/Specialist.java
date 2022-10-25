@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -23,5 +24,7 @@ public class Specialist {
 
     private String name;
 
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
+
+    private HospitalCilinic hospitalCilinic;
 }

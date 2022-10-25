@@ -6,6 +6,7 @@
 package com.example.doctorcare.api.service;
 
 
+import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.UserStatus;
@@ -21,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,6 +34,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRoleRepository userRoleRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -51,8 +56,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return (UserDetails) new User(user.getEmail(), user.getPassword(), grantList);
     }
 
-
-
     public Iterable<UserEntity> findAll(){
         return userRepository.findAll();
     }
@@ -68,4 +71,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findByEmailLikeAndStatusLike(email,UserStatus.ACTIVE);
     }
 
+    public void save(com.example.doctorcare.api.domain.dto.User user){
+        user.setCreateDate(LocalDate.now());
+        user.setStatus(UserStatus.ACTIVE);
+        userRepository.save(userMapper.convertToEntity(user));
+    }
 }

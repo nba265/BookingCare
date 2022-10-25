@@ -4,14 +4,18 @@ import com.example.doctorcare.api.domain.entity.HospitalCilinicEntity;
 import com.example.doctorcare.api.domain.entity.SpecialistEntity;
 import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.Gender;
+import com.example.doctorcare.api.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +40,9 @@ public class User {
 
     private String degree;
 
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
     private String nationality;
 
     private String experience;
@@ -44,6 +51,13 @@ public class User {
 
     private Specialist specialist;
 
+    private HospitalCilinicEntity hospitalCilinicMangager;
+
     private HospitalCilinic hospitalCilinicDoctor;
+
+    private List<TimeDoctors> timeDoctors = new ArrayList<>();
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createDate;
 
 }

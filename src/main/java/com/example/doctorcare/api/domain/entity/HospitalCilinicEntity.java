@@ -1,5 +1,7 @@
 package com.example.doctorcare.api.domain.entity;
 
+import com.example.doctorcare.api.domain.dto.Specialist;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -22,6 +24,9 @@ public class HospitalCilinicEntity {
 
     @OneToMany(cascade = CascadeType.ALL, fetch =FetchType.LAZY, mappedBy = "hospitalCilinic")
     private Set<ServicesEntity> services;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch =FetchType.LAZY, mappedBy = "hospitalCilinic")
+    private Set<SpecialistEntity> specialists;
 
     public HospitalCilinicEntity() {
     }
@@ -71,5 +76,11 @@ public class HospitalCilinicEntity {
         this.services = services;
     }
 
+    public Set<SpecialistEntity> getSpecialists() {
+        return specialists;
+    }
 
+    public void setSpecialists(Set<SpecialistEntity> specialists) {
+        this.specialists = specialists;
+    }
 }

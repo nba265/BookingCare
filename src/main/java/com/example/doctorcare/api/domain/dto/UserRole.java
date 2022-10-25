@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,5 +22,5 @@ public class UserRole {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 }

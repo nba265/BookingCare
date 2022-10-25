@@ -46,4 +46,8 @@ public class HospitalCilinicService {
         hospitalCilinicRepository.findByKeywords(keyword).forEach(hospitalCilinicEntity -> hospitalCilinics.add(hospitalCilinicMapper.convertToDto(hospitalCilinicEntity)));
         return hospitalCilinics;
     }
+
+    public void save(HospitalCilinic hospitalCilinic){
+        hospitalCilinicRepository.save(hospitalCilinicMapper.convertToEntity(hospitalCilinic));
+    }
 }

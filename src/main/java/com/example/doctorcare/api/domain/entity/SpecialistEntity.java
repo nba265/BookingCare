@@ -17,6 +17,10 @@ public class SpecialistEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "specialist")
     private Set<UserEntity> userSet;
 
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name="hospital_cilinic_id")
+    private HospitalCilinicEntity hospitalCilinic;
+
     public SpecialistEntity() {
     }
 
@@ -49,4 +53,11 @@ public class SpecialistEntity {
         this.userSet = userSet;
     }
 
+    public HospitalCilinicEntity getHospitalCilinic() {
+        return hospitalCilinic;
+    }
+
+    public void setHospitalCilinic(HospitalCilinicEntity hospitalCilinic) {
+        this.hospitalCilinic = hospitalCilinic;
+    }
 }

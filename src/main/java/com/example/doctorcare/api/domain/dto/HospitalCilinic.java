@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -17,7 +18,9 @@ public class HospitalCilinic {
 
     private String name;
 
-    private List<User> doctor;
+    private List<User> doctor = new ArrayList<>();
 
-    private List<Services> services;
+    private List<Services> services = new ArrayList<>();
+
+    private List<Specialist> specialists = new ArrayList<>();
 }

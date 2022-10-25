@@ -21,8 +21,10 @@ public class UserMapper extends BaseMapper<UserEntity, User> {
     public UserEntity convertToEntity(User dto, Object... args) {
         UserEntity userEntity = new UserEntity();
         if (dto != null){
-            BeanUtils.copyProperties(dto,userEntity,"userRoles");
-            userEntity.setUserRoles(userRoleMapper.convertToEntitySet(dto.getUserRoles()));
+            BeanUtils.copyProperties(dto,userEntity,"timeDoctors","userRoles");
+            if (dto.getUserRoles() != null && !dto.getUserRoles().isEmpty()) {
+                userEntity.setUserRoles(userRoleMapper.convertToEntitySet(dto.getUserRoles()));
+            }
         }
         return userEntity;
     }
@@ -31,7 +33,8 @@ public class UserMapper extends BaseMapper<UserEntity, User> {
     public User convertToDto(UserEntity entity, Object... args) {
         User user = new User();
         if (entity != null){
-            BeanUtils.copyProperties(entity,user,"timeDoctors","userRoles","createDate");
+            BeanUtils.copyProperties(entity,user,"timeDoctors","userRoles");
+            user.setUserRoles(userRoleMapper.convertToDtoList(entity.getUserRoles()));
         }
         return user;
     }

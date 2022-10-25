@@ -14,19 +14,29 @@ public class HospitalCilinicMapper extends BaseMapper<HospitalCilinicEntity, Hos
 
     private ServiceMapper serviceMapper;
 
+    private SpecialistMapper specialistMapper;
+
     @PostConstruct
-    public void init(){
+    public void init() {
         this.userMapper = new UserMapper();
         this.serviceMapper = new ServiceMapper();
+        this.specialistMapper = new SpecialistMapper();
     }
 
     @Override
     public HospitalCilinicEntity convertToEntity(HospitalCilinic dto, Object... args) {
         HospitalCilinicEntity hospitalCilinicEntity = new HospitalCilinicEntity();
-        if (dto != null){
-            BeanUtils.copyProperties(dto,hospitalCilinicEntity,"doctor","services");
-            hospitalCilinicEntity.setDoctor(userMapper.convertToEntitySet(dto.getDoctor()));
-            hospitalCilinicEntity.setServices(serviceMapper.convertToEntitySet(dto.getServices()));
+        if (dto != null) {
+            BeanUtils.copyProperties(dto, hospitalCilinicEntity, "doctor", "services", "specialists");
+            if (dto.getDoctor() != null) {
+                hospitalCilinicEntity.setDoctor(userMapper.convertToEntitySet(dto.getDoctor()));
+            }
+            if (dto.getServices() != null) {
+                hospitalCilinicEntity.setServices(serviceMapper.convertToEntitySet(dto.getServices()));
+            }
+            if (dto.getSpecialists() != null) {
+                hospitalCilinicEntity.setSpecialists(specialistMapper.convertToEntitySet(dto.getSpecialists()));
+            }
         }
         return hospitalCilinicEntity;
     }
@@ -34,10 +44,11 @@ public class HospitalCilinicMapper extends BaseMapper<HospitalCilinicEntity, Hos
     @Override
     public HospitalCilinic convertToDto(HospitalCilinicEntity entity, Object... args) {
         HospitalCilinic hospitalCilinic = new HospitalCilinic();
-        if (entity != null){
-            BeanUtils.copyProperties(entity,hospitalCilinic,"doctor","services");
+        if (entity != null) {
+            BeanUtils.copyProperties(entity, hospitalCilinic, "doctor", "services", "specialists");
             hospitalCilinic.setServices(serviceMapper.convertToDtoList(entity.getServices()));
             hospitalCilinic.setDoctor(userMapper.convertToDtoList(entity.getDoctor()));
+            hospitalCilinic.setSpecialists(specialistMapper.convertToDtoList(entity.getSpecialists()));
         }
         return hospitalCilinic;
     }

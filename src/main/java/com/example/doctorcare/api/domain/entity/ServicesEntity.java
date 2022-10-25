@@ -19,7 +19,7 @@ public class ServicesEntity {
     @Column(nullable = false)
     private Double price;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_cilinic_id")
     private HospitalCilinicEntity hospitalCilinic;
 

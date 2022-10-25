@@ -1,12 +1,12 @@
 package com.example.doctorcare.api.controller;
 
+import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,9 +19,19 @@ public class UserController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @GetMapping("users")
-
+    @GetMapping("/users")
     public List<UserEntity> getUsers(){
         return (List<UserEntity>) this.userDetailsService.findAll();
+    }
+
+    @PostMapping("/createUser")
+    public HttpStatus createUser(@RequestBody(required = false) User user){
+        try {
+            userDetailsService.save(user);
+            return HttpStatus.CREATED;
+        } catch (Exception e){
+            e.printStackTrace();
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
     }
 }
