@@ -33,6 +33,6 @@ public class UserMapper extends BaseMapper<UserEntity, User> {
         if (entity != null){
             BeanUtils.copyProperties(entity,user,"timeDoctors","userRoles","createDate");
         }
-        return null;
+        return user;
     }
 }
