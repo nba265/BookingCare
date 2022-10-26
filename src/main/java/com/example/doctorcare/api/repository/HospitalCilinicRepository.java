@@ -1,5 +1,6 @@
 package com.example.doctorcare.api.repository;
 
+import com.example.doctorcare.api.domain.dto.HospitalCilinic;
 import com.example.doctorcare.api.domain.entity.HospitalCilinicEntity;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,6 @@ public interface HospitalCilinicRepository extends CrudRepository<HospitalCilini
 
     @Query(value = "select h from HospitalCilinicEntity h where h.name like %:keyword%")
     Set<HospitalCilinicEntity> findByKeywords(@Param("keyword") String keyword);
+
+    HospitalCilinicEntity findById(Long id);
 }

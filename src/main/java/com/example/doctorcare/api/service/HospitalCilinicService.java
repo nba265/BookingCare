@@ -45,4 +45,8 @@ public class HospitalCilinicService {
         hospitalCilinicRepository.save(hospitalCilinicMapper.convertToEntity(hospitalCilinic));
     }
 
+    public HospitalCilinic findById(Long id){
+        return hospitalCilinicMapper.convertToDto(hospitalCilinicRepository.findById(Math.toIntExact(id)).get());
+    }
+
 }

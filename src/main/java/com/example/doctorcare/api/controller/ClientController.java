@@ -2,6 +2,7 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.dto.HospitalCilinic;
 import com.example.doctorcare.api.service.HospitalCilinicService;
+import com.example.doctorcare.api.service.ServicesService;
 import com.example.doctorcare.api.service.SpecialistService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class ClientController {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    ServicesService servicesService;
 
     @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital(){
@@ -76,6 +79,11 @@ public class ClientController {
 
     @GetMapping("/selectService")
     public ResponseEntity<?> selectService(@RequestParam("doctor_id")Long docId){
-
+        try {
+            return new ResponseEntity<>(servicesService.findAllByDoctorId(docId),HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

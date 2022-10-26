@@ -65,8 +65,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public void save(UserEntity userEntity){
 
             userRepository.save(userEntity);
-
-
     }
 
     public UserEntity findByEmail(String email){
