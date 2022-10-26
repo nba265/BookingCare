@@ -13,9 +13,12 @@ public class UserMapper extends BaseMapper<UserEntity, User> {
 
     private UserRoleMapper userRoleMapper;
 
+    private SpecialistMapper specialistMapper;
+
     @PostConstruct
     public void init(){
         this.userRoleMapper = new UserRoleMapper();
+        this.specialistMapper = new SpecialistMapper();
     }
     @Override
     public UserEntity convertToEntity(User dto, Object... args) {
@@ -34,6 +37,7 @@ public class UserMapper extends BaseMapper<UserEntity, User> {
         User user = new User();
         if (entity != null){
             BeanUtils.copyProperties(entity,user,"timeDoctors","userRoles");
+            if(entity.getUserRoles() != null && !entity.getUserRoles().isEmpty())
             user.setUserRoles(userRoleMapper.convertToDtoList(entity.getUserRoles()));
         }
         return user;

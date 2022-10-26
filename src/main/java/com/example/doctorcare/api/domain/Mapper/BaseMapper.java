@@ -1,10 +1,13 @@
 package com.example.doctorcare.api.domain.Mapper;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 public abstract class BaseMapper<E,T> {
 
     public abstract E convertToEntity(T dto, Object... args);

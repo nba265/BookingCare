@@ -2,17 +2,26 @@ package com.example.doctorcare.api.domain.Mapper;
 
 import com.example.doctorcare.api.domain.dto.Services;
 import com.example.doctorcare.api.domain.entity.ServicesEntity;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ServiceMapper extends BaseMapper<ServicesEntity, Services> {
+
+
     @Override
     public ServicesEntity convertToEntity(Services dto, Object... args) {
-        return null;
+        ServicesEntity servicesEntity = new ServicesEntity();
+        if (dto != null)
+            BeanUtils.copyProperties(dto,servicesEntity);
+        return servicesEntity;
     }
 
     @Override
     public Services convertToDto(ServicesEntity entity, Object... args) {
-        return null;
+        Services services = new Services();
+        if (entity != null)
+            BeanUtils.copyProperties(entity,services);
+        return services;
     }
 }

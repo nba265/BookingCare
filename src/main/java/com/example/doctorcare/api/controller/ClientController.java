@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("api/hospitalcilinic")
-public class HospitalCilinicController {
+@RequestMapping("api/client")
+public class ClientController {
 
     @Autowired
     HospitalCilinicService hospitalCilinicService;
@@ -23,10 +23,11 @@ public class HospitalCilinicController {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
+
     @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital(){
         try{
-            return new ResponseEntity<>(hospitalCilinicService.hospitalCilinicList(),HttpStatus.OK);
+            return new ResponseEntity<>(hospitalCilinicService.hospitalCilinicList(), HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -34,7 +35,7 @@ public class HospitalCilinicController {
     }
 
     @GetMapping("/listDoctor")
-    public ResponseEntity<?> findDoctorByHospitalCilinic(@RequestParam("hos_id") Long hosId ){
+    public ResponseEntity<?> findDoctorByHospitalCilinic(@RequestParam("hos_id") Long hosId){
         try {
             return new ResponseEntity<>(userDetailsService.findDoctorByHospitalCilinic(hosId),HttpStatus.OK);
         } catch (Exception e){
@@ -63,11 +64,18 @@ public class HospitalCilinicController {
         }
     }
 
-    @PostMapping("/createHospitalCilinic")
-    public ResponseEntity<?> createHospitalCilinic(@RequestParam("name")String name ){
-            HospitalCilinic hospitalCilinic = new HospitalCilinic();
-            hospitalCilinic.setName(name);
-            hospitalCilinicService.save(hospitalCilinic);
-        return new ResponseEntity<>(null,HttpStatus.OK);
+    @GetMapping("/findDoctor")
+    public ResponseEntity<?> findDoctor(@RequestParam("hos_id") Long hosId,@RequestParam("spec_id")Long specId,@RequestParam("gender")String gender, @RequestParam("keyword")String keyword){
+        try {
+            return new ResponseEntity<>(userDetailsService.findDoctor(hosId,specId,gender,keyword),HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/selectService")
+    public ResponseEntity<?> selectService(@RequestParam("doctor_id")Long docId){
+
     }
 }

@@ -46,8 +46,11 @@ public class HospitalCilinicMapper extends BaseMapper<HospitalCilinicEntity, Hos
         HospitalCilinic hospitalCilinic = new HospitalCilinic();
         if (entity != null) {
             BeanUtils.copyProperties(entity, hospitalCilinic, "doctor", "services", "specialists");
+            if(entity.getServices() != null && !entity.getServices().isEmpty())
             hospitalCilinic.setServices(serviceMapper.convertToDtoList(entity.getServices()));
+            if(entity.getDoctor() != null && !entity.getDoctor().isEmpty())
             hospitalCilinic.setDoctor(userMapper.convertToDtoList(entity.getDoctor()));
+            if (entity.getSpecialists() != null && !entity.getSpecialists().isEmpty())
             hospitalCilinic.setSpecialists(specialistMapper.convertToDtoList(entity.getSpecialists()));
         }
         return hospitalCilinic;
