@@ -77,8 +77,8 @@ public class ClientController {
         }
     }
 
-    @GetMapping("/selectService")
-    public ResponseEntity<?> selectService(@RequestParam("doctor_id")Long docId){
+    @GetMapping("/listService")
+    public ResponseEntity<?> listService(@RequestParam("doctor_id")Long docId){
         try {
             return new ResponseEntity<>(servicesService.findAllByDoctorId(docId),HttpStatus.OK);
         } catch (Exception e){
