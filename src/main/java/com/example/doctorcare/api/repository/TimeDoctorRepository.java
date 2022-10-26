@@ -8,5 +8,5 @@ import java.util.Set;
 
 @Repository
 public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity,Integer> {
-    Set<TimeDoctorsEntity> findByDoctor_Id(int doctorId);
+    Set<TimeDoctorsEntity> findByDoctor_Id(Long doctorId);
 }

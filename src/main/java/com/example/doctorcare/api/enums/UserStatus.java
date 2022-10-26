@@ -5,10 +5,6 @@
  */
 package com.example.doctorcare.api.enums;
 
-/**
- *
- * @author ASUS
- */
 public enum UserStatus {
     ACTIVE,
     BLOCK,

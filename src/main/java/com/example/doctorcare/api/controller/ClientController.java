@@ -27,7 +27,7 @@ public class ClientController {
     @Autowired
     ServicesService servicesService;
 
-    @GetMapping("/listHospital")
+    @PostMapping("/listHospital")
     public ResponseEntity<?> getAllHospital(){
         try{
             return new ResponseEntity<>(hospitalCilinicService.hospitalCilinicList(), HttpStatus.OK);

@@ -13,6 +13,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,15 +22,20 @@ import java.util.Set;
 public interface UserRepository extends CrudRepository<UserEntity, Integer> {
 
     UserEntity findByEmailLikeAndStatusLike(String email,
-            UserStatus status);
+                                            UserStatus status);
+
     Optional<UserEntity> findByEmail(String email);
 
-    @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 ",nativeQuery = false)
+    Boolean existsByUsername(String username);
+
+    Boolean existsByEmail(String email);
+
+    Optional<UserEntity> findByUsername(@NotBlank @Size(max = 20) String username);
+
+    @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 ", nativeQuery = false)
     Set<UserEntity> findDoctorByHospitalCilinicId(Long hosId);
 
     @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 and u.specialist.id = ?2 and u.gender = ?3")
     Set<UserEntity> findDoctorByHospitalCilinicIdAndSpecIdAndGender(Long hosId, Long specId, Gender gender);
 
-    @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 ")
-    Set<UserEntity> findDoctorByHospitalCilinicIdAndDoctorName(Long hosId,String keyword);
 }

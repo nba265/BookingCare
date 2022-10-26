@@ -20,10 +20,10 @@ public class TimeDoctors {
 
     private Long id;
 
-    @DateTimeFormat(pattern = "HH:mm:ss")
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime timeStart;
 
-    @DateTimeFormat(pattern = "HH:mm:ss")
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime timeEnd;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -32,4 +32,14 @@ public class TimeDoctors {
     private AppointmentsEntity appointments;
 
     private UserEntity doctor;
+
+    @Override
+    public String toString() {
+        return "TimeDoctors{" +
+                "id=" + id +
+                ", timeStart=" + timeStart +
+                ", timeEnd=" + timeEnd +
+                ", date=" + date +
+                '}';
+    }
 }

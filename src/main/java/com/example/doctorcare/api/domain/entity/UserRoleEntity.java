@@ -11,6 +11,7 @@ import com.example.doctorcare.api.enums.Role;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,8 +25,8 @@ public class UserRoleEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToMany(mappedBy = "userRoles")
-    private Set<UserEntity> users;
+    @ManyToMany(mappedBy = "userRoles",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private Set<UserEntity> users = new HashSet<>();
 
     public Integer getId() {
         return id;

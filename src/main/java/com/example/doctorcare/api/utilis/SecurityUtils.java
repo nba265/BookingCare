@@ -5,6 +5,10 @@
  */
 package com.example.doctorcare.api.utilis;
 
+import com.example.doctorcare.api.domain.dto.request.LoginRequest;
+import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.repository.UserRepository;
+import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,10 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  *
@@ -63,5 +64,14 @@ public class SecurityUtils {
     public static String encrytePassword(String password) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.encode(password);
+    }
+
+    public static boolean checkInfoLogin(LoginRequest loginRequest, UserDetailsServiceImpl userDetailsService){
+        Optional<UserEntity> user = userDetailsService.findByUsername(loginRequest.getUsername());
+        if(user.isPresent()){
+            if(user.get().getPassword().equals(encrytePassword(loginRequest.getPassword())));
+            return true;
+        }
+        else return false;
     }
 }

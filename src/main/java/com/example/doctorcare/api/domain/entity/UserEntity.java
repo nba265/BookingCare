@@ -11,8 +11,11 @@ import com.example.doctorcare.api.enums.UserStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,10 +24,14 @@ public class UserEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column( length = 100)
     private String email;
+
+    @NotBlank
+    @Size(max = 20)
+    private String username;
 
     private String password;
 
@@ -43,6 +50,8 @@ public class UserEntity implements Serializable {
 
     private String experience;
 
+    private String token;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus status;
@@ -50,14 +59,14 @@ public class UserEntity implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createDate;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "user_role_relationship",
             joinColumns = @JoinColumn(name = "user_id",
                     referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id",
                     referencedColumnName = "id"))
-    private Set<UserRoleEntity> userRoles;
+    private Set<UserRoleEntity> userRoles = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name= "specialist_id")
@@ -91,11 +100,17 @@ public class UserEntity implements Serializable {
         this.userRoles = userRoles;
     }
 
-    public Integer getId() {
+    public UserEntity(String email, String username, String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -225,5 +240,21 @@ public class UserEntity implements Serializable {
 
     public void setTimeDoctors(Set<TimeDoctorsEntity> timeDoctors) {
         this.timeDoctors = timeDoctors;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

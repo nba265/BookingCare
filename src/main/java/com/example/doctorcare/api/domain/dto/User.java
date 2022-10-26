@@ -29,6 +29,8 @@ public class User {
 
     private String email;
 
+    private String username;
+
     private String address;
 
     private String fullName;
@@ -47,7 +49,7 @@ public class User {
 
     private String experience;
 
-    private List<UserRole> userRoles;
+    private List<UserRole> userRoles = new ArrayList<>();
 
     private Specialist specialist;
 
@@ -59,5 +61,7 @@ public class User {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createDate;
+
+
 
 }

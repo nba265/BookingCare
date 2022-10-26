@@ -23,15 +23,10 @@ public class DoctorController {
     @Autowired
     TimeDoctorService timeDoctorService;
 
-    @PostMapping
-    public ResponseEntity<?> createTimeDoctor(@RequestParam("timeStart") LocalTime timeStart, @RequestParam("timeEnd") LocalTime timeEnd) {
+    @PostMapping("/create_time_doctors")
+    public ResponseEntity<?> createTimeDoctor(@RequestBody TimeDoctors timeDoctors) {
         try {
-            TimeDoctors timeDoctors = new TimeDoctors();
-            UserEntity user = userDetailsService.findByEmail(SecurityUtils.getUsername());
-            timeDoctors.setDoctor(user);
-            timeDoctors.setTimeEnd(timeEnd);
-            timeDoctors.setTimeStart(timeStart);
-            timeDoctors.setDate(LocalDate.now());
+//            UserEntity user = userDetailsService.findByEmail(SecurityUtils.getUsername());
             timeDoctorService.save(timeDoctors);
         }
         catch (Exception e){
@@ -39,7 +34,7 @@ public class DoctorController {
         }
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
-    @GetMapping
+    @GetMapping("/get_time_doctors")
     public ResponseEntity<?> getTimeDoctor(){
         UserEntity user = userDetailsService.findByEmail(SecurityUtils.getUsername());
         try {

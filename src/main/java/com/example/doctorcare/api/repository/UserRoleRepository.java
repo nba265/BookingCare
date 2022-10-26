@@ -6,13 +6,17 @@
 package com.example.doctorcare.api.repository;
 
 import com.example.doctorcare.api.domain.entity.UserRoleEntity;
+import com.example.doctorcare.api.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRoleEntity, Integer> {
 
     Set<UserRoleEntity> findByUsers_Email(String email);
+
+    Optional<UserRoleEntity> findByRole(Role role);
 }

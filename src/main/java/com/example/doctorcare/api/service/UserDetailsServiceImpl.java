@@ -6,6 +6,7 @@
 package com.example.doctorcare.api.service;
 
 
+import com.example.doctorcare.api.config.security.Services.UserDetailsImpl;
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.domain.entity.UserRoleEntity;
@@ -41,21 +42,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByEmailLikeAndStatusLike(email, UserStatus.ACTIVE);
-        if (user == null) {
-            throw new UsernameNotFoundException(email);
-        }
-        Set<UserRoleEntity> roleNames = userRoleRepository.findByUsers_Email(email);
-        Set<GrantedAuthority> grantList = new HashSet<>();
-        if (!CollectionUtils.isEmpty(roleNames)) {
-            for (UserRoleEntity role : roleNames) {
-                GrantedAuthority authority = new SimpleGrantedAuthority(role.getRole().toString());
-                grantList.add(authority);
-            }
-        }
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-        return (UserDetails) new User(user.getEmail(), user.getPassword(), grantList);
+        return UserDetailsImpl.build(user);
     }
 
     public Iterable<UserEntity> findAll(){
@@ -70,6 +61,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserEntity findByEmail(String email){
         return userRepository.findByEmailLikeAndStatusLike(email,UserStatus.ACTIVE);
     }
+
+    public Optional<UserEntity> findByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
+
+
 
     public void save(com.example.doctorcare.api.domain.dto.User user){
         user.setCreateDate(LocalDate.now());
