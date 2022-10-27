@@ -11,18 +11,17 @@ import javax.annotation.PostConstruct;
 @Component
 public class UserMapper extends BaseMapper<UserEntity, User> {
 
-    private UserRoleMapper userRoleMapper;
+    UserRoleMapper userRoleMapper;
 
-    private SpecialistMapper specialistMapper;
 
     @PostConstruct
     public void init(){
         this.userRoleMapper = new UserRoleMapper();
-        this.specialistMapper = new SpecialistMapper();
     }
     @Override
     public UserEntity convertToEntity(User dto, Object... args) {
         UserEntity userEntity = new UserEntity();
+        userRoleMapper = new UserRoleMapper();
         if (dto != null){
             BeanUtils.copyProperties(dto,userEntity,"timeDoctors","userRoles");
             if (dto.getUserRoles() != null && !dto.getUserRoles().isEmpty()) {
@@ -35,6 +34,7 @@ public class UserMapper extends BaseMapper<UserEntity, User> {
     @Override
     public User convertToDto(UserEntity entity, Object... args) {
         User user = new User();
+        userRoleMapper = new UserRoleMapper();
         if (entity != null){
             BeanUtils.copyProperties(entity,user,"timeDoctors","userRoles");
             if(entity.getUserRoles() != null && !entity.getUserRoles().isEmpty())

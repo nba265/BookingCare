@@ -26,6 +26,9 @@ public class HospitalCilinicMapper extends BaseMapper<HospitalCilinicEntity, Hos
     @Override
     public HospitalCilinicEntity convertToEntity(HospitalCilinic dto, Object... args) {
         HospitalCilinicEntity hospitalCilinicEntity = new HospitalCilinicEntity();
+        userMapper = new UserMapper();
+        serviceMapper = new ServiceMapper();
+        specialistMapper = new SpecialistMapper();
         if (dto != null) {
             BeanUtils.copyProperties(dto, hospitalCilinicEntity, "doctor", "services", "specialists");
             if (dto.getDoctor() != null) {
@@ -37,9 +40,6 @@ public class HospitalCilinicMapper extends BaseMapper<HospitalCilinicEntity, Hos
             if (dto.getSpecialists() != null) {
                 hospitalCilinicEntity.setSpecialists(specialistMapper.convertToEntitySet(dto.getSpecialists()));
             }
-            if(dto.getManager()!=null){
-                hospitalCilinicEntity.setManager(userMapper.convertToEntity(dto.getManager()));
-            }
         }
         return hospitalCilinicEntity;
     }
@@ -47,14 +47,20 @@ public class HospitalCilinicMapper extends BaseMapper<HospitalCilinicEntity, Hos
     @Override
     public HospitalCilinic convertToDto(HospitalCilinicEntity entity, Object... args) {
         HospitalCilinic hospitalCilinic = new HospitalCilinic();
+        userMapper = new UserMapper();
+        serviceMapper = new ServiceMapper();
+        specialistMapper = new SpecialistMapper();
         if (entity != null) {
             BeanUtils.copyProperties(entity, hospitalCilinic, "doctor", "services", "specialists");
-            if(entity.getServices() != null && !entity.getServices().isEmpty())
-            hospitalCilinic.setServices(serviceMapper.convertToDtoList(entity.getServices()));
-            if(entity.getDoctor() != null && !entity.getDoctor().isEmpty())
-            hospitalCilinic.setDoctor(userMapper.convertToDtoList(entity.getDoctor()));
-            if (entity.getSpecialists() != null && !entity.getSpecialists().isEmpty())
-            hospitalCilinic.setSpecialists(specialistMapper.convertToDtoList(entity.getSpecialists()));
+            if (entity.getServices() != null && !entity.getServices().isEmpty()) {
+                hospitalCilinic.setServices(serviceMapper.convertToDtoList(entity.getServices()));
+            }
+            if (entity.getDoctor() != null && !entity.getDoctor().isEmpty()) {
+                hospitalCilinic.setDoctor(userMapper.convertToDtoList(entity.getDoctor()));
+            }
+            if (entity.getSpecialists() != null && !entity.getSpecialists().isEmpty()) {
+                hospitalCilinic.setSpecialists(specialistMapper.convertToDtoList(entity.getSpecialists()));
+            }
         }
         return hospitalCilinic;
     }

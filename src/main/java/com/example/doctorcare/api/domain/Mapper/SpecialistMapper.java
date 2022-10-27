@@ -14,17 +14,16 @@ public class SpecialistMapper extends BaseMapper<SpecialistEntity, Specialist> {
 
     private UserMapper userMapper;
 
-    private HospitalCilinicMapper hospitalCilinicMapper;
 
     @PostConstruct
     public void init(){
         this.userMapper = new UserMapper();
-        this.hospitalCilinicMapper = new HospitalCilinicMapper();
     }
 
     @Override
     public SpecialistEntity convertToEntity(Specialist dto, Object... args) {
         SpecialistEntity specialistEntity = new SpecialistEntity();
+        userMapper = new UserMapper();
         if (dto != null){
             BeanUtils.copyProperties(dto,specialistEntity,"userSet");
             if (dto.getUsers() != null && !dto.getUsers().isEmpty()) {

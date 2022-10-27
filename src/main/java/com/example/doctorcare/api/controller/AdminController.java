@@ -4,6 +4,7 @@ import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.HospitalCilinic;
 import com.example.doctorcare.api.domain.dto.request.AddHospital;
 import com.example.doctorcare.api.domain.dto.response.MessageResponse;
+import com.example.doctorcare.api.domain.entity.HospitalCilinicEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.Role;
@@ -21,7 +22,7 @@ import java.util.Set;
 
 @RestController
 @PreAuthorize("hasRole('ROLE_ADMIN')")
-@RequestMapping("api/adminr")
+@RequestMapping("api/admin")
 public class AdminController {
     @Autowired
     private HospitalCilinicService hospitalCilinicService;
@@ -48,9 +49,10 @@ public class AdminController {
             if(userDetailsService.checkUser(hospitalCilinic.getManagerUserName())){
                 UserEntity user=userDetailsService.findByUsername(hospitalCilinic.getManagerUserName()).get();
                 user.getUserRoles().add(userRoleService.findById(2).get());
-                HospitalCilinic hospitalCilinic1= new HospitalCilinic();
-                hospitalCilinic1.setManager(userMapper.convertToDto(user));
-                hospitalCilinicService.save(hospitalCilinic1);
+                HospitalCilinicEntity hospitalCilinicEntity = new HospitalCilinicEntity();
+                hospitalCilinicEntity.setManager(user);
+                hospitalCilinicEntity.setName(hospitalCilinic.getName());
+                hospitalCilinicService.save(hospitalCilinicEntity);
                 return new ResponseEntity<>(null,HttpStatus.OK);
             }
             else return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong Username or Password"));
