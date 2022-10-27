@@ -37,6 +37,9 @@ public class HospitalCilinicMapper extends BaseMapper<HospitalCilinicEntity, Hos
             if (dto.getSpecialists() != null) {
                 hospitalCilinicEntity.setSpecialists(specialistMapper.convertToEntitySet(dto.getSpecialists()));
             }
+            if(dto.getManager()!=null){
+                hospitalCilinicEntity.setManager(userMapper.convertToEntity(dto.getManager()));
+            }
         }
         return hospitalCilinicEntity;
     }

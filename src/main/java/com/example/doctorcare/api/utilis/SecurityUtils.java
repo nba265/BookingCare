@@ -52,7 +52,6 @@ public class SecurityUtils {
                 username = ((UserDetails) principal).getUsername();
             }
         }
-        System.out.println(username);
         return username;
     }
 

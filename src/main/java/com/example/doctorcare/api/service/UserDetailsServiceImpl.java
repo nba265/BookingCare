@@ -48,6 +48,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return UserDetailsImpl.build(user);
     }
+    public boolean checkUser(String name){
+        return userRepository.existsByUsername(name);
+    }
 
     public Iterable<UserEntity> findAll(){
         return userRepository.findAll();

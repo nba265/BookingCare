@@ -1,5 +1,6 @@
 package com.example.doctorcare.api.domain.dto;
 
+import com.example.doctorcare.api.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,8 @@ public class HospitalCilinic {
     private Long id;
 
     private String name;
+
+    private User manager;
 
     private List<User> doctor = new ArrayList<>();
 
