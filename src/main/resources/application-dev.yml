@@ -1,9 +1,9 @@
 spring:
   datasource:
-    driver-class-name: ${JDBC_DATABASE_DRIVER:}
-    url: ${JDBC_DATABASE_URL:}
-    username: ${JDBC_DATABASE_USERNAME:}
-    password: ${JDBC_DATABASE_PASSWORD:}
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/booking_care
+    username: root
+    password: baoanh123
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,7 +12,7 @@ spring:
     properties:
       hibernate:
         enable_lazy_load_no_trans : true
-        dialect: ${SPRING_JPA_HIBERNATE_DIALECT:}
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 bezkoder:
   app:
     jwtSecret: bezKoderSecretKey
