@@ -13,9 +13,6 @@ public class DoctorCareApplication implements CommandLineRunner {
 		SpringApplication.run(DoctorCareApplication.class, args);
 	}
 
-	@Autowired
-	private UserDetailsServiceImpl userDetailsService;
-
 
 	@Override
 	public void run(String... args) throws Exception {
