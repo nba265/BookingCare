@@ -92,6 +92,11 @@ public class AuthController {
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
+        if(!signUpRequest.getRePassword().equals(signUpRequest.getPassword())){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Password is not the same"));
+        }
 
         // Create new user's account
         UserEntity user = new UserEntity(signUpRequest.getEmail(),signUpRequest.getUsername(),
