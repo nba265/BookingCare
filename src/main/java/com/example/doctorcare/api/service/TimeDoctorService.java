@@ -29,7 +29,22 @@ public class TimeDoctorService {
     public TimeDoctors findById(Long id){
         return timeDoctorsMapper.convertToDto(timeDoctorRepository.findById(id).get());
     }
-    public void deleteById(Long id){
+
+    public TimeDoctorsEntity findByIdEntity(Long id){
+        return timeDoctorRepository.findById(id).get();
+    }
+
+    public List<TimeDoctors> findFreeTimeByDoctorId(Long id){
+        List<TimeDoctors> timeDoctors = findAllByDoctor(id);
+        timeDoctors.forEach(timeDoctors1 -> {
+            if (timeDoctors1.getAppointments() != null) timeDoctors.remove(timeDoctors1);
+        });
+        return timeDoctors;
+    }
+
+    public void deleteById(Long id)
+    {
         timeDoctorRepository.deleteById(id);
     }
+
 }

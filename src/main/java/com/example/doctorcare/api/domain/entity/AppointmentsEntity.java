@@ -2,6 +2,7 @@ package com.example.doctorcare.api.domain.entity;
 
 
 import com.example.doctorcare.api.enums.AppointmentStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,16 +24,18 @@ public class AppointmentsEntity {
 
     private LocalDateTime createDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "services_id")
     private ServicesEntity services;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "customers_id")
+    @JsonIgnore
     private CustomersEntity customers;
 
-    @OneToOne(mappedBy = "appointments")
+    @OneToOne(mappedBy = "appointments",fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
+    @JsonIgnore
     private TimeDoctorsEntity timeDoctors;
 
     public AppointmentsEntity() {

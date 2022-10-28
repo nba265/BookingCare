@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimeDoctor {
+
     private Long id;
     @DateTimeFormat(pattern = "HH:mm")
     private String timeStart;
