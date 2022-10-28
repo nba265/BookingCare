@@ -2,7 +2,7 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
-import com.example.doctorcare.api.domain.dto.response.ListTimeDoctor;
+import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.service.TimeDoctorService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
@@ -44,9 +44,9 @@ public class DoctorController {
     public ResponseEntity<?> getTimeDoctor() {
         UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
         List<TimeDoctors> timeDoctorsList = timeDoctorService.findAllByDoctor(user.getId());
-        List<ListTimeDoctor> timeDoctors = new ArrayList<>();
+        List<TimeDoctor> timeDoctors = new ArrayList<>();
         timeDoctorsList.forEach(timeDoctors1 -> {
-            timeDoctors.add(new ListTimeDoctor(timeDoctors1.getId(), timeDoctors1.getTimeStart().toString(), timeDoctors1.getTimeEnd().toString(), timeDoctors1.getDate().toString()));
+            timeDoctors.add(new TimeDoctor(timeDoctors1.getId(), timeDoctors1.getTimeStart().toString(), timeDoctors1.getTimeEnd().toString(), timeDoctors1.getDate().toString()));
         });
         try {
             return new ResponseEntity<>(timeDoctors, HttpStatus.OK);
@@ -61,7 +61,6 @@ public class DoctorController {
         try {
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             timeDoctors.setDoctor(user);
-
             timeDoctorService.save(timeDoctors);
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,7 +74,7 @@ public class DoctorController {
         TimeDoctors timeDoctors = timeDoctorService.findById(id);
         try {
             System.out.println(timeDoctors.getTimeStart());
-            return new ResponseEntity<>(new ListTimeDoctor(timeDoctors.getId(), timeDoctors.getTimeStart().toString(), timeDoctors.getTimeEnd().toString(), timeDoctors.getDate().toString()), HttpStatus.OK);
+            return new ResponseEntity<>(new TimeDoctor(timeDoctors.getId(), timeDoctors.getTimeStart().toString(), timeDoctors.getTimeEnd().toString(), timeDoctors.getDate().toString()), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }

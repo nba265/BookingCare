@@ -6,14 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListTimeDoctor {
+public class TimeDoctor {
     private Long id;
     @DateTimeFormat(pattern = "HH:mm")
     private String timeStart;
