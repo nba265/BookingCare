@@ -26,4 +26,7 @@ public class TimeDoctorService {
         timeDoctorRepository.findByDoctor_Id(doctorId).forEach(timeDoctors -> {timeDoctorsList.add(timeDoctorsMapper.convertToDto(timeDoctors));});
     return timeDoctorsList;
     }
+    public TimeDoctors findById(Long id){
+        return timeDoctorsMapper.convertToDto(timeDoctorRepository.findById(id).get());
+    }
 }

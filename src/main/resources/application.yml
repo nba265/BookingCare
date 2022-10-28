@@ -1,7 +1,7 @@
 
 spring:
   application:
-    name: project-news
+    name: doctor-care
   # Profile
   profiles:
     active: dev
