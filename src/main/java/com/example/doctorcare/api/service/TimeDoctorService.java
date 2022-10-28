@@ -29,4 +29,7 @@ public class TimeDoctorService {
     public TimeDoctors findById(Long id){
         return timeDoctorsMapper.convertToDto(timeDoctorRepository.findById(id).get());
     }
+    public void deleteById(Long id){
+        timeDoctorRepository.deleteById(id);
+    }
 }

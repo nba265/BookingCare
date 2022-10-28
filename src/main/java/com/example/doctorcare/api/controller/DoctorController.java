@@ -65,6 +65,7 @@ public class DoctorController {
             timeDoctorService.save(timeDoctors);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
@@ -80,5 +81,14 @@ public class DoctorController {
         }
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
-
+    @DeleteMapping ("/delete_time_doctors")
+    public ResponseEntity<?> deleteTimeDoctor(@RequestParam("id") Long id) {
+        try {
+            timeDoctorService.deleteById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 }
