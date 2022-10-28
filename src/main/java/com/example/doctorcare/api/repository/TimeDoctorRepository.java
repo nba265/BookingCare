@@ -13,4 +13,6 @@ public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity,I
     Set<TimeDoctorsEntity> findByDoctor_Id(Long doctorId);
     Optional<TimeDoctorsEntity> findById(Long id);
 
+    void deleteById(Long id);
+
 }

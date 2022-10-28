@@ -30,6 +30,10 @@ public class TimeDoctorService {
         return timeDoctorsMapper.convertToDto(timeDoctorRepository.findById(id).get());
     }
 
+    public TimeDoctorsEntity findByIdEntity(Long id){
+        return timeDoctorRepository.findById(id).get();
+    }
+
     public List<TimeDoctors> findFreeTimeByDoctorId(Long id){
         List<TimeDoctors> timeDoctors = findAllByDoctor(id);
         timeDoctors.forEach(timeDoctors1 -> {
@@ -37,4 +41,10 @@ public class TimeDoctorService {
         });
         return timeDoctors;
     }
+
+    public void deleteById(Long id)
+    {
+        timeDoctorRepository.deleteById(id);
+    }
+
 }
