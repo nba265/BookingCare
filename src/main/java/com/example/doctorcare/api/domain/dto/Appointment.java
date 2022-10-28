@@ -4,17 +4,25 @@ import com.example.doctorcare.api.domain.entity.CustomersEntity;
 import com.example.doctorcare.api.domain.entity.ServicesEntity;
 import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-public class Appoinment {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Appointment {
     private Long id;
 
     private String comment;
 
     private String description;
-
 
     private AppointmentStatus status;
 
@@ -22,7 +30,9 @@ public class Appoinment {
 
     private Services services;
 
+    @JsonIgnore
     private Customer customer;
 
+    @JsonIgnore
     private TimeDoctors timeDoctors;
 }

@@ -1,5 +1,6 @@
 package com.example.doctorcare.api.controller;
 
+import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.TimeDoctorsMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.User;
@@ -49,6 +50,9 @@ public class ClientController {
 
     @Autowired
     AppointmentsService appointmentsService;
+
+    @Autowired
+    AppointmentMapper appointmentMapper;
 
     @PostMapping("/listHospital")
     public ResponseEntity<?> getAllHospital() {
@@ -156,7 +160,7 @@ public class ClientController {
             appointments.setCustomers(customers);
             appointments.setDescription(makeAppointment.getDescription());
             appointmentsService.save(appointments);
-            return new ResponseEntity<>(appointments, HttpStatus.OK);
+            return new ResponseEntity<>(appointmentMapper.convertToDto(appointments), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

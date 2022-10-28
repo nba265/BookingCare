@@ -1,6 +1,7 @@
 package com.example.doctorcare.api.domain.dto;
 
 import com.example.doctorcare.api.domain.entity.HospitalCilinicEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,5 +26,6 @@ public class Services {
 
     private Double price;
 
+    @JsonIgnore
     private HospitalCilinic hospitalCilinic;
 }

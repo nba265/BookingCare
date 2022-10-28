@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,16 +18,13 @@ public class Customer {
 
     private Long id;
 
-
     private String nameBooking;
-
 
     private String phoneBooking;
 
     private String namePatient;
 
     private String phonePatient;
-
 
     @Email
     private String email;
