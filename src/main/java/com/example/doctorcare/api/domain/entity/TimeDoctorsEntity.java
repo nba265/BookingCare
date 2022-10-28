@@ -1,5 +1,6 @@
 package com.example.doctorcare.api.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -29,8 +30,8 @@ public class TimeDoctorsEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private AppointmentsEntity appointments;
 
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id")
     private UserEntity doctor;
 

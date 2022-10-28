@@ -53,9 +53,9 @@ public class User {
 
     private Specialist specialist;
 
-    private HospitalCilinicEntity hospitalCilinicMangager;
-
     private HospitalCilinic hospitalCilinicDoctor;
+
+    private HospitalCilinic hospitalCilinicMangager;
 
     private List<TimeDoctors> timeDoctors = new ArrayList<>();
 

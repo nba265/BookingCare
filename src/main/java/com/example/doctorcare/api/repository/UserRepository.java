@@ -11,6 +11,7 @@ import com.example.doctorcare.api.enums.Gender;
 import com.example.doctorcare.api.enums.UserStatus;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.NotBlank;
@@ -38,4 +39,5 @@ public interface UserRepository extends CrudRepository<UserEntity, Integer> {
     @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 and u.specialist.id = ?2 and u.gender = ?3")
     Set<UserEntity> findDoctorByHospitalCilinicIdAndSpecIdAndGender(Long hosId, Long specId, Gender gender);
 
+    UserEntity findById(Long doctorId);
 }

@@ -8,6 +8,7 @@ package com.example.doctorcare.api.domain.entity;
 
 
 import com.example.doctorcare.api.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,7 +26,8 @@ public class UserRoleEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToMany(mappedBy = "userRoles",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToMany(mappedBy = "userRoles",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<UserEntity> users = new HashSet<>();
 
     public Integer getId() {

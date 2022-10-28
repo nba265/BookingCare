@@ -8,6 +8,7 @@ package com.example.doctorcare.api.domain.entity;
 
 import com.example.doctorcare.api.enums.Gender;
 import com.example.doctorcare.api.enums.UserStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -59,7 +60,7 @@ public class UserEntity implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createDate;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "user_role_relationship",
             joinColumns = @JoinColumn(name = "user_id",
                     referencedColumnName = "id"),

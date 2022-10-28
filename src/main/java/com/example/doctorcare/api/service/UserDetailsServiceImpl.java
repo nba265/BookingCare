@@ -7,7 +7,10 @@ package com.example.doctorcare.api.service;
 
 
 import com.example.doctorcare.api.config.security.Services.UserDetailsImpl;
+import com.example.doctorcare.api.domain.Mapper.HospitalCilinicMapper;
+import com.example.doctorcare.api.domain.Mapper.SpecialistMapper;
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
+import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.Gender;
@@ -17,7 +20,6 @@ import com.example.doctorcare.api.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -38,6 +40,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private HospitalCilinicMapper hospitalCilinicMapper;
+
+    @Autowired
+    private SpecialistMapper specialistMapper;
 
 
 
@@ -109,5 +117,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         users.removeAll(toRemove);
         return userMapper.convertToDtoList(users);
+    }
+
+    public User findDoctorById(Long doctorId){
+        UserEntity userEntity = userRepository.findById(doctorId);
+        User user = userMapper.convertToDto(userEntity);
+        user.setHospitalCilinicDoctor(hospitalCilinicMapper.convertToDto(userEntity.getHospitalCilinicDoctor()));
+        user.setHospitalCilinicMangager(hospitalCilinicMapper.convertToDto(userEntity.getHospitalCilinicMangager()));
+        user.setSpecialist(specialistMapper.convertToDto(userEntity.getSpecialist()));
+        return user;
     }
 }

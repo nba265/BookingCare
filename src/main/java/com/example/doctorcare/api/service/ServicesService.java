@@ -26,8 +26,8 @@ public class ServicesService {
     @Autowired
     private ServiceMapper serviceMapper;
 
-    public List<Services> findAllByDoctorId(Long id){
-        HospitalCilinicEntity hospitalCilinicEntity = hospitalCilinicRepository.findById(id);
-        return serviceMapper.convertToDtoList(hospitalCilinicEntity.getServices());
+    public List<Services> findAllByHospitalCilinic_Id(Long id){
+
+        return serviceMapper.convertToDtoList(servicesRepository.findAllByHospitalCilinic_Id(id));
     }
 }

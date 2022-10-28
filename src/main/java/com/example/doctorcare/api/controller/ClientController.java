@@ -1,18 +1,18 @@
 package com.example.doctorcare.api.controller;
 
-import com.example.doctorcare.api.domain.dto.HospitalCilinic;
-import com.example.doctorcare.api.service.HospitalCilinicService;
-import com.example.doctorcare.api.service.ServicesService;
-import com.example.doctorcare.api.service.SpecialistService;
-import com.example.doctorcare.api.service.UserDetailsServiceImpl;
+import com.example.doctorcare.api.domain.dto.User;
+import com.example.doctorcare.api.domain.dto.response.DoctorSearchInfo;
+import com.example.doctorcare.api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/client")
+@PreAuthorize("hasRole('ROLE_USER')")
 public class ClientController {
 
     @Autowired
@@ -26,6 +26,9 @@ public class ClientController {
 
     @Autowired
     ServicesService servicesService;
+
+    @Autowired
+    TimeDoctorService timeDoctorService;
 
     @PostMapping("/listHospital")
     public ResponseEntity<?> getAllHospital(){
@@ -77,11 +80,29 @@ public class ClientController {
         }
     }
 
-    @GetMapping("/listService")
+/*    @GetMapping("/listService")
     public ResponseEntity<?> listService(@RequestParam("doctor_id")Long docId){
         try {
             return new ResponseEntity<>(servicesService.findAllByDoctorId(docId),HttpStatus.OK);
         } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
+
+    @GetMapping("/booking_service_datetime")
+    public ResponseEntity<?> bookingServiceAndDatetime(@RequestParam("doctor_id")Long doctorId){
+        try {
+            DoctorSearchInfo doctorSearchInfo = new DoctorSearchInfo();
+            User doctor = userDetailsService.findDoctorById(doctorId);
+            doctorSearchInfo.setDoctorName(doctor.getFullName());
+            doctorSearchInfo.setServicesList(servicesService.findAllByHospitalCilinic_Id(doctor.getHospitalCilinicDoctor().getId()));
+            doctorSearchInfo.setHospName(doctor.getHospitalCilinicDoctor().getName());
+            doctorSearchInfo.setSpecialist(doctor.getSpecialist().getName());
+            doctorSearchInfo.setTimeDoctors(doctor.getTimeDoctors());
+            return new ResponseEntity<>(doctorSearchInfo,HttpStatus.OK);
+        }
+        catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
