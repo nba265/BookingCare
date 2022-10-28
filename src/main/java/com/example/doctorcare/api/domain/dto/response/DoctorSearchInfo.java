@@ -24,6 +24,6 @@ public class DoctorSearchInfo {
 
     private List<Services> servicesList = new ArrayList<>();
 
-    private List<TimeDoctors> timeDoctors = new ArrayList<>();
+    private List<ListTimeDoctor> timeDoctors = new ArrayList<>();
 
 }

@@ -1,13 +1,18 @@
 package com.example.doctorcare.api.controller;
 
+import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.dto.response.DoctorSearchInfo;
+import com.example.doctorcare.api.domain.dto.response.ListTimeDoctor;
 import com.example.doctorcare.api.service.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -99,7 +104,15 @@ public class ClientController {
             doctorSearchInfo.setServicesList(servicesService.findAllByHospitalCilinic_Id(doctor.getHospitalCilinicDoctor().getId()));
             doctorSearchInfo.setHospName(doctor.getHospitalCilinicDoctor().getName());
             doctorSearchInfo.setSpecialist(doctor.getSpecialist().getName());
-            doctorSearchInfo.setTimeDoctors(doctor.getTimeDoctors());
+            List<TimeDoctors> timeDoctorsList = timeDoctorService.findFreeTimeByDoctorId(doctorId);
+            timeDoctorsList.forEach(timeDoctors -> {
+                ListTimeDoctor listTimeDoctor = new ListTimeDoctor();
+                listTimeDoctor.setTimeEnd(timeDoctors.getTimeEnd().toString());
+                listTimeDoctor.setTimeStart(timeDoctors.getTimeStart().toString());
+                listTimeDoctor.setId(timeDoctors.getId());
+                listTimeDoctor.setDate(timeDoctors.getDate().toString());
+                doctorSearchInfo.getTimeDoctors().add(listTimeDoctor);
+            });
             return new ResponseEntity<>(doctorSearchInfo,HttpStatus.OK);
         }
         catch (Exception e){

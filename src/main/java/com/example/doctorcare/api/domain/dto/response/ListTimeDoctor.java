@@ -14,6 +14,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ListTimeDoctor {
+
     private Long id;
     @DateTimeFormat(pattern = "HH:mm")
     private String timeStart;
