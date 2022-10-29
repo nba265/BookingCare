@@ -74,7 +74,7 @@ public class AuthController {
                     userDetails.getId(),
                     userDetails.getUsername(),
                     userDetails.getEmail(),
-                    roles));
+                    roles.stream().findFirst().get()));
         }
         else return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong Username or Password"));
     }
@@ -92,11 +92,6 @@ public class AuthController {
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
-        if(!signUpRequest.getRePassword().equals(signUpRequest.getPassword())){
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Password is not the same"));
-        }
 
         // Create new user's account
         UserEntity user = new UserEntity(signUpRequest.getEmail(),signUpRequest.getUsername(),
@@ -104,7 +99,7 @@ public class AuthController {
 
         user.setFullName(signUpRequest.getFullName());
 
-        user.getUserRoles().add(roleRepository.findByRole(Role.ROLE_USER).get());
+        user.getUserRoles().add(roleRepository.findByRole(Role.user).get());
 
         user.setStatus(UserStatus.ACTIVE);
 
