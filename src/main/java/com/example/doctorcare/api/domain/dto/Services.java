@@ -11,6 +11,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,4 +29,5 @@ public class Services {
 
     @JsonIgnore
     private HospitalCilinic hospitalCilinic;
+    private List<Appointment> appointments;
 }

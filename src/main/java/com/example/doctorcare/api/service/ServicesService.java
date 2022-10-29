@@ -35,4 +35,8 @@ public class ServicesService {
     public ServicesEntity findById(Long id){
         return servicesRepository.findById(id).get();
     }
+
+    public void save(Services services) {
+        servicesRepository.save(serviceMapper.convertToEntity(services));
+    }
 }

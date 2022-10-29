@@ -2,9 +2,10 @@ server:
   port: 5000
 spring:
   datasource:
-    url: jdbc:mysql://awseb-e-3je5tvza2p-stack-awsebrdsdatabase-8rln86sv4uy2.cpvhoocvx4fq.ap-southeast-1.rds.amazonaws.com:3306/booking_care
+    url: jdbc:mysql://localhost:3306/booking_care
     username: root
-    password: baoanh123
+    password: Speedypro99
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
