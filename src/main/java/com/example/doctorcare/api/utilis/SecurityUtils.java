@@ -9,19 +9,17 @@ import com.example.doctorcare.api.domain.dto.request.LoginRequest;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.repository.UserRepository;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
-/**
- *
- * @author ldanh
- */
 public class SecurityUtils {
 
     public static List<String> getRolesOfUser() {
@@ -65,12 +63,8 @@ public class SecurityUtils {
         return encoder.encode(password);
     }
 
-    public static boolean checkInfoLogin(LoginRequest loginRequest, UserDetailsServiceImpl userDetailsService){
+    public static boolean checkInfoLogin(LoginRequest loginRequest, UserDetailsServiceImpl userDetailsService,PasswordEncoder encoder){
         Optional<UserEntity> user = userDetailsService.findByUsername(loginRequest.getUsername());
-        if(user.isPresent()){
-            if(user.get().getPassword().equals(encrytePassword(loginRequest.getPassword())));
-            return true;
-        }
-        else return false;
+        return user.filter(userEntity -> encoder.matches(loginRequest.getPassword(), userEntity.getPassword())).isPresent();
     }
 }

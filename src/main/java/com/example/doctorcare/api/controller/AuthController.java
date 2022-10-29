@@ -58,7 +58,7 @@ public class AuthController {
     @PostMapping("/sign_in")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        if (SecurityUtils.checkInfoLogin(loginRequest,userDetailsService)) {
+        if (SecurityUtils.checkInfoLogin(loginRequest,userDetailsService,encoder)) {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
