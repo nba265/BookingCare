@@ -1,7 +1,9 @@
+server:
+  port: 5000
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/booking_care
+    url: jdbc:mysql://awseb-e-csmhgpwrke-stack-awsebrdsdatabase-bkzc5dm14pb0:3306/booking_care
     username: root
     password: baoanh123
   jpa:
