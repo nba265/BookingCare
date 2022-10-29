@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/booking_care
     username: root
-    password: baoanh123
+    password: Speedypro99
   jpa:
     hibernate:
       ddl-auto: update

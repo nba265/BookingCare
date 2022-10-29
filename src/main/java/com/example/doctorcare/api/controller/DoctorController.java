@@ -2,6 +2,7 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
+import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
 import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
 import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +38,14 @@ public class DoctorController {
             TimeDoctors timeDoctors= new TimeDoctors();
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             timeDoctors.setDoctor(userMapper.convertToDto(user));
-            timeDoctors.setTimeStart(timeDoctors1.getTimeStart());
-            timeDoctors.setTimeEnd(timeDoctors1.getTimeEnd());
-            timeDoctors.setDate(timeDoctors1.getCreateDate());
+            if(timeDoctors1.getId()==null){
+                timeDoctors.setId(0L);
+            }
+            timeDoctors.setTimeStart(LocalTime.parse(timeDoctors1.getTimeStart()));
+            timeDoctors.setTimeEnd(LocalTime.parse(timeDoctors1.getTimeEnd()));
+            timeDoctors.setDate(LocalDate.parse(timeDoctors1.getCreateDate()));
+            User user1=userMapper.convertToDto(user);
+            timeDoctors.setDoctor(userMapper.convertToDto(user));
             timeDoctorService.save(timeDoctors);
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,10 +74,11 @@ public class DoctorController {
         try {
             TimeDoctors timeDoctors= new TimeDoctors();
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
+
             timeDoctors.setDoctor(userMapper.convertToDto(user));
-            timeDoctors.setTimeStart(timeDoctors1.getTimeStart());
-            timeDoctors.setTimeEnd(timeDoctors1.getTimeEnd());
-            timeDoctors.setDate(timeDoctors1.getCreateDate());
+            timeDoctors.setTimeStart(LocalTime.parse(timeDoctors1.getTimeStart()));
+            timeDoctors.setTimeEnd(LocalTime.parse(timeDoctors1.getTimeEnd()));
+            timeDoctors.setDate(LocalDate.parse(timeDoctors1.getCreateDate()));
             timeDoctorService.save(timeDoctors);
         } catch (Exception e) {
             e.printStackTrace();

@@ -19,6 +19,7 @@ public class TimeDoctorService {
     @Autowired
     private TimeDoctorsMapper timeDoctorsMapper;
     public void save(TimeDoctors timeDoctors){
+
         timeDoctorRepository.save(timeDoctorsMapper.convertToEntity(timeDoctors));
     }
     public List<TimeDoctors> findAllByDoctor(Long doctorId){
