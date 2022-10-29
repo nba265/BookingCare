@@ -14,6 +14,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignupRequest {
+
+    @NotBlank
+    @Size(min = 3, max = 50)
+    private String fullName;
+
     @NotBlank
     @Size(min = 3, max = 20)
     private String username;

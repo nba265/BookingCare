@@ -102,6 +102,8 @@ public class AuthController {
         UserEntity user = new UserEntity(signUpRequest.getEmail(),signUpRequest.getUsername(),
                 encoder.encode(signUpRequest.getPassword()));
 
+        user.setFullName(signUpRequest.getFullName());
+
         user.getUserRoles().add(roleRepository.findByRole(Role.ROLE_USER).get());
 
         user.setStatus(UserStatus.ACTIVE);
