@@ -32,10 +32,10 @@ public class TimeDoctors {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
-    private AppointmentsEntity appointments;
+    private Appointment appointments;
 
     @JsonIgnore
-    private UserEntity doctor;
+    private User doctor;
 
     @Override
     public String toString() {

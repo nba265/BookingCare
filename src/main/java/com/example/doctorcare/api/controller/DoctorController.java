@@ -2,7 +2,9 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
+import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
 import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
+import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.service.TimeDoctorService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
@@ -28,11 +30,14 @@ public class DoctorController {
     UserMapper userMapper;
 
     @PostMapping("/create_time_doctors")
-    public ResponseEntity<?> createTimeDoctor(@RequestBody TimeDoctors timeDoctors) {
+    public ResponseEntity<?> createTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
         try {
+            TimeDoctors timeDoctors= new TimeDoctors();
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-            timeDoctors.setDoctor(user);
-
+            timeDoctors.setDoctor(userMapper.convertToDto(user));
+            timeDoctors.setTimeStart(timeDoctors1.getTimeStart());
+            timeDoctors.setTimeEnd(timeDoctors1.getTimeEnd());
+            timeDoctors.setDate(timeDoctors1.getCreateDate());
             timeDoctorService.save(timeDoctors);
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,10 +62,14 @@ public class DoctorController {
     }
 
     @PutMapping("/edit_time_doctors")
-    public ResponseEntity<?> editTimeDoctor(@RequestBody TimeDoctors timeDoctors) {
+    public ResponseEntity<?> editTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
         try {
+            TimeDoctors timeDoctors= new TimeDoctors();
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-            timeDoctors.setDoctor(user);
+            timeDoctors.setDoctor(userMapper.convertToDto(user));
+            timeDoctors.setTimeStart(timeDoctors1.getTimeStart());
+            timeDoctors.setTimeEnd(timeDoctors1.getTimeEnd());
+            timeDoctors.setDate(timeDoctors1.getCreateDate());
             timeDoctorService.save(timeDoctors);
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,14 +82,14 @@ public class DoctorController {
     public ResponseEntity<?> editTimeDoctor(@RequestParam("id") Long id) {
         TimeDoctors timeDoctors = timeDoctorService.findById(id);
         try {
-            System.out.println(timeDoctors.getTimeStart());
             return new ResponseEntity<>(new TimeDoctor(timeDoctors.getId(), timeDoctors.getTimeStart().toString(), timeDoctors.getTimeEnd().toString(), timeDoctors.getDate().toString()), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
-    @DeleteMapping ("/delete_time_doctors")
+
+    @DeleteMapping("/delete_time_doctors")
     public ResponseEntity<?> deleteTimeDoctor(@RequestParam("id") Long id) {
         try {
             timeDoctorService.deleteById(id);
@@ -90,4 +99,5 @@ public class DoctorController {
         }
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
+
 }
