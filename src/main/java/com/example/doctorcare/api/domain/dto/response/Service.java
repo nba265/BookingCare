@@ -1,21 +1,19 @@
-package com.example.doctorcare.api.domain.dto;
+package com.example.doctorcare.api.domain.dto.response;
 
-import com.example.doctorcare.api.domain.entity.HospitalCilinicEntity;
 import com.example.doctorcare.api.enums.ServiceEnum;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Services {
-
+public class Service {
     private Long id;
 
     private String name;
@@ -24,8 +22,6 @@ public class Services {
 
     private Double price;
 
-    @JsonIgnore
-    private HospitalCilinic hospitalCilinic;
     @Enumerated(EnumType.STRING)
     private ServiceEnum serviceEnum;
 }

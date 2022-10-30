@@ -15,7 +15,8 @@ public class TimeDoctorsMapper extends BaseMapper<TimeDoctorsEntity, TimeDoctors
         UserMapper userMapper = new UserMapper();
         AppointmentMapper appointmentMapper= new AppointmentMapper();
         BeanUtils.copyProperties(dto,timeDoctorsEntity);
-        timeDoctorsEntity.setDoctor(userMapper.convertToEntity(dto.getDoctor()));
+        timeDoctorsEntity.setDoctor(dto.getDoctor());
+
         if(dto.getAppointments()!=null){
             timeDoctorsEntity.setAppointments(appointmentMapper.convertToEntity(dto.getAppointments()));
         }

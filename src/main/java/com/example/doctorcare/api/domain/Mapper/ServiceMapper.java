@@ -11,9 +11,12 @@ public class ServiceMapper extends BaseMapper<ServicesEntity, Services> {
 
     @Override
     public ServicesEntity convertToEntity(Services dto, Object... args) {
+        HospitalCilinicMapper hospitalCilinicMapper= new HospitalCilinicMapper();
         ServicesEntity servicesEntity = new ServicesEntity();
-        if (dto != null)
+        if (dto != null){
             BeanUtils.copyProperties(dto,servicesEntity);
+            servicesEntity.setHospitalCilinic(hospitalCilinicMapper.convertToEntity(dto.getHospitalCilinic()));
+        }
         return servicesEntity;
     }
 

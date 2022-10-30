@@ -18,5 +18,5 @@ public interface HospitalCilinicRepository extends CrudRepository<HospitalCilini
     Set<HospitalCilinicEntity> findByKeywords(@Param("keyword") String keyword);
 
     HospitalCilinicEntity findById(Long id);
-
+    HospitalCilinicEntity findByManager_Username(String username);
 }

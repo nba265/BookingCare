@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddTimeDoctor {
-
     private Long id;
     private String timeStart;
     private String timeEnd;
