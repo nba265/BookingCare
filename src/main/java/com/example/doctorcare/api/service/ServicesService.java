@@ -38,11 +38,15 @@ public class ServicesService {
     public ServicesEntity findById(Long id){
         return servicesRepository.findById(id).get();
     }
-    public void toggleStatus(String name,Long id){
-        ServicesEntity services= servicesRepository.findById(id).get();
-        if(!services.getServiceEnum().equals(ServiceEnum.valueOf(name))){
+
+    public void toggleStatus(String name,Long id) {
+        ServicesEntity services = servicesRepository.findById(id).get();
+        if (!services.getServiceEnum().equals(ServiceEnum.valueOf(name))) {
             services.setServiceEnum(ServiceEnum.valueOf(name));
             servicesRepository.save(services);
         }
     }
+
+
+
 }

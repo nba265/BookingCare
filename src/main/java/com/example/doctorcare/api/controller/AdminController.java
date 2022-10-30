@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RestController
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasRole('admin')")
 @RequestMapping("api/admin")
 public class AdminController {
     @Autowired

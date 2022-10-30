@@ -5,17 +5,28 @@ import com.example.doctorcare.api.domain.entity.ServicesEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
 public class ServiceMapper extends BaseMapper<ServicesEntity, Services> {
 
 
     @Override
     public ServicesEntity convertToEntity(Services dto, Object... args) {
-        HospitalCilinicMapper hospitalCilinicMapper= new HospitalCilinicMapper();
+        HospitalCilinicMapper hospitalCilinicMapper = new HospitalCilinicMapper();
         ServicesEntity servicesEntity = new ServicesEntity();
-        if (dto != null){
-            BeanUtils.copyProperties(dto,servicesEntity);
-            servicesEntity.setHospitalCilinic(hospitalCilinicMapper.convertToEntity(dto.getHospitalCilinic()));
+        if (dto != null) {
+            BeanUtils.copyProperties(dto, servicesEntity);
+            AppointmentMapper appointmentMapper = new AppointmentMapper();
+            if (dto != null)
+                BeanUtils.copyProperties(dto, servicesEntity);
+            if (dto != null) {
+                servicesEntity.setAppointmentsSet(appointmentMapper.convertToEntitySet(dto.getAppointments()));
+            }
+            if (dto != null) {
+
+                servicesEntity.setHospitalCilinic(hospitalCilinicMapper.convertToEntity(dto.getHospitalCilinic()));
+            }
         }
         return servicesEntity;
     }
