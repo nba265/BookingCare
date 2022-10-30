@@ -15,11 +15,13 @@ spring:
       hibernate:
         enable_lazy_load_no_trans : true
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
 bezkoder:
   app:
     jwtSecret: bezKoderSecretKey
     jwtExpirationMs: 3600000
     jwtRefreshExpirationMs: 86400000
+
 logging:
   level:
     org:

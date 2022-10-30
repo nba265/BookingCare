@@ -32,6 +32,7 @@ public class ManagerController {
         }
     }
 
+    @PostMapping("/addService")
     public ResponseEntity<?> addService(@RequestBody AddService addService) {
         try {
             Services services = new Services();
