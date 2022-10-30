@@ -25,7 +25,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class User {
 
-    private Long id;
+    private Integer id;
 
     private String email;
 

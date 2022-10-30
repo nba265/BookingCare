@@ -32,7 +32,6 @@ public class ServicesEntity {
     public ServicesEntity() {
     }
 
-
     public ServicesEntity(Long id, String name, String description, Double price, ServiceEnum serviceEnum, HospitalCilinicEntity hospitalCilinic, Set<AppointmentsEntity> appointmentsSet) {
         this.id = id;
         this.name = name;

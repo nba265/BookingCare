@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class ManagerController {
     @Autowired
 
+
     HospitalCilinicMapper hospitalCilinicMapper;
     @Autowired
     ServicesService servicesService;
@@ -64,12 +65,16 @@ public class ManagerController {
         }
     }
 
+
+
+
     @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital() {
         try {
             return new ResponseEntity<>(hospitalCilinicService.hospitalCilinicList(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
+
 
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -100,9 +105,13 @@ public class ManagerController {
             servicesService.toggleStatus(status, id);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Exception e) {
+
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @PostMapping("/addService")
 
     public ResponseEntity<?> addService(@RequestBody AddService addService) {
         try {

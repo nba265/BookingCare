@@ -32,12 +32,11 @@ public class ServicesService {
 
         return serviceMapper.convertToDtoList(servicesRepository.findAllByHospitalCilinic_Id(id));
     }
-    public void save(Services services){
-        servicesRepository.save(serviceMapper.convertToEntity(services));
-    }
+
     public ServicesEntity findById(Long id){
         return servicesRepository.findById(id).get();
     }
+
 
     public void toggleStatus(String name,Long id) {
         ServicesEntity services = servicesRepository.findById(id).get();
@@ -45,6 +44,11 @@ public class ServicesService {
             services.setServiceEnum(ServiceEnum.valueOf(name));
             servicesRepository.save(services);
         }
+    }
+
+    public void save(Services services) {
+        servicesRepository.save(serviceMapper.convertToEntity(services));
+
     }
 
 

@@ -2,7 +2,9 @@ server:
   port: 5000
 spring:
   datasource:
+
     driver-class-name: com.mysql.jdbc.Driver
+
     url: jdbc:mysql://awseb-e-62ifitjcry-stack-awsebrdsdatabase-owv4jqx3kuun.cpvhoocvx4fq.ap-southeast-1.rds.amazonaws.com:3306/ebdb
     username: root
     password: baoanh123
@@ -13,13 +15,15 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        enable_lazy_load_no_trans: true
+        enable_lazy_load_no_trans : true
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
 bezkoder:
   app:
     jwtSecret: bezKoderSecretKey
     jwtExpirationMs: 3600000
     jwtRefreshExpirationMs: 86400000
+
 logging:
   level:
     org:
@@ -28,4 +32,4 @@ logging:
         type:
           descriptor:
             spl:
-              BasicBinder: TRACE
+              BasicBinder : TRACE

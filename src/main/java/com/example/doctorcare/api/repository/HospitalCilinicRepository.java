@@ -19,4 +19,5 @@ public interface HospitalCilinicRepository extends CrudRepository<HospitalCilini
 
     HospitalCilinicEntity findById(Long id);
     HospitalCilinicEntity findByManager_Username(String username);
+
 }

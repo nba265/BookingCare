@@ -29,9 +29,12 @@ public class Services {
     @JsonIgnore
     private HospitalCilinic hospitalCilinic;
 
+
     @Enumerated(EnumType.STRING)
     private ServiceEnum serviceEnum;
 
     private List<Appointment> appointments;
+
+
 
 }

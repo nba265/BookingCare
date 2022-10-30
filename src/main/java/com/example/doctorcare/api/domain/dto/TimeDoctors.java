@@ -1,13 +1,17 @@
 package com.example.doctorcare.api.domain.dto;
 
+import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -31,7 +35,7 @@ public class TimeDoctors {
     private Appointment appointments;
 
     @JsonIgnore
-    private UserEntity doctor;
+    private User doctor;
 
     @Override
     public String toString() {

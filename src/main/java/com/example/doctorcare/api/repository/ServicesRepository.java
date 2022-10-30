@@ -13,5 +13,4 @@ public interface ServicesRepository extends CrudRepository<ServicesEntity,Intege
     Set<ServicesEntity> findAllByHospitalCilinic_Id(Long hospitalCilinic_id);
 
     Optional<ServicesEntity> findById(Long id);
-
 }

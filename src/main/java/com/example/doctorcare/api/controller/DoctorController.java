@@ -4,6 +4,7 @@ import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
 import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
+import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.service.TimeDoctorService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
@@ -13,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,18 +29,15 @@ public class DoctorController {
     @Autowired
     UserMapper userMapper;
 
-    @PostMapping("/create_edit_time_doctors")
+    @PostMapping("/create_time_doctors")
     public ResponseEntity<?> createTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
         try {
-            TimeDoctors timeDoctors = new TimeDoctors();
+            TimeDoctors timeDoctors= new TimeDoctors();
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-            timeDoctors.setDoctor(user);
-            if (timeDoctors1.getId() == null) {
-                timeDoctors.setId(0L);
-            } else timeDoctors.setId(timeDoctors1.getId());
-            timeDoctors.setTimeStart(LocalTime.parse(timeDoctors1.getTimeStart()));
-            timeDoctors.setTimeEnd(LocalTime.parse(timeDoctors1.getTimeEnd()));
-            timeDoctors.setDate(LocalDate.parse(timeDoctors1.getCreateDate()));
+            timeDoctors.setDoctor(userMapper.convertToDto(user));
+            timeDoctors.setTimeStart(timeDoctors1.getTimeStart());
+            timeDoctors.setTimeEnd(timeDoctors1.getTimeEnd());
+            timeDoctors.setDate(timeDoctors1.getCreateDate());
             timeDoctorService.save(timeDoctors);
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,6 +59,23 @@ public class DoctorController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PutMapping("/edit_time_doctors")
+    public ResponseEntity<?> editTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
+        try {
+            TimeDoctors timeDoctors= new TimeDoctors();
+            UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
+            timeDoctors.setDoctor(userMapper.convertToDto(user));
+            timeDoctors.setTimeStart(timeDoctors1.getTimeStart());
+            timeDoctors.setTimeEnd(timeDoctors1.getTimeEnd());
+            timeDoctors.setDate(timeDoctors1.getCreateDate());
+            timeDoctorService.save(timeDoctors);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @GetMapping("/display_edit_time_doctors")
