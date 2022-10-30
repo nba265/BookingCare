@@ -19,7 +19,7 @@ public class SpecialistEntity {
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name="hospital_cilinic_id")
-    private HospitalCilinicEntity hospitalCilinic;
+    private HospitalClinicEntity hospitalCilinic;
 
     public SpecialistEntity() {
     }
@@ -53,11 +53,11 @@ public class SpecialistEntity {
         this.userSet = userSet;
     }
 
-    public HospitalCilinicEntity getHospitalCilinic() {
+    public HospitalClinicEntity getHospitalCilinic() {
         return hospitalCilinic;
     }
 
-    public void setHospitalCilinic(HospitalCilinicEntity hospitalCilinic) {
+    public void setHospitalCilinic(HospitalClinicEntity hospitalCilinic) {
         this.hospitalCilinic = hospitalCilinic;
     }
 }

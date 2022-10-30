@@ -12,6 +12,7 @@ import com.example.doctorcare.api.enums.UserStatus;
 import com.example.doctorcare.api.repository.UserRepository;
 import com.example.doctorcare.api.repository.UserRoleRepository;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
+import com.example.doctorcare.api.utilis.RoleConst;
 import com.example.doctorcare.api.utilis.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,7 @@ public class AuthController {
     @PostMapping("/sign_in")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        if (SecurityUtils.checkInfoLogin(loginRequest,userDetailsService,encoder)) {
+        if (SecurityUtils.checkInfoLogin(loginRequest, userDetailsService, encoder)) {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -66,13 +67,14 @@ public class AuthController {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
 
+
             return ResponseEntity.ok(new JwtResponse(jwt,
                     userDetails.getId(),
                     userDetails.getUsername(),
                     userDetails.getEmail(),
-                    roles.stream().findFirst().get()));
-        }
-        else return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong Username or Password"));
+                    RoleConst.getRoleConst(roles.stream().findFirst().get()))
+            );
+        } else return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong Username or Password"));
     }
 
     @PostMapping("/sign_up")
@@ -90,7 +92,7 @@ public class AuthController {
         }
 
         // Create new user's account
-        UserEntity user = new UserEntity(signUpRequest.getEmail(),signUpRequest.getUsername(),
+        UserEntity user = new UserEntity(signUpRequest.getEmail(), signUpRequest.getUsername(),
                 encoder.encode(signUpRequest.getPassword()));
 
         user.setFullName(signUpRequest.getFullName());

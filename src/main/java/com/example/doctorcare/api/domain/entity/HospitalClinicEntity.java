@@ -1,13 +1,11 @@
 package com.example.doctorcare.api.domain.entity;
 
-import com.example.doctorcare.api.domain.dto.Specialist;
-
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "hospital_cilinic")
-public class HospitalCilinicEntity {
+public class HospitalClinicEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -28,10 +26,10 @@ public class HospitalCilinicEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch =FetchType.LAZY, mappedBy = "hospitalCilinic")
     private Set<SpecialistEntity> specialists;
 
-    public HospitalCilinicEntity() {
+    public HospitalClinicEntity() {
     }
 
-    public HospitalCilinicEntity(Long id, String name) {
+    public HospitalClinicEntity(Long id, String name) {
         this.id = id;
         this.name = name;
     }

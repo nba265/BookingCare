@@ -7,24 +7,19 @@ package com.example.doctorcare.api.service;
 
 
 import com.example.doctorcare.api.config.security.Services.UserDetailsImpl;
-import com.example.doctorcare.api.domain.Mapper.HospitalCilinicMapper;
+import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.SpecialistMapper;
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.entity.UserEntity;
-import com.example.doctorcare.api.domain.entity.UserRoleEntity;
-import com.example.doctorcare.api.enums.Gender;
 import com.example.doctorcare.api.enums.UserStatus;
 import com.example.doctorcare.api.repository.UserRepository;
 import com.example.doctorcare.api.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -42,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserMapper userMapper;
 
     @Autowired
-    private HospitalCilinicMapper hospitalCilinicMapper;
+    private HospitalClinicMapper hospitalClinicMapper;
 
     @Autowired
     private SpecialistMapper specialistMapper;
@@ -122,8 +117,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public User findDoctorById(Long doctorId){
         UserEntity userEntity = userRepository.findById(doctorId).get();
         User user = userMapper.convertToDto(userEntity);
-        user.setHospitalCilinicDoctor(hospitalCilinicMapper.convertToDto(userEntity.getHospitalCilinicDoctor()));
-        user.setHospitalCilinicMangager(hospitalCilinicMapper.convertToDto(userEntity.getHospitalCilinicMangager()));
+        user.setHospitalClinicDoctor(hospitalClinicMapper.convertToDto(userEntity.getHospitalCilinicDoctor()));
+        user.setHospitalClinicMangager(hospitalClinicMapper.convertToDto(userEntity.getHospitalCilinicMangager()));
         user.setSpecialist(specialistMapper.convertToDto(userEntity.getSpecialist()));
         return user;
     }

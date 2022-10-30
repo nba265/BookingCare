@@ -1,6 +1,5 @@
 package com.example.doctorcare.api.domain.dto;
 
-import com.example.doctorcare.api.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HospitalCilinic {
+public class HospitalClinic {
 
     private Long id;
 

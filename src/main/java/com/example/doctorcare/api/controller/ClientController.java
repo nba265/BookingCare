@@ -2,14 +2,10 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.TimeDoctorsMapper;
-import com.example.doctorcare.api.domain.dto.Appointment;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.dto.request.MakeAppointment;
-import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
-import com.example.doctorcare.api.domain.dto.response.AppointmentCustomer;
-import com.example.doctorcare.api.domain.dto.response.DoctorSearchInfo;
-import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
+import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.CustomersEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
@@ -34,7 +30,7 @@ import java.util.Set;
 public class ClientController {
 
     @Autowired
-    HospitalCilinicService hospitalCilinicService;
+    HospitalClinicService hospitalClinicService;
 
     @Autowired
     SpecialistService specialistService;
@@ -57,20 +53,28 @@ public class ClientController {
     @Autowired
     AppointmentMapper appointmentMapper;
 
-    @PostMapping("/listHospital")
+    @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital() {
         try {
-            return new ResponseEntity<>(hospitalCilinicService.hospitalCilinicList(), HttpStatus.OK);
+            List<HospitalClinicInfoResponse> responses = new ArrayList<>();
+            hospitalClinicService.hospitalCilinicList().forEach(hospitalCilinic -> {
+                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(),hospitalCilinic.getName()));
+            });
+            return new ResponseEntity<>(responses, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/listDoctor")
     public ResponseEntity<?> findDoctorByHospitalCilinic(@RequestParam("hos_id") Long hosId) {
         try {
-            return new ResponseEntity<>(userDetailsService.findDoctorByHospitalCilinic(hosId), HttpStatus.OK);
+            List<DoctorInfoResponse> doctorInfoResponses = new ArrayList<>();
+            userDetailsService.findDoctorByHospitalCilinic(hosId).forEach(user -> {
+                doctorInfoResponses.add(new DoctorInfoResponse(user.getId(),user.getFullName(),user.getGender(),user.getDegree(),user.getNationality(),user.getExperience(),user.getSpecialist()));
+            });
+            return new ResponseEntity<>(doctorInfoResponses, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,7 +84,11 @@ public class ClientController {
     @GetMapping("/searchHospital")
     public ResponseEntity<?> searchHospital(@RequestParam("keyword") String keyword) {
         try {
-            return new ResponseEntity<>(hospitalCilinicService.findByKeywords(keyword), HttpStatus.OK);
+            List<HospitalClinicInfoResponse> responses = new ArrayList<>();
+            hospitalClinicService.findByKeywords(keyword).forEach(hospitalCilinic -> {
+                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(),hospitalCilinic.getName()));
+            });
+            return new ResponseEntity<>(responses, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -100,7 +108,11 @@ public class ClientController {
     @GetMapping("/findDoctor")
     public ResponseEntity<?> findDoctor(@RequestParam("hos_id") Long hosId, @RequestParam("spec_id") Long specId, @RequestParam("gender") String gender, @RequestParam("keyword") String keyword) {
         try {
-            return new ResponseEntity<>(userDetailsService.findDoctor(hosId, specId, gender, keyword), HttpStatus.OK);
+            List<DoctorInfoResponse> doctorInfoResponses = new ArrayList<>();
+            userDetailsService.findDoctor(hosId, specId, gender, keyword).forEach(user -> {
+                doctorInfoResponses.add(new DoctorInfoResponse(user.getId(),user.getFullName(),user.getGender(),user.getDegree(),user.getNationality(),user.getExperience(),user.getSpecialist()));
+            });
+            return new ResponseEntity<>(doctorInfoResponses, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -123,8 +135,8 @@ public class ClientController {
             DoctorSearchInfo doctorSearchInfo = new DoctorSearchInfo();
             User doctor = userDetailsService.findDoctorById(doctorId);
             doctorSearchInfo.setDoctorName(doctor.getFullName());
-            doctorSearchInfo.setServicesList(servicesService.findAllByHospitalCilinic_Id(doctor.getHospitalCilinicDoctor().getId()));
-            doctorSearchInfo.setHospName(doctor.getHospitalCilinicDoctor().getName());
+            doctorSearchInfo.setServicesList(servicesService.findAllByHospitalCilinic_Id(doctor.getHospitalClinicDoctor().getId()));
+            doctorSearchInfo.setHospName(doctor.getHospitalClinicDoctor().getName());
             doctorSearchInfo.setSpecialist(doctor.getSpecialist().getName());
             doctorSearchInfo.setDoctorId(doctorId);
             List<TimeDoctors> timeDoctorsList = timeDoctorService.findFreeTimeByDoctorId(doctorId);
@@ -179,7 +191,7 @@ public class ClientController {
                 AppoinmentHistory appointmentHistory = new AppoinmentHistory();
                 appointmentHistory.setId(appointments.getId());
                 appointmentHistory.setDescription(appointmentHistory.getDescription());
-                appointmentHistory.setHospitalName(hospitalCilinicService.findByAppointment_Id(appointments.getId()).getName());
+                appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId()).getName());
                 appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
                 appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
                 appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());

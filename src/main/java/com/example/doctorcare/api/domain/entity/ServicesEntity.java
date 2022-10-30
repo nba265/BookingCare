@@ -24,7 +24,7 @@ public class ServicesEntity {
     private ServiceEnum serviceEnum;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_cilinic_id")
-    private HospitalCilinicEntity hospitalCilinic;
+    private HospitalClinicEntity hospitalCilinic;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "services",fetch = FetchType.LAZY)
     private Set<AppointmentsEntity> appointmentsSet;
@@ -32,7 +32,7 @@ public class ServicesEntity {
     public ServicesEntity() {
     }
 
-    public ServicesEntity(Long id, String name, String description, Double price, ServiceEnum serviceEnum, HospitalCilinicEntity hospitalCilinic, Set<AppointmentsEntity> appointmentsSet) {
+    public ServicesEntity(Long id, String name, String description, Double price, ServiceEnum serviceEnum, HospitalClinicEntity hospitalCilinic, Set<AppointmentsEntity> appointmentsSet) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -82,11 +82,11 @@ public class ServicesEntity {
         this.price = price;
     }
 
-    public HospitalCilinicEntity getHospitalCilinic() {
+    public HospitalClinicEntity getHospitalCilinic() {
         return hospitalCilinic;
     }
 
-    public void setHospitalCilinic(HospitalCilinicEntity hospitalCilinic) {
+    public void setHospitalCilinic(HospitalClinicEntity hospitalCilinic) {
         this.hospitalCilinic = hospitalCilinic;
     }
 

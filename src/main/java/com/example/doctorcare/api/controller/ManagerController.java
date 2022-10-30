@@ -1,16 +1,16 @@
 package com.example.doctorcare.api.controller;
 
-import com.example.doctorcare.api.domain.Mapper.HospitalCilinicMapper;
+import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
 import com.example.doctorcare.api.domain.dto.Services;
 import com.example.doctorcare.api.domain.dto.request.AddService;
 import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
 import com.example.doctorcare.api.domain.dto.response.AppointmentCustomer;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
-import com.example.doctorcare.api.domain.entity.HospitalCilinicEntity;
+import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.enums.ServiceEnum;
 import com.example.doctorcare.api.service.AppointmentsService;
-import com.example.doctorcare.api.service.HospitalCilinicService;
+import com.example.doctorcare.api.service.HospitalClinicService;
 import com.example.doctorcare.api.service.ServicesService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import com.example.doctorcare.api.utilis.SecurityUtils;
@@ -34,11 +34,11 @@ public class ManagerController {
     @Autowired
 
 
-    HospitalCilinicMapper hospitalCilinicMapper;
+    HospitalClinicMapper hospitalClinicMapper;
     @Autowired
     ServicesService servicesService;
     @Autowired
-    HospitalCilinicService hospitalCilinicService;
+    HospitalClinicService hospitalClinicService;
     @Autowired
     ServiceMapper serviceMapper;
 
@@ -50,9 +50,9 @@ public class ManagerController {
     @GetMapping("/appointmentHistory")
     public ResponseEntity<?> appointmentHistory() {
         try {
-            HospitalCilinicEntity hospitalCilinicEntity = hospitalCilinicService.findByManagerUsername(SecurityUtils.getUsername());
+            HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername());
             List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
-            Set<AppointmentsEntity> appointmentHistorySet = appointmentsService.findByHospital(hospitalCilinicEntity.getId());
+            Set<AppointmentsEntity> appointmentHistorySet = appointmentsService.findByHospital(hospitalClinicEntity.getId());
             System.out.println(Arrays.toString(appointmentHistorySet.toArray()));
             appointmentHistorySet.forEach(appointments -> {
                 AppoinmentHistory appointmentHistory = new AppoinmentHistory();
@@ -92,7 +92,7 @@ public class ManagerController {
     @PostMapping("/create_edit_service")
     public ResponseEntity<?> createTimeService(@RequestBody AddService service) {
         try {
-            HospitalCilinicEntity hospitalCilinicEntity = hospitalCilinicService.findByManagerUsername(SecurityUtils.getUsername());
+            HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername());
             Services services = new Services();
             if (service.getId() == null) {
                 services.setId(0L);
@@ -100,7 +100,7 @@ public class ManagerController {
             services.setName(service.getName());
             services.setPrice(service.getPrice());
             services.setDescription(service.getDescription());
-            services.setHospitalCilinic(hospitalCilinicEntity);
+            services.setHospitalCilinic(hospitalClinicEntity);
             if (services.getServiceEnum() == null) {
                 services.setServiceEnum(ServiceEnum.AVAILABLE);
             }
@@ -116,7 +116,7 @@ public class ManagerController {
     @GetMapping("/get_all_service")
     public ResponseEntity<?> getAllService() {
         try {
-            return new ResponseEntity<>(servicesService.findAllByHospitalCilinic_Id(hospitalCilinicService.findByManagerUsername(SecurityUtils.getUsername()).getId()), HttpStatus.OK);
+            return new ResponseEntity<>(servicesService.findAllByHospitalCilinic_Id(hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername()).getId()), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -127,7 +127,7 @@ public class ManagerController {
     @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital() {
         try {
-            return new ResponseEntity<>(hospitalCilinicService.hospitalCilinicList(), HttpStatus.OK);
+            return new ResponseEntity<>(hospitalClinicService.hospitalCilinicList(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -174,7 +174,7 @@ public class ManagerController {
             services.setName(addService.getName());
             services.setDescription(addService.getName());
             services.setPrice(addService.getPrice());
-            services.setHospitalCilinic(hospitalCilinicService.findById(addService.getId()));
+            services.setHospitalCilinic(hospitalClinicService.findById(addService.getId()));
             servicesService.save(services);
         } catch (Exception e
         ) {

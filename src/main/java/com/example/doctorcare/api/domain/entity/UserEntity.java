@@ -8,7 +8,6 @@ package com.example.doctorcare.api.domain.entity;
 
 import com.example.doctorcare.api.enums.Gender;
 import com.example.doctorcare.api.enums.UserStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -74,11 +73,11 @@ public class UserEntity implements Serializable {
     private SpecialistEntity specialist;
 
     @OneToOne(mappedBy = "manager", cascade = CascadeType.ALL)
-    private HospitalCilinicEntity hospitalCilinicMangager;
+    private HospitalClinicEntity hospitalCilinicMangager;
 
     @ManyToOne(cascade =  CascadeType.ALL)
     @JoinColumn(name = "hospital_cilinic_id")
-    private HospitalCilinicEntity hospitalCilinicDoctor;
+    private HospitalClinicEntity hospitalCilinicDoctor;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "doctor")
     private Set<TimeDoctorsEntity> timeDoctors;
@@ -222,19 +221,19 @@ public class UserEntity implements Serializable {
         this.specialist = specialist;
     }
 
-    public HospitalCilinicEntity getHospitalCilinicMangager() {
+    public HospitalClinicEntity getHospitalCilinicMangager() {
         return hospitalCilinicMangager;
     }
 
-    public void setHospitalCilinicMangager(HospitalCilinicEntity hospitalCilinicMangager) {
+    public void setHospitalCilinicMangager(HospitalClinicEntity hospitalCilinicMangager) {
         this.hospitalCilinicMangager = hospitalCilinicMangager;
     }
 
-    public HospitalCilinicEntity getHospitalCilinicDoctor() {
+    public HospitalClinicEntity getHospitalCilinicDoctor() {
         return hospitalCilinicDoctor;
     }
 
-    public void setHospitalCilinicDoctor(HospitalCilinicEntity hospitalCilinicDoctor) {
+    public void setHospitalCilinicDoctor(HospitalClinicEntity hospitalCilinicDoctor) {
         this.hospitalCilinicDoctor = hospitalCilinicDoctor;
     }
 
