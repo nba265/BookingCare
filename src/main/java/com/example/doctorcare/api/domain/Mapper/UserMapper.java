@@ -15,6 +15,8 @@ public class UserMapper extends BaseMapper<UserEntity, User> {
 
     TimeDoctorsMapper timeDoctorsMapper;
 
+    AppointmentMapper appointmentMapper;
+
 
     @PostConstruct
     public void init() {
@@ -27,13 +29,17 @@ public class UserMapper extends BaseMapper<UserEntity, User> {
         UserEntity userEntity = new UserEntity();
         userRoleMapper = new UserRoleMapper();
         timeDoctorsMapper = new TimeDoctorsMapper();
+        appointmentMapper = new AppointmentMapper();
         if (dto != null) {
-            BeanUtils.copyProperties(dto, userEntity, "timeDoctors", "userRoles");
+            BeanUtils.copyProperties(dto, userEntity, "timeDoctors", "userRoles", "appointments");
             if (dto.getUserRoles() != null && !dto.getUserRoles().isEmpty()) {
                 userEntity.setUserRoles(userRoleMapper.convertToEntitySet(dto.getUserRoles()));
             }
             if (dto.getTimeDoctors() != null && !dto.getTimeDoctors().isEmpty()) {
                 userEntity.setTimeDoctors(timeDoctorsMapper.convertToEntitySet(dto.getTimeDoctors()));
+            }
+            if (dto.getAppointments() != null && !dto.getAppointments().isEmpty()) {
+                userEntity.setAppointmentsEntities(appointmentMapper.convertToEntitySet(dto.getAppointments()));
             }
         }
         return userEntity;
@@ -44,6 +50,7 @@ public class UserMapper extends BaseMapper<UserEntity, User> {
         User user = new User();
         userRoleMapper = new UserRoleMapper();
         timeDoctorsMapper = new TimeDoctorsMapper();
+        appointmentMapper = new AppointmentMapper();
         if (entity != null) {
             BeanUtils.copyProperties(entity, user, "timeDoctors", "userRoles");
             if (entity.getUserRoles() != null && !entity.getUserRoles().isEmpty()) {
@@ -51,6 +58,9 @@ public class UserMapper extends BaseMapper<UserEntity, User> {
             }
             if (entity.getTimeDoctors() != null && !entity.getTimeDoctors().isEmpty()) {
                 user.setTimeDoctors(timeDoctorsMapper.convertToDtoList(entity.getTimeDoctors()));
+            }
+            if (entity.getAppointmentsEntities() != null && !entity.getAppointmentsEntities().isEmpty()) {
+                user.setAppointments(appointmentMapper.convertToDtoList(entity.getAppointmentsEntities()));
             }
         }
         return user;

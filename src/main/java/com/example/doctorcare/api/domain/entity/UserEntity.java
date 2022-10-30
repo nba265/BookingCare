@@ -83,6 +83,9 @@ public class UserEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "doctor")
     private Set<TimeDoctorsEntity> timeDoctors;
 
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "user")
+    private Set<AppointmentsEntity> appointmentsEntities;
+
     public UserEntity() {
     }
 
@@ -257,5 +260,13 @@ public class UserEntity implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Set<AppointmentsEntity> getAppointmentsEntities() {
+        return appointmentsEntities;
+    }
+
+    public void setAppointmentsEntities(Set<AppointmentsEntity> appointmentsEntities) {
+        this.appointmentsEntities = appointmentsEntities;
     }
 }

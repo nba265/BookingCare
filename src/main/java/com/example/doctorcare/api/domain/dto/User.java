@@ -62,6 +62,6 @@ public class User {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createDate;
 
-
+    private List<Appointment> appointments  = new ArrayList<>();
 
 }

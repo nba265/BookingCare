@@ -38,6 +38,10 @@ public class AppointmentsEntity {
     @JsonIgnore
     private TimeDoctorsEntity timeDoctors;
 
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     public AppointmentsEntity() {
     }
 
@@ -111,5 +115,13 @@ public class AppointmentsEntity {
 
     public void setTimeDoctors(TimeDoctorsEntity timeDoctors) {
         this.timeDoctors = timeDoctors;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 }

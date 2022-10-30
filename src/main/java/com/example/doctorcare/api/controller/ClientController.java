@@ -5,6 +5,7 @@ import com.example.doctorcare.api.domain.Mapper.TimeDoctorsMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.dto.request.MakeAppointment;
+import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
 import com.example.doctorcare.api.domain.dto.response.DoctorSearchInfo;
 import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -112,7 +115,7 @@ public class ClientController {
         }
     }*/
 
-    @GetMapping("/booking_service_datetime")
+    @GetMapping("/bookingServiceDatetime")
     public ResponseEntity<?> bookingServiceAndDatetime(@RequestParam("doctor_id") Long doctorId) {
         try {
             DoctorSearchInfo doctorSearchInfo = new DoctorSearchInfo();
@@ -138,7 +141,7 @@ public class ClientController {
         }
     }
 
-    @PostMapping("/make_appointment")
+    @PostMapping("/makeAppointment")
     public ResponseEntity<?> makeAppointment(@RequestBody MakeAppointment makeAppointment) {
         try {
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
@@ -159,6 +162,28 @@ public class ClientController {
             appointments.setDescription(makeAppointment.getDescription());
             appointmentsService.save(appointments);
             return new ResponseEntity<>(appointmentMapper.convertToDto(appointments), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/appointmentHistory")
+    public ResponseEntity<?> appointmentHistory() {
+        try {
+            UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
+            List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
+            Set<AppointmentsEntity> appointmentHistorySet = user.getAppointmentsEntities();
+            appointmentHistorySet.forEach(appointments -> {
+                AppoinmentHistory appointmentHistory = new AppoinmentHistory();
+                appointmentHistory.setId(appointments.getId());
+                appointmentHistory.setDescription(appointmentHistory.getDescription());
+                appointmentHistory.setHospitalName(hospitalCilinicService.findByAppointment_Id(appointments.getId()).getName());
+                appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
+                appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
+                appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                appointmentHistories.add(appointmentHistory);
+            });
+            return new ResponseEntity<>(appointmentHistories, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

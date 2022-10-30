@@ -13,14 +13,17 @@ public class AppointmentMapper extends  BaseMapper<AppointmentsEntity, Appointme
     CustomerMapper customerMapper;
 
     TimeDoctorsMapper timeDoctorsMapper;
+
+    UserMapper userMapper;
     @Override
     public AppointmentsEntity convertToEntity(Appointment dto, Object... args) {
         serviceMapper = new ServiceMapper();
         customerMapper = new CustomerMapper();
         timeDoctorsMapper = new TimeDoctorsMapper();
+        userMapper = new UserMapper();
         AppointmentsEntity appointments = new AppointmentsEntity();
         if (dto != null){
-            BeanUtils.copyProperties(dto,appointments,"services","customers","timeDoctors");
+            BeanUtils.copyProperties(dto,appointments,"services","customers","timeDoctors","user");
         }
         assert dto != null;
         if (dto.getServices() != null)
@@ -29,6 +32,7 @@ public class AppointmentMapper extends  BaseMapper<AppointmentsEntity, Appointme
             appointments.setTimeDoctors(timeDoctorsMapper.convertToEntity(dto.getTimeDoctors()));
         if (dto.getCustomer() != null)
             appointments.setCustomers(customerMapper.convertToEntity(dto.getCustomer()));
+        appointments.setUser(userMapper.convertToEntity(dto.getUser()));
         return appointments ;
     }
 
@@ -37,9 +41,10 @@ public class AppointmentMapper extends  BaseMapper<AppointmentsEntity, Appointme
         serviceMapper = new ServiceMapper();
         customerMapper = new CustomerMapper();
         timeDoctorsMapper = new TimeDoctorsMapper();
+        userMapper = new UserMapper();
         Appointment appointments = new Appointment();
         if (entity != null){
-            BeanUtils.copyProperties(entity,appointments,"services","customers","timeDoctors");
+            BeanUtils.copyProperties(entity,appointments,"services","customers","timeDoctors","user");
         }
         assert entity != null;
         if (entity.getServices() != null)
@@ -48,6 +53,7 @@ public class AppointmentMapper extends  BaseMapper<AppointmentsEntity, Appointme
             appointments.setTimeDoctors(timeDoctorsMapper.convertToDto(entity.getTimeDoctors()));
         if (entity.getCustomers() != null)
             appointments.setCustomer(customerMapper.convertToDto(entity.getCustomers()));
+        appointments.setUser(userMapper.convertToDto(entity.getUser()));
         return appointments ;
     }
 }

@@ -56,4 +56,8 @@ public class HospitalCilinicService {
         return hospitalCilinicMapper.convertToDto(userRepository.findById(docId).getHospitalCilinicDoctor());
     }
 
+    public HospitalCilinic findByAppointment_Id(Long id){
+        return hospitalCilinicMapper.convertToDto(hospitalCilinicRepository.findByAppointment_Id(id));
+    }
+
 }

@@ -19,4 +19,7 @@ public interface HospitalCilinicRepository extends CrudRepository<HospitalCilini
 
     HospitalCilinicEntity findById(Long id);
 
+    @Query(value = "select h from HospitalCilinicEntity h join h.doctor d join d.timeDoctors t where t.appointments.id = ?1 ")
+    HospitalCilinicEntity findByAppointment_Id(Long id);
+
 }

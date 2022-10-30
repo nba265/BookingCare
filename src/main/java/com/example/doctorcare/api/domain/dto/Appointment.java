@@ -35,4 +35,6 @@ public class Appointment {
 
     @JsonIgnore
     private TimeDoctors timeDoctors;
+
+    private User user;
 }
