@@ -18,6 +18,7 @@ public interface HospitalCilinicRepository extends CrudRepository<HospitalCilini
     Set<HospitalCilinicEntity> findByKeywords(@Param("keyword") String keyword);
 
     HospitalCilinicEntity findById(Long id);
+    HospitalCilinicEntity findByManager_Username(String username);
 
     @Query(value = "select h from HospitalCilinicEntity h join h.doctor d join d.timeDoctors t where t.appointments.id = ?1 ")
     HospitalCilinicEntity findByAppointment_Id(Long id);

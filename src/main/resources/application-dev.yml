@@ -2,10 +2,12 @@ server:
   port: 5000
 spring:
   datasource:
+
+    driver-class-name: com.mysql.jdbc.Driver
+
     url: jdbc:mysql://awseb-e-62ifitjcry-stack-awsebrdsdatabase-owv4jqx3kuun.cpvhoocvx4fq.ap-southeast-1.rds.amazonaws.com:3306/ebdb
     username: root
     password: baoanh123
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update

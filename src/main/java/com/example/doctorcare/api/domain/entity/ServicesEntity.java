@@ -1,5 +1,7 @@
 package com.example.doctorcare.api.domain.entity;
 
+import com.example.doctorcare.api.enums.ServiceEnum;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -18,7 +20,8 @@ public class ServicesEntity {
 
     @Column(nullable = false)
     private Double price;
-
+    @Enumerated(EnumType.STRING)
+    private ServiceEnum serviceEnum;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_cilinic_id")
     private HospitalCilinicEntity hospitalCilinic;
@@ -29,11 +32,22 @@ public class ServicesEntity {
     public ServicesEntity() {
     }
 
-    public ServicesEntity(Long id, String name, String description, Double price) {
+    public ServicesEntity(Long id, String name, String description, Double price, ServiceEnum serviceEnum, HospitalCilinicEntity hospitalCilinic, Set<AppointmentsEntity> appointmentsSet) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.serviceEnum = serviceEnum;
+        this.hospitalCilinic = hospitalCilinic;
+        this.appointmentsSet = appointmentsSet;
+    }
+
+    public ServiceEnum getServiceEnum() {
+        return serviceEnum;
+    }
+
+    public void setServiceEnum(ServiceEnum serviceEnum) {
+        this.serviceEnum = serviceEnum;
     }
 
     public Long getId() {
