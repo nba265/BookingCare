@@ -47,13 +47,13 @@ public class HospitalCilinicService {
     public void save(HospitalCilinicEntity hospitalCilinicEntity){
         hospitalCilinicRepository.save(hospitalCilinicEntity);
     }
-    public HospitalCilinic findByManagerUsername(String username){
-        return hospitalCilinicMapper.convertToDto(hospitalCilinicRepository.findByManager_Username(username));
+    public HospitalCilinicEntity findByManagerUsername(String username){
+        return hospitalCilinicRepository.findByManager_Username(username);
 
     }
 
-    public HospitalCilinic findById(Long id){
-        return hospitalCilinicMapper.convertToDto(hospitalCilinicRepository.findById(id).get());
+    public HospitalCilinicEntity findById(Long id){
+        return hospitalCilinicRepository.findById(id).get();
     }
 
     public HospitalCilinic findByDoctorId(Long docId){

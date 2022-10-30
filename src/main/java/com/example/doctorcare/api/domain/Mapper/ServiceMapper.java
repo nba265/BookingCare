@@ -1,9 +1,14 @@
 package com.example.doctorcare.api.domain.Mapper;
 
 import com.example.doctorcare.api.domain.dto.Services;
+import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.ServicesEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 @Component
 public class ServiceMapper extends BaseMapper<ServicesEntity, Services> {
@@ -16,8 +21,9 @@ public class ServiceMapper extends BaseMapper<ServicesEntity, Services> {
         AppointmentMapper appointmentMapper = new AppointmentMapper();
         if (dto != null)
             BeanUtils.copyProperties(dto, servicesEntity,"appointments");
+        assert dto != null;
         if (dto.getAppointments() != null && !dto.getAppointments().isEmpty()) {
-            servicesEntity.setAppointmentsSet(appointmentMapper.convertToEntitySet(dto.getAppointments()));
+            servicesEntity.setAppointmentsSet((new HashSet<>(dto.getAppointments())));
         }
         return servicesEntity;
     }
@@ -28,8 +34,9 @@ public class ServiceMapper extends BaseMapper<ServicesEntity, Services> {
         AppointmentMapper appointmentMapper = new AppointmentMapper();
         if (entity != null)
             BeanUtils.copyProperties(entity, services);
+        assert entity != null;
         if (entity.getAppointmentsSet() != null && !entity.getAppointmentsSet().isEmpty()) {
-            services.setAppointments(appointmentMapper.convertToDtoList(entity.getAppointmentsSet()));
+            services.setAppointments((new ArrayList<>(entity.getAppointmentsSet())));
         }
         return services;
     }

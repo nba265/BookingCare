@@ -1,17 +1,15 @@
 package com.example.doctorcare.api.domain.dto.response;
 
-import com.example.doctorcare.api.enums.AppointmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-public class AppointmentCustomer {
-
+@NoArgsConstructor
+public class AppointmentHistoryManager extends AppoinmentHistory {
     private String namePatient;
 
     private String phonePatient;
@@ -28,5 +26,6 @@ public class AppointmentCustomer {
 
     private String specialistDoctor;
 
-    private AppointmentStatus status;
+
+    private String serviceName;
 }
