@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Repository
-public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity,Integer> {
+public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity,Long> {
     Set<TimeDoctorsEntity> findByDoctor_Id(Long doctorId);
     Optional<TimeDoctorsEntity> findById(Long id);
 

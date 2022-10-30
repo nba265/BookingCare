@@ -48,7 +48,7 @@ public class AdminController {
         try{
             if(userDetailsService.checkUser(hospitalCilinic.getManagerUserName())){
                 UserEntity user=userDetailsService.findByUsername(hospitalCilinic.getManagerUserName()).get();
-                user.getUserRoles().add(userRoleService.findById(2).get());
+                user.getUserRoles().add(userRoleService.findById(2L).get());
                 HospitalCilinicEntity hospitalCilinicEntity = new HospitalCilinicEntity();
                 hospitalCilinicEntity.setManager(user);
                 hospitalCilinicEntity.setName(hospitalCilinic.getName());

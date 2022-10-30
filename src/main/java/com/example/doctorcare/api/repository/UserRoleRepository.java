@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Repository
-public interface UserRoleRepository extends JpaRepository<UserRoleEntity, Integer> {
+public interface UserRoleRepository extends JpaRepository<UserRoleEntity, Long> {
 
     Set<UserRoleEntity> findByUsers_Email(String email);
 

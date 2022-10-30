@@ -120,7 +120,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public User findDoctorById(Long doctorId){
-        UserEntity userEntity = userRepository.findById(doctorId);
+        UserEntity userEntity = userRepository.findById(doctorId).get();
         User user = userMapper.convertToDto(userEntity);
         user.setHospitalCilinicDoctor(hospitalCilinicMapper.convertToDto(userEntity.getHospitalCilinicDoctor()));
         user.setHospitalCilinicMangager(hospitalCilinicMapper.convertToDto(userEntity.getHospitalCilinicMangager()));

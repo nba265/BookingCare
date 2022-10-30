@@ -1,15 +1,12 @@
 package com.example.doctorcare.api.controller;
 
-import com.example.doctorcare.api.common.UserRole;
 import com.example.doctorcare.api.config.security.JWT.JwtUtils;
 import com.example.doctorcare.api.config.security.Services.UserDetailsImpl;
-import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.dto.request.LoginRequest;
 import com.example.doctorcare.api.domain.dto.request.SignupRequest;
 import com.example.doctorcare.api.domain.dto.response.JwtResponse;
 import com.example.doctorcare.api.domain.dto.response.MessageResponse;
 import com.example.doctorcare.api.domain.entity.UserEntity;
-import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.Role;
 import com.example.doctorcare.api.enums.UserStatus;
 import com.example.doctorcare.api.repository.UserRepository;
@@ -17,7 +14,6 @@ import com.example.doctorcare.api.repository.UserRoleRepository;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import com.example.doctorcare.api.utilis.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -99,7 +95,7 @@ public class AuthController {
 
         user.setFullName(signUpRequest.getFullName());
 
-        user.getUserRoles().add(roleRepository.findByRole(Role.user).get());
+        user.getUserRoles().add(roleRepository.findByRole(Role.ROLE_USER).get());
 
         user.setStatus(UserStatus.ACTIVE);
 

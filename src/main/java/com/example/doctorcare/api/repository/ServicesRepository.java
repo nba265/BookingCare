@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Repository
-public interface ServicesRepository extends CrudRepository<ServicesEntity,Integer> {
+public interface ServicesRepository extends CrudRepository<ServicesEntity,Long> {
 
     Set<ServicesEntity> findAllByHospitalCilinic_Id(Long hospitalCilinic_id);
 

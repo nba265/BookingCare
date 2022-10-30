@@ -56,11 +56,12 @@ public class ManagerController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    @GetMapping("get_all_service")
+    @GetMapping("/get_all_service")
     public ResponseEntity<?> getAllService() {
         try {
             return new ResponseEntity<>(servicesService.findAllByHospitalCilinic_Id(hospitalCilinicService.findByManagerUsername(SecurityUtils.getUsername()).getId()), HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -81,7 +82,7 @@ public class ManagerController {
     }
 
 
-    @GetMapping("get_service_by_id")
+    @GetMapping("/get_service_by_id")
     public ResponseEntity<?> displayEditSerivice(Long id) {
         try {
             return new ResponseEntity<>(serviceMapper.convertToDto(servicesService.findById(id)), HttpStatus.OK);
@@ -90,7 +91,7 @@ public class ManagerController {
         }
     }
 
-    @DeleteMapping("delete_service_by_id")
+    @DeleteMapping("/delete_service_by_id")
     public ResponseEntity<?> deleteService(Long id) {
         try {
             return new ResponseEntity<>(serviceMapper.convertToDto(servicesService.findById(id)), HttpStatus.OK);
@@ -99,7 +100,7 @@ public class ManagerController {
         }
     }
 
-    @PutMapping("edit_status")
+    @PutMapping("/edit_status")
     public ResponseEntity<?> changeStatus(@RequestParam("status") String status, @RequestParam("id") Long id) {
         try {
             servicesService.toggleStatus(status, id);

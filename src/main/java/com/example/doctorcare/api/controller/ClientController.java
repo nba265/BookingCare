@@ -2,10 +2,12 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.TimeDoctorsMapper;
+import com.example.doctorcare.api.domain.dto.Appointment;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.dto.request.MakeAppointment;
 import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
+import com.example.doctorcare.api.domain.dto.response.AppointmentCustomer;
 import com.example.doctorcare.api.domain.dto.response.DoctorSearchInfo;
 import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
@@ -28,7 +30,7 @@ import java.util.Set;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/client")
-@PreAuthorize("hasRole('user')")
+@PreAuthorize("hasRole('ROLE_USER')")
 public class ClientController {
 
     @Autowired
@@ -185,6 +187,25 @@ public class ClientController {
             });
             return new ResponseEntity<>(appointmentHistories, HttpStatus.OK);
         } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/appointmentInfo")
+    public ResponseEntity<?> appointmentInfo(@RequestParam("id")Long id) {
+        try {
+            AppointmentCustomer appointmentCustomer = new AppointmentCustomer();
+            AppointmentsEntity appointment = appointmentsService.findById(id);
+            appointmentCustomer.setDoctorName(appointment.getUser().getFullName());
+            appointmentCustomer.setPhoneDoctor(appointment.getUser().getPhone());
+            appointmentCustomer.setGenderDoctor(appointment.getUser().getGender().toString());
+            appointmentCustomer.setGenderCustomer(appointment.getCustomers().getGender().toString());
+            appointmentCustomer.setBirthday(appointment.getCustomers().getBirthday().toString());
+            appointmentCustomer.setNamePatient(appointment.getCustomers().getNamePatient());
+            appointmentCustomer.setPhonePatient(appointment.getCustomers().getPhonePatient());
+            return new ResponseEntity<>(appointmentCustomer, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

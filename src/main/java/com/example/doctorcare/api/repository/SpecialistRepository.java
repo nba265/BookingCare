@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Set;
 
 @Repository
-public interface SpecialistRepository extends CrudRepository<SpecialistEntity,Integer> {
+public interface SpecialistRepository extends CrudRepository<SpecialistEntity,Long> {
 
     @Query("select s from SpecialistEntity s join s.userSet u  where u.hospitalCilinicDoctor.id = ?1")
     Set<SpecialistEntity> findAllByHospitalCilinicId(Long id);

@@ -13,7 +13,7 @@ public class UserRoleService {
     @Autowired
     UserRoleRepository userRoleRepository;
 
-    public Optional<UserRoleEntity> findById(int id){
+    public Optional<UserRoleEntity> findById(Long id){
         return userRoleRepository.findById(id);
     }
 }

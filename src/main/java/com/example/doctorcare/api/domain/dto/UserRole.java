@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UserRole {
 
-    private Integer id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private Role role;

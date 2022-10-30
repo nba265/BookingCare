@@ -21,7 +21,7 @@ public class UserRoleEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -30,11 +30,11 @@ public class UserRoleEntity implements Serializable {
     @ManyToMany(mappedBy = "userRoles",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<UserEntity> users = new HashSet<>();
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

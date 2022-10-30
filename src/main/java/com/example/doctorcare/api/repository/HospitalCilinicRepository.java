@@ -12,12 +12,10 @@ import java.util.Set;
 
 @Repository
 @Transactional
-public interface HospitalCilinicRepository extends CrudRepository<HospitalCilinicEntity,Integer> {
+public interface HospitalCilinicRepository extends CrudRepository<HospitalCilinicEntity,Long> {
 
     @Query(value = "select h from HospitalCilinicEntity h where h.name like %:keyword%")
     Set<HospitalCilinicEntity> findByKeywords(@Param("keyword") String keyword);
-
-    HospitalCilinicEntity findById(Long id);
     HospitalCilinicEntity findByManager_Username(String username);
 
     @Query(value = "select h from HospitalCilinicEntity h join h.doctor d join d.timeDoctors t where t.appointments.id = ?1 ")

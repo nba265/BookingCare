@@ -23,6 +23,5 @@ public class Service {
 
     private Double price;
 
-    @Enumerated(EnumType.STRING)
-    private ServiceEnum serviceEnum;
+    private String serviceEnum;
 }

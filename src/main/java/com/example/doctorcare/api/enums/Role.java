@@ -6,5 +6,5 @@
 package com.example.doctorcare.api.enums;
 
 public enum Role {
-    user, admin, doctor, manager;
+    ROLE_USER, ROLE_ADMIN, ROLE_DOCTOR, ROLE_MANAGER;
 }
