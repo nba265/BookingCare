@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/doctor")
-@PreAuthorize("hasRole('doctor')")
+@PreAuthorize("hasRole('ROLE_DOCTOR')")
 public class DoctorController {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
