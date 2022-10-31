@@ -1,8 +1,5 @@
 package com.example.doctorcare.api.domain.dto;
 
-import com.example.doctorcare.api.domain.entity.HospitalCilinicEntity;
-import com.example.doctorcare.api.domain.entity.SpecialistEntity;
-import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.Gender;
 import com.example.doctorcare.api.enums.UserStatus;
 import lombok.AllArgsConstructor;
@@ -11,13 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -53,9 +48,9 @@ public class User {
 
     private Specialist specialist;
 
-    private HospitalCilinic hospitalCilinicDoctor;
+    private HospitalClinic hospitalClinicDoctor;
 
-    private HospitalCilinic hospitalCilinicMangager;
+    private HospitalClinic hospitalClinicMangager;
 
     private List<TimeDoctors> timeDoctors = new ArrayList<>();
 

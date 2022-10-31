@@ -1,7 +1,7 @@
 package com.example.doctorcare.api.domain.dto;
 
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
-import com.example.doctorcare.api.domain.entity.HospitalCilinicEntity;
+import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.enums.ServiceEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -29,11 +29,12 @@ public class Services {
     private Double price;
 
     @JsonIgnore
-    private HospitalCilinicEntity hospitalCilinic;
+    private HospitalClinicEntity hospitalCilinic;
 
 
     @Enumerated(EnumType.STRING)
     private ServiceEnum serviceEnum;
+
     @JsonIgnore
     private List<AppointmentsEntity> appointments;
 

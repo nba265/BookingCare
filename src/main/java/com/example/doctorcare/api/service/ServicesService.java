@@ -1,12 +1,10 @@
 package com.example.doctorcare.api.service;
 
 import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
-import com.example.doctorcare.api.domain.dto.HospitalCilinic;
 import com.example.doctorcare.api.domain.dto.Services;
-import com.example.doctorcare.api.domain.entity.HospitalCilinicEntity;
 import com.example.doctorcare.api.domain.entity.ServicesEntity;
 import com.example.doctorcare.api.enums.ServiceEnum;
-import com.example.doctorcare.api.repository.HospitalCilinicRepository;
+import com.example.doctorcare.api.repository.HospitalClinicRepository;
 import com.example.doctorcare.api.repository.ServicesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +21,7 @@ public class ServicesService {
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private HospitalCilinicRepository hospitalCilinicRepository;
+    private HospitalClinicRepository hospitalClinicRepository;
 
     @Autowired
     private ServiceMapper serviceMapper;

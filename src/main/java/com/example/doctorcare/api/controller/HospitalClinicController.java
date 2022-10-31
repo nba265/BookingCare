@@ -1,7 +1,7 @@
 package com.example.doctorcare.api.controller;
 
-import com.example.doctorcare.api.domain.dto.HospitalCilinic;
-import com.example.doctorcare.api.service.HospitalCilinicService;
+import com.example.doctorcare.api.domain.dto.HospitalClinic;
+import com.example.doctorcare.api.service.HospitalClinicService;
 import com.example.doctorcare.api.service.SpecialistService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/hospitalcilinic")
-public class HospitalCilinicController {
+public class HospitalClinicController {
 
     @Autowired
-    HospitalCilinicService hospitalCilinicService;
+    HospitalClinicService hospitalClinicService;
 
     @Autowired
     SpecialistService specialistService;
@@ -26,7 +26,7 @@ public class HospitalCilinicController {
     @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital(){
         try{
-            return new ResponseEntity<>(hospitalCilinicService.hospitalCilinicList(),HttpStatus.OK);
+            return new ResponseEntity<>(hospitalClinicService.hospitalCilinicList(),HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -46,7 +46,7 @@ public class HospitalCilinicController {
     @GetMapping("/searchHospital")
     public ResponseEntity<?> searchHospital(@RequestParam("keyword")String keyword){
         try{
-            return new ResponseEntity<>(hospitalCilinicService.findByKeywords(keyword),HttpStatus.OK);
+            return new ResponseEntity<>(hospitalClinicService.findByKeywords(keyword),HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
@@ -65,9 +65,9 @@ public class HospitalCilinicController {
 
     @PostMapping("/createHospitalCilinic")
     public ResponseEntity<?> createHospitalCilinic(@RequestParam("name")String name ){
-            HospitalCilinic hospitalCilinic = new HospitalCilinic();
-            hospitalCilinic.setName(name);
-            hospitalCilinicService.save(hospitalCilinic);
+            HospitalClinic hospitalClinic = new HospitalClinic();
+            hospitalClinic.setName(name);
+            hospitalClinicService.save(hospitalClinic);
         return new ResponseEntity<>(null,HttpStatus.OK);
     }
 }
