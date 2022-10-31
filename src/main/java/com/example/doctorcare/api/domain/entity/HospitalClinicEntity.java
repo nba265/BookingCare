@@ -10,19 +10,18 @@ public class HospitalClinicEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
     private String name;
 
+    private String address;
+
+    private String phone;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     private UserEntity manager;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy ="hospitalCilinicDoctor" )
     private Set<UserEntity> doctor;
-
     @OneToMany(cascade = CascadeType.ALL, fetch =FetchType.LAZY, mappedBy = "hospitalCilinic")
     private Set<ServicesEntity> services;
-
     @OneToMany(cascade = CascadeType.ALL, fetch =FetchType.LAZY, mappedBy = "hospitalCilinic")
     private Set<SpecialistEntity> specialists;
 

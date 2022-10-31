@@ -20,6 +20,10 @@ public class HospitalClinic {
 
     private User manager;
 
+    private String address;
+
+    private String phone;
+
     private List<User> doctor = new ArrayList<>();
 
     private List<Services> services = new ArrayList<>();

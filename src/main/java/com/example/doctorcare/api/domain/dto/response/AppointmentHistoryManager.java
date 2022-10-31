@@ -26,6 +26,5 @@ public class AppointmentHistoryManager extends AppoinmentHistory {
 
     private String specialistDoctor;
 
-
     private String serviceName;
 }

@@ -31,7 +31,6 @@ public class Services {
     @JsonIgnore
     private HospitalClinicEntity hospitalCilinic;
 
-
     @Enumerated(EnumType.STRING)
     private ServiceEnum serviceEnum;
 

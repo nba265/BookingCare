@@ -9,6 +9,7 @@ import com.example.doctorcare.api.repository.ServicesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,8 +28,10 @@ public class ServicesService {
     private ServiceMapper serviceMapper;
 
     public List<Services> findAllByHospitalCilinic_Id(Long id){
-
-        return serviceMapper.convertToDtoList(servicesRepository.findAllByHospitalCilinic_Id(id));
+        List<Services> services = serviceMapper.convertToDtoList(servicesRepository.findAllByHospitalCilinic_Id(id));
+        services.removeIf(services1 -> (
+             services1.getServiceEnum().equals(ServiceEnum.UNAVAILABLE)));
+        return services;
     }
 
     public ServicesEntity findById(Long id){

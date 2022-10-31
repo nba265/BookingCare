@@ -53,7 +53,7 @@ public class ClientController {
     @Autowired
     AppointmentMapper appointmentMapper;
 
-    @GetMapping("/listHospital")
+/*    @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital() {
         try {
             List<HospitalClinicInfoResponse> responses = new ArrayList<>();
@@ -65,9 +65,9 @@ public class ClientController {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 
-    @GetMapping("/listDoctor")
+/*    @GetMapping("/listDoctor")
     public ResponseEntity<?> findDoctorByHospitalCilinic(@RequestParam("hos_id") Long hosId) {
         try {
             List<DoctorInfoResponse> doctorInfoResponses = new ArrayList<>();
@@ -79,14 +79,14 @@ public class ClientController {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 
-    @GetMapping("/searchHospital")
-    public ResponseEntity<?> searchHospital(@RequestParam("keyword") String keyword) {
+    @GetMapping("/listHospital")
+    public ResponseEntity<?> searchHospital(@RequestParam(name = "keyword", required = false) String keyword) {
         try {
             List<HospitalClinicInfoResponse> responses = new ArrayList<>();
             hospitalClinicService.findByKeywords(keyword).forEach(hospitalCilinic -> {
-                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(),hospitalCilinic.getName()));
+                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(), hospitalCilinic.getName()));
             });
             return new ResponseEntity<>(responses, HttpStatus.OK);
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class ClientController {
         }
     }
 
-    @GetMapping("/specialist")
+/*    @GetMapping("/specialist")
     public ResponseEntity<?> allSpecialistInHospital(@RequestParam("id") Long id) {
         try {
             return new ResponseEntity<>(specialistService.findAllByHospitalCilinicId(id), HttpStatus.OK);
@@ -103,14 +103,14 @@ public class ClientController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 
-    @GetMapping("/findDoctor")
-    public ResponseEntity<?> findDoctor(@RequestParam("hos_id") Long hosId, @RequestParam("spec_id") Long specId, @RequestParam("gender") String gender, @RequestParam("keyword") String keyword) {
+    @GetMapping("/listDoctor")
+    public ResponseEntity<?> findDoctor(@RequestParam(name = "hos_id", required = true) Long hosId, @RequestParam(name = "spec_id", required = false) Long specId, @RequestParam(name = "gender", required = false) String gender, @RequestParam(name = "keyword", required = false) String keyword) {
         try {
             List<DoctorInfoResponse> doctorInfoResponses = new ArrayList<>();
             userDetailsService.findDoctor(hosId, specId, gender, keyword).forEach(user -> {
-                doctorInfoResponses.add(new DoctorInfoResponse(user.getId(),user.getFullName(),user.getGender(),user.getDegree(),user.getNationality(),user.getExperience(),user.getSpecialist()));
+                doctorInfoResponses.add(new DoctorInfoResponse(user.getId(), user.getFullName(), user.getGender(), user.getDegree(), user.getNationality(), user.getExperience(), user.getSpecialist()));
             });
             return new ResponseEntity<>(doctorInfoResponses, HttpStatus.OK);
         } catch (Exception e) {
@@ -155,7 +155,7 @@ public class ClientController {
         }
     }
 
-    @PostMapping("/makeAppointment")
+    @PostMapping("/createAppointment")
     public ResponseEntity<?> makeAppointment(@RequestBody MakeAppointment makeAppointment) {
         try {
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
@@ -204,7 +204,7 @@ public class ClientController {
     }
 
     @GetMapping("/appointmentInfo")
-    public ResponseEntity<?> appointmentInfo(@RequestParam("id")Long id) {
+    public ResponseEntity<?> appointmentInfo(@RequestParam("appointmentId") Long id) {
         try {
             AppointmentCustomer appointmentCustomer = new AppointmentCustomer();
             AppointmentsEntity appointment = appointmentsService.findById(id);
