@@ -14,4 +14,8 @@ public class HospitalClinicInfoResponse {
     private Long id;
 
     private String name;
+
+    private String address;
+
+    private String phone;
 }

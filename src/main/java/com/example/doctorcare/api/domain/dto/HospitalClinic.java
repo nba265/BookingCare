@@ -29,4 +29,5 @@ public class HospitalClinic {
     private List<Services> services = new ArrayList<>();
 
     private List<Specialist> specialists = new ArrayList<>();
+
 }

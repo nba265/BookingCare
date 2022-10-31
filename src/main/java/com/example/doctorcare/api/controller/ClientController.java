@@ -86,7 +86,7 @@ public class ClientController {
         try {
             List<HospitalClinicInfoResponse> responses = new ArrayList<>();
             hospitalClinicService.findByKeywords(keyword).forEach(hospitalCilinic -> {
-                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(), hospitalCilinic.getName()));
+                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(), hospitalCilinic.getName(),hospitalCilinic.getAddress(),hospitalCilinic.getPhone()));
             });
             return new ResponseEntity<>(responses, HttpStatus.OK);
         } catch (Exception e) {
@@ -110,7 +110,7 @@ public class ClientController {
         try {
             List<DoctorInfoResponse> doctorInfoResponses = new ArrayList<>();
             userDetailsService.findDoctor(hosId, specId, gender, keyword).forEach(user -> {
-                doctorInfoResponses.add(new DoctorInfoResponse(user.getId(), user.getFullName(), user.getGender(), user.getDegree(), user.getNationality(), user.getExperience(), user.getSpecialist()));
+                doctorInfoResponses.add(new DoctorInfoResponse(user.getId(), user.getFullName(), user.getGender(), user.getDegree(), user.getNationality(), user.getExperience(), user.getSpecialist().getName()));
             });
             return new ResponseEntity<>(doctorInfoResponses, HttpStatus.OK);
         } catch (Exception e) {

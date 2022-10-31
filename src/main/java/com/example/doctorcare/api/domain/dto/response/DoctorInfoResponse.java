@@ -33,5 +33,5 @@ public class DoctorInfoResponse {
 
     private String experience;
 
-    private Specialist specialist;
+    private String specialist;
 }

@@ -86,7 +86,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return users;
     }
 
-    public List<com.example.doctorcare.api.domain.dto.User> findDoctor(Long hosId, Long specId, String gender, String keyword){
+    public Set<UserEntity> findDoctor(Long hosId, Long specId, String gender, String keyword){
         Set<UserEntity> users =  userRepository.findDoctorByHospitalCilinicId(hosId);
         Set<UserEntity> toRemove = new HashSet<>();
         if(specId != null && specId != 0){
@@ -111,7 +111,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             });
         }
         users.removeAll(toRemove);
-        return userMapper.convertToDtoList(users);
+        return users;
     }
 
     public User findDoctorById(Long doctorId){
