@@ -95,15 +95,15 @@ public class ClientController {
         }
     }
 
-/*    @GetMapping("/specialist")
-    public ResponseEntity<?> allSpecialistInHospital(@RequestParam("id") Long id) {
+    @GetMapping("/listSpecialist")
+    public ResponseEntity<?> allSpecialistInHospital(@RequestParam("hosId") Long id) {
         try {
             return new ResponseEntity<>(specialistService.findAllByHospitalCilinicId(id), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }*/
+    }
 
     @GetMapping("/listDoctor")
     public ResponseEntity<?> findDoctor(@RequestParam(name = "hos_id", required = true) Long hosId, @RequestParam(name = "spec_id", required = false) Long specId, @RequestParam(name = "gender", required = false) String gender, @RequestParam(name = "keyword", required = false) String keyword) {
