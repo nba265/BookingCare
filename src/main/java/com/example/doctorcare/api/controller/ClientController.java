@@ -26,7 +26,7 @@ import java.util.Set;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/client")
-@PreAuthorize("hasRole('ROLE_USER')")
+/*@PreAuthorize("hasRole('ROLE_USER')")*/
 public class ClientController {
 
     @Autowired
