@@ -3,20 +3,27 @@ package com.example.doctorcare.api.controller;
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
+import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
 import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
-import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
+import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
+import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.service.TimeDoctorService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import com.example.doctorcare.api.utilis.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -31,10 +38,48 @@ public class DoctorController {
     @Autowired
     UserMapper userMapper;
 
-    @PostMapping("/create_time_doctors")
+    /*@GetMapping("/appointmentHistory")
+    public ResponseEntity<?> appointmentHistory(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) LocalDate before,
+            @RequestParam(required = false) LocalDate after
+    ) {
+        try {
+            HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername());
+            List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
+            List<AppointmentsEntity> appointmentsEntities;
+            Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
+            Page<AppointmentsEntity> pageTuts = appointmentsService.findByHospitalCustomerCreateDate(hospitalClinicEntity.getId(), pagingSort, bookName, before, after);
+            appointmentsEntities = pageTuts.getContent();
+            if (appointmentsEntities.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            appointmentsEntities.forEach(appointments -> {
+                AppoinmentHistory appointmentHistory = new AppoinmentHistory();
+                appointmentHistory.setId(appointments.getId());
+                appointmentHistory.setDescription(appointmentHistory.getDescription());
+                appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
+                appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
+                appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                appointmentHistories.add(appointmentHistory);
+            });
+            Map<String, Object> response = new HashMap<>();
+            response.put("appointmentList", appointmentHistories);
+            response.put("currentPage", pageTuts.getNumber() + 1);
+            response.put("totalItems", pageTuts.getTotalElements());
+            response.put("totalPages", pageTuts.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
+
+    @PostMapping("/createTimeDoctors")
     public ResponseEntity<?> createTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
         try {
-            TimeDoctors timeDoctors= new TimeDoctors();
+            TimeDoctors timeDoctors = new TimeDoctors();
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             timeDoctors.setDoctor(userMapper.convertToDto(user));
             timeDoctors.setTimeStart(timeDoctors1.getTimeStart());
@@ -47,7 +92,7 @@ public class DoctorController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    @GetMapping("/get_time_doctors")
+    @GetMapping("/getTimeDoctors")
     public ResponseEntity<?> getTimeDoctor() {
         UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
         List<TimeDoctors> timeDoctorsList = timeDoctorService.findAllByDoctor(user.getId());
@@ -63,10 +108,10 @@ public class DoctorController {
         }
     }
 
-    @PutMapping("/edit_time_doctors")
+    @PutMapping("/editTimeDoctors")
     public ResponseEntity<?> editTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
         try {
-            TimeDoctors timeDoctors= new TimeDoctors();
+            TimeDoctors timeDoctors = new TimeDoctors();
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             timeDoctors.setDoctor(userMapper.convertToDto(user));
             timeDoctors.setTimeStart(timeDoctors1.getTimeStart());
@@ -80,7 +125,7 @@ public class DoctorController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    @GetMapping("/display_edit_time_doctors")
+    @GetMapping("/displayEditTimeDoctors")
     public ResponseEntity<?> editTimeDoctor(@RequestParam("id") Long id) {
         TimeDoctors timeDoctors = timeDoctorService.findById(id);
         try {
@@ -91,7 +136,7 @@ public class DoctorController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete_time_doctors")
+    @DeleteMapping("/deleteTimeDoctors")
     public ResponseEntity<?> deleteTimeDoctor(@RequestParam("id") Long id) {
         try {
             timeDoctorService.deleteById(id);

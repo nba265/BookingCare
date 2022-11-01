@@ -107,7 +107,7 @@ public class ClientController {
     }
 
     @GetMapping("/listDoctor")
-    public ResponseEntity<?> findDoctor(@RequestParam(name = "hos_id", required = true) Long hosId, @RequestParam(name = "spec_id", required = false) Long specId, @RequestParam(name = "gender", required = false) String gender, @RequestParam(name = "keyword", required = false) String keyword) {
+    public ResponseEntity<?> findDoctor(@RequestParam(name = "hosId", required = true) Long hosId, @RequestParam(name = "specId", required = false) Long specId, @RequestParam(name = "gender", required = false) String gender, @RequestParam(name = "keyword", required = false) String keyword) {
         try {
             List<DoctorInfoResponse> doctorInfoResponses = new ArrayList<>();
             userDetailsService.findDoctor(hosId, specId, gender, keyword).forEach(user -> {
@@ -131,7 +131,7 @@ public class ClientController {
     }*/
 
     @GetMapping("/bookingServiceDatetime")
-    public ResponseEntity<?> bookingServiceAndDatetime(@RequestParam("doctor_id") Long doctorId) {
+    public ResponseEntity<?> bookingServiceAndDatetime(@RequestParam("doctorId") Long doctorId) {
         try {
             DoctorSearchInfo doctorSearchInfo = new DoctorSearchInfo();
             User doctor = userDetailsService.findDoctorById(doctorId);

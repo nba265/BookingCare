@@ -117,7 +117,7 @@ public class ManagerController {
         }
     }
 
-    @PutMapping("/edit_status_appointment")
+    @PutMapping("/editStatusAppointment")
     public ResponseEntity<?> editStatusAppointment(@RequestParam("status") String status, @RequestParam("id") Long id) {
         try {
             AppointmentsEntity appointmentsEntity = appointmentsService.findById(id);
@@ -130,8 +130,8 @@ public class ManagerController {
         }
     }
 
-    @PutMapping("/edit_service_appointment")
-    public ResponseEntity<?> editServiceAppointment(@RequestParam("id_appointment") Long idAppointment, @RequestParam("id_service") Long idService) {
+    @PutMapping("/editServiceAppointment")
+    public ResponseEntity<?> editServiceAppointment(@RequestParam("idAppointment") Long idAppointment, @RequestParam("idService") Long idService) {
         try {
             AppointmentsEntity appointmentsEntity = appointmentsService.findById(idAppointment);
             ServicesEntity servicesEntity = servicesService.findById(idService);
@@ -144,7 +144,7 @@ public class ManagerController {
         }
     }
 
-    @PostMapping("/create_edit_service")
+    @PostMapping("/createEditService")
     public ResponseEntity<?> createTimeService(@RequestBody AddService service) {
         try {
             HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername());
@@ -167,7 +167,7 @@ public class ManagerController {
         }
     }
 
-    @GetMapping("/get_all_service")
+    @GetMapping("/getAllService")
     public ResponseEntity<?> getAllService() {
         try {
             return new ResponseEntity<>(servicesService.findAllByHospitalCilinic_Id(hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername()).getId()), HttpStatus.OK);
@@ -189,7 +189,7 @@ public class ManagerController {
     }
 
 
-    @GetMapping("/get_service_by_id")
+    @GetMapping("/getServiceById")
     public ResponseEntity<?> displayEditSerivice(Long id) {
         try {
             return new ResponseEntity<>(serviceMapper.convertToDto(servicesService.findById(id)), HttpStatus.OK);
@@ -198,7 +198,7 @@ public class ManagerController {
         }
     }
 
-    @DeleteMapping("/delete_service_by_id")
+    @DeleteMapping("/deleteServiceById")
     public ResponseEntity<?> deleteService(Long id) {
         try {
             return new ResponseEntity<>(serviceMapper.convertToDto(servicesService.findById(id)), HttpStatus.OK);
@@ -207,7 +207,7 @@ public class ManagerController {
         }
     }
 
-    @PutMapping("/edit_status")
+    @PutMapping("/editStatus")
     public ResponseEntity<?> changeStatus(@RequestParam("status") String status, @RequestParam("id") Long id) {
         try {
             servicesService.toggleStatus(status, id);

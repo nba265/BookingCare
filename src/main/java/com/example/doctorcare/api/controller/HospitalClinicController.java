@@ -63,7 +63,7 @@ public class HospitalClinicController {
         }
     }
 
-    @PostMapping("/createHospitalCilinic")
+    @PostMapping("/createHospitalClinic")
     public ResponseEntity<?> createHospitalCilinic(@RequestParam("name")String name ){
             HospitalClinic hospitalClinic = new HospitalClinic();
             hospitalClinic.setName(name);
