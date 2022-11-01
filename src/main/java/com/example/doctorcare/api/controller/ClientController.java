@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @CrossOrigin(origins = "*")
@@ -101,7 +102,7 @@ public class ClientController {
             return new ResponseEntity<>(specialistService.findAllByHospitalCilinicId(id), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -148,6 +149,7 @@ public class ClientController {
                 timeDoctor.setDate(timeDoctors.getDate().toString());
                 doctorSearchInfo.getTimeDoctors().add(timeDoctor);
             });
+            doctorSearchInfo.setHosId(doctor.getHospitalClinicDoctor().getId());
             return new ResponseEntity<>(doctorSearchInfo, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

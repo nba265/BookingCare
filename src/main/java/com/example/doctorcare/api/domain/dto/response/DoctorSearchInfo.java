@@ -15,6 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 public class DoctorSearchInfo {
 
+    private Long hosId;
+
     private String hospName;
 
     private String specialist;
