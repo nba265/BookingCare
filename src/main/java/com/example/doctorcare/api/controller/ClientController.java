@@ -198,8 +198,11 @@ public class ClientController {
                 appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
                 appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
+                appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistories.add(appointmentHistory);
             });
+            if (appointmentHistories.isEmpty())
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(appointmentHistories, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -82,6 +82,7 @@ public class ManagerController {
                 appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
                 appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
                 appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistories.add(appointmentHistory);
             });
             Map<String, Object> response = new HashMap<>();

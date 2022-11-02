@@ -35,8 +35,8 @@ public class AppointmentsEntity {
     @JsonIgnore
     private CustomersEntity customers;
 
-    @OneToOne(mappedBy = "appointments",fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "time_doctors_id",referencedColumnName = "id")
     private TimeDoctorsEntity timeDoctors;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)

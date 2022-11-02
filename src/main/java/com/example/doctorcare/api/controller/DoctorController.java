@@ -10,8 +10,10 @@ import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.service.AppointmentsService;
+import com.example.doctorcare.api.service.HospitalClinicService;
 import com.example.doctorcare.api.service.TimeDoctorService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
+import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
 import com.example.doctorcare.api.utilis.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -42,6 +45,11 @@ public class DoctorController {
 
     @Autowired
     AppointmentsService appointmentsService;
+
+    PaginationAndSortUtil paginationAndSortUtil = new PaginationAndSortUtil();
+
+    @Autowired
+    HospitalClinicService hospitalClinicService;
 
     /*@GetMapping("/appointmentHistory")
     public ResponseEntity<?> appointmentHistory(
@@ -152,11 +160,46 @@ public class DoctorController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-/*    @GetMapping("/displayListAppoiment")
+    @GetMapping("/displayListAppoiment")
+    public ResponseEntity<?> getAppointmentHistory(@RequestParam(defaultValue = "1") int page,
+                                                   @RequestParam(defaultValue = "10") int size,
+                                                   @RequestParam(required = false) LocalDate before,
+                                                   @RequestParam(required = false) LocalDate after) {
+        try {
+            UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
+            List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
+            List<AppointmentsEntity> appointmentsEntities;
+            Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
+            Page<AppointmentsEntity> pageTuts = appointmentsService.findByDoctorsId(user.getId(), pagingSort, before, after);
+            appointmentsEntities = pageTuts.getContent();
+            if (appointmentsEntities.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            appointmentsEntities.forEach(appointments -> {
+                AppoinmentHistory appointmentHistory = new AppoinmentHistory();
+                appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId()).getName());
+                appointmentHistory.setId(appointments.getId());
+                appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
+                appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
+                appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
+                appointmentHistories.add(appointmentHistory);
+            });
+            Map<String, Object> response = new HashMap<>();
+            response.put("appointmentList", appointmentHistories);
+            response.put("currentPage", pageTuts.getNumber() + 1);
+            response.put("totalItems", pageTuts.getTotalElements());
+            response.put("totalPages", pageTuts.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
     @GetMapping("/displayAppointmentInfo")
-    public ResponseEntity<?> getAppointmentHistory(@RequestParam("timeDoctorId")Long id){
+    public ResponseEntity<?> getAppointmentInfo(@RequestParam("timeDoctorId")Long id){
         try{
             AppointmentsEntity appointments = appointmentsService.findByTimeDoctorsId(id);
             return new ResponseEntity<>(new AppointmentHistoryForDoctor(appointments.getCustomers().getNamePatient(),
@@ -170,5 +213,5 @@ public class DoctorController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }*/
+    }
 }

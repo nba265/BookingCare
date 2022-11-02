@@ -77,11 +77,11 @@ public class AppointmentsService {
         if (beforeCreateDate == null && afterCreateDate == null) {
             return appointmentsRepository.findByDoctorsId(id, pageable);
         } else if (beforeCreateDate != null && afterCreateDate == null) {
-            return appointmentsRepository.findByCreateDateAfter(beforeCreateDate, pageable);
+            return appointmentsRepository.findByCreateDateAfterAndDoctorId(id,beforeCreateDate, pageable);
         } else if (beforeCreateDate == null) {
-            return appointmentsRepository.findByCreateDateBefore(afterCreateDate, pageable);
+            return appointmentsRepository.findByCreateDateBeforeAndDoctorId(id,afterCreateDate, pageable);
         } else {
-            return appointmentsRepository.findByCreateDateBetween(beforeCreateDate, afterCreateDate, pageable);
+            return appointmentsRepository.findByCreateDateBetweenAndDoctorId(id,beforeCreateDate, afterCreateDate, pageable);
         }
     }
 }

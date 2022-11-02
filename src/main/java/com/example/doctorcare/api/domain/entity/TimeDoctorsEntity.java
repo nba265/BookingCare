@@ -27,8 +27,7 @@ public class TimeDoctorsEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "timeDoctors")
     private AppointmentsEntity appointments;
 
     @JsonIgnore

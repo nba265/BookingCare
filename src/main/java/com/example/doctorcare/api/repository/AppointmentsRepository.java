@@ -20,12 +20,23 @@ public interface AppointmentsRepository extends CrudRepository<AppointmentsEntit
     @Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where u.id = ?1 ",nativeQuery = true)
     Page<AppointmentsEntity> findByDoctorsId(Long id, Pageable pageable);
 
-    @Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where u.id = ?1 and date(?2) >= td.date ",nativeQuery = true)
     Page<AppointmentsEntity> findByCreateDateAfter(LocalDateTime before,
                                                  Pageable pageable);
 
     Page<AppointmentsEntity> findByCreateDateBefore(LocalDateTime after,
                                                   Pageable pageable);
+
+    @Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where u.id = ?1 and date(?2) >= td.date ",nativeQuery = true)
+    Page<AppointmentsEntity> findByCreateDateAfterAndDoctorId(Long id,LocalDateTime before,
+                                                   Pageable pageable);
+
+    @Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where u.id = ?1 and date(?2) <= td.date ",nativeQuery = true)
+    Page<AppointmentsEntity> findByCreateDateBeforeAndDoctorId(Long id,LocalDateTime after,
+                                                    Pageable pageable);
+
+    @Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where u.id = ?1 and date(?3) <= td.date and date(2) >= td.date ",nativeQuery = true)
+
+    Page<AppointmentsEntity> findByCreateDateBetweenAndDoctorId(Long id,LocalDateTime before, LocalDateTime after,Pageable pageable);
 
     Page<AppointmentsEntity> findByCreateDateBetween(LocalDateTime before, LocalDateTime after,Pageable pageable);
 
