@@ -14,10 +14,13 @@ import java.util.Set;
 
 @Repository
 public interface AppointmentsRepository extends CrudRepository<AppointmentsEntity, Long> {
-    @Query(value = "select a.* from appointments a join time_doctors td on a.id=td.appointments_id join `user` u on td.doctor_id= u.id where hospital_cilinic_id=?1",nativeQuery = true)
-    Page<AppointmentsEntity> findByHostpital(Long id,
-                                             Pageable pageable);
+    @Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where hospital_cilinic_id=?1",nativeQuery = true)
+    Page<AppointmentsEntity> findByHostpital(Long id, Pageable pageable);
 
+    @Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where u.id = ?1 ",nativeQuery = true)
+    Page<AppointmentsEntity> findByDoctorsId(Long id, Pageable pageable);
+
+    @Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where u.id = ?1 and date(?2) >= td.date ",nativeQuery = true)
     Page<AppointmentsEntity> findByCreateDateAfter(LocalDateTime before,
                                                  Pageable pageable);
 
@@ -34,4 +37,6 @@ public interface AppointmentsRepository extends CrudRepository<AppointmentsEntit
     Page<AppointmentsEntity> findByUser_FullNameContainingIgnoreCaseAndCreateDateBefore(String bookName, LocalDateTime after, Pageable pageable);
 
     Page<AppointmentsEntity> findByUser_FullNameContainingIgnoreCaseAndCreateDateBetween(String bookName, LocalDateTime before, LocalDateTime after, Pageable pageable);
+
+    AppointmentsEntity findByTimeDoctors_Id(Long timeDoctors_id);
 }

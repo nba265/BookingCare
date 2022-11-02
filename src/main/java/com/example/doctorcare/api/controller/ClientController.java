@@ -193,11 +193,11 @@ public class ClientController {
             appointmentHistorySet.forEach(appointments -> {
                 AppoinmentHistory appointmentHistory = new AppoinmentHistory();
                 appointmentHistory.setId(appointments.getId());
-                appointmentHistory.setDescription(appointmentHistory.getDescription());
                 appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId()).getName());
                 appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
                 appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
                 appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistories.add(appointmentHistory);
             });
             return new ResponseEntity<>(appointmentHistories, HttpStatus.OK);
@@ -218,6 +218,7 @@ public class ClientController {
             appointmentCustomer.setBirthday(appointment.getCustomers().getBirthday().toString());
             appointmentCustomer.setNamePatient(appointment.getCustomers().getNamePatient());
             appointmentCustomer.setPhonePatient(appointment.getCustomers().getPhonePatient());
+            appointmentCustomer.setDescription(appointment.getDescription());
             return new ResponseEntity<>(appointmentCustomer, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

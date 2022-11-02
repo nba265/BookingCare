@@ -1,6 +1,7 @@
 package com.example.doctorcare.api.domain.dto.response;
 
 import com.example.doctorcare.api.enums.AppointmentStatus;
+import com.example.doctorcare.api.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppointmentCustomer {
+public class AppointmentHistoryForDoctor {
 
     private String namePatient;
 
@@ -18,17 +19,9 @@ public class AppointmentCustomer {
 
     private String birthday;
 
-    private String genderCustomer;
+    private Gender genderCustomer;
 
-    private String doctorName;
+    private String specialist;
 
-    private String genderDoctor;
-
-    private String phoneDoctor;
-
-    private String specialistDoctor;
-
-    private AppointmentStatus status;
-
-    private String description;
+    private String appointmentCode;
 }

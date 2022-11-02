@@ -24,6 +24,8 @@ public class AppointmentsEntity {
 
     private LocalDateTime createDate;
 
+    private String appointmentCode;
+
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "services_id")
     private ServicesEntity services;
@@ -34,7 +36,6 @@ public class AppointmentsEntity {
     private CustomersEntity customers;
 
     @OneToOne(mappedBy = "appointments",fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
     @JsonIgnore
     private TimeDoctorsEntity timeDoctors;
 
@@ -83,6 +84,14 @@ public class AppointmentsEntity {
 
     public void setStatus(AppointmentStatus status) {
         this.status = status;
+    }
+
+    public String getAppointmentCode() {
+        return appointmentCode;
+    }
+
+    public void setAppointmentCode(String appointmentCode) {
+        this.appointmentCode = appointmentCode;
     }
 
     public LocalDateTime getCreateDate() {

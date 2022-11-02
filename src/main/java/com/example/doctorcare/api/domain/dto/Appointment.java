@@ -37,4 +37,6 @@ public class Appointment {
     private TimeDoctors timeDoctors;
 
     private User user;
+
+    private String appointmentCode;
 }

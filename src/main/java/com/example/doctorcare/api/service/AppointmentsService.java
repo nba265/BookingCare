@@ -32,36 +32,56 @@ public class AppointmentsService {
     public Page<AppointmentsEntity> findByHospitalCustomerCreateDate(Long id, Pageable pageable, String bookName, LocalDate before, LocalDate after) {
         LocalDateTime beforeCreateDate;
         LocalDateTime afterCreateDate;
-        if (before == null)
-        {
-            beforeCreateDate=null;
-        }
-        else beforeCreateDate=before.atStartOfDay();
-        if (after==null){
-            afterCreateDate=null;
-        }
-        else afterCreateDate=after.atStartOfDay();
+        if (before == null) {
+            beforeCreateDate = null;
+        } else beforeCreateDate = before.atStartOfDay();
+        if (after == null) {
+            afterCreateDate = null;
+        } else afterCreateDate = after.atStartOfDay();
         if (bookName == null) {
             if (beforeCreateDate == null && afterCreateDate == null) {
                 return appointmentsRepository.findByHostpital(id, pageable);
             } else if (beforeCreateDate != null && afterCreateDate == null) {
                 return appointmentsRepository.findByCreateDateAfter(beforeCreateDate, pageable);
-            } else if (beforeCreateDate == null && afterCreateDate != null) {
+            } else if (beforeCreateDate == null) {
                 return appointmentsRepository.findByCreateDateBefore(afterCreateDate, pageable);
             } else {
-                return appointmentsRepository.findByCreateDateBetween(beforeCreateDate, afterCreateDate,pageable);
+                return appointmentsRepository.findByCreateDateBetween(beforeCreateDate, afterCreateDate, pageable);
             }
         } else {
             if (beforeCreateDate == null && afterCreateDate == null) {
-                return appointmentsRepository.findByUser_FullNameContainingIgnoreCase(bookName,pageable);
+                return appointmentsRepository.findByUser_FullNameContainingIgnoreCase(bookName, pageable);
             } else if (beforeCreateDate != null && afterCreateDate == null) {
-                return appointmentsRepository.findByUser_FullNameContainingIgnoreCaseAndCreateDateAfter(bookName, beforeCreateDate,pageable);
-            } else if (beforeCreateDate == null && afterCreateDate != null) {
-                return appointmentsRepository.findByUser_FullNameContainingIgnoreCaseAndCreateDateAfter(bookName, afterCreateDate,pageable);
+                return appointmentsRepository.findByUser_FullNameContainingIgnoreCaseAndCreateDateAfter(bookName, beforeCreateDate, pageable);
+            } else if (beforeCreateDate == null) {
+                return appointmentsRepository.findByUser_FullNameContainingIgnoreCaseAndCreateDateAfter(bookName, afterCreateDate, pageable);
             } else {
-                return appointmentsRepository.findByUser_FullNameContainingIgnoreCaseAndCreateDateBetween(bookName, beforeCreateDate, afterCreateDate,pageable);
+                return appointmentsRepository.findByUser_FullNameContainingIgnoreCaseAndCreateDateBetween(bookName, beforeCreateDate, afterCreateDate, pageable);
             }
         }
     }
 
+    public AppointmentsEntity findByTimeDoctorsId(Long id) {
+        return appointmentsRepository.findByTimeDoctors_Id(id);
+    }
+
+    public Page<AppointmentsEntity> findByDoctorsId(Long id, Pageable pageable, LocalDate before, LocalDate after) {
+        LocalDateTime beforeCreateDate;
+        LocalDateTime afterCreateDate;
+        if (before == null) {
+            beforeCreateDate = null;
+        } else beforeCreateDate = before.atStartOfDay();
+        if (after == null) {
+            afterCreateDate = null;
+        } else afterCreateDate = after.atStartOfDay();
+        if (beforeCreateDate == null && afterCreateDate == null) {
+            return appointmentsRepository.findByDoctorsId(id, pageable);
+        } else if (beforeCreateDate != null && afterCreateDate == null) {
+            return appointmentsRepository.findByCreateDateAfter(beforeCreateDate, pageable);
+        } else if (beforeCreateDate == null) {
+            return appointmentsRepository.findByCreateDateBefore(afterCreateDate, pageable);
+        } else {
+            return appointmentsRepository.findByCreateDateBetween(beforeCreateDate, afterCreateDate, pageable);
+        }
+    }
 }

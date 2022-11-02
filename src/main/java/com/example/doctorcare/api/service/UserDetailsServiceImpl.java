@@ -114,6 +114,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return users;
     }
 
+    public UserEntity findById(Long id){
+        return userRepository.findById(id).get();
+    }
+
     public User findDoctorById(Long doctorId){
         UserEntity userEntity = userRepository.findById(doctorId).get();
         User user = userMapper.convertToDto(userEntity);

@@ -28,6 +28,7 @@ public class TimeDoctorsEntity {
     private LocalDate date;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private AppointmentsEntity appointments;
 
     @JsonIgnore

@@ -14,8 +14,6 @@ public class AppoinmentHistory {
 
     private Long id;
 
-    private String description;
-
     private String hospitalName;
 
     @DateTimeFormat(pattern = "HH:mm")
@@ -26,5 +24,7 @@ public class AppoinmentHistory {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String date;
+
+    private String appointmentCode;
 
 }

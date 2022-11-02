@@ -39,4 +39,5 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 and u.specialist.id = ?2 and u.gender = ?3")
     Set<UserEntity> findDoctorByHospitalCilinicIdAndSpecIdAndGender(Long hosId, Long specId, Gender gender);
 
+
 }

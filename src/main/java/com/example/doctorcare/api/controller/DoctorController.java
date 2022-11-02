@@ -4,10 +4,12 @@ import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
 import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
+import com.example.doctorcare.api.domain.dto.response.AppointmentHistoryForDoctor;
 import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.service.AppointmentsService;
 import com.example.doctorcare.api.service.TimeDoctorService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import com.example.doctorcare.api.utilis.SecurityUtils;
@@ -37,6 +39,9 @@ public class DoctorController {
     TimeDoctorService timeDoctorService;
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    AppointmentsService appointmentsService;
 
     /*@GetMapping("/appointmentHistory")
     public ResponseEntity<?> appointmentHistory(
@@ -147,4 +152,23 @@ public class DoctorController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
+/*    @GetMapping("/displayListAppoiment")
+
+
+    @GetMapping("/displayAppointmentInfo")
+    public ResponseEntity<?> getAppointmentHistory(@RequestParam("timeDoctorId")Long id){
+        try{
+            AppointmentsEntity appointments = appointmentsService.findByTimeDoctorsId(id);
+            return new ResponseEntity<>(new AppointmentHistoryForDoctor(appointments.getCustomers().getNamePatient(),
+                    appointments.getCustomers().getPhonePatient(),
+                    appointments.getCustomers().getBirthday().toString(),
+                    appointments.getCustomers().getGender(),
+                    userDetailsService.findById(appointments.getUser().getId()).getSpecialist().getName(),
+                    appointments.getAppointmentCode()),HttpStatus.OK);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
 }
