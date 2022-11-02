@@ -26,6 +26,8 @@ public class Customer {
 
     private String phonePatient;
 
+    private String identityCard;
+
     @Email
     private String email;
 

@@ -174,6 +174,7 @@ public class ClientController {
             customers.setBirthday(LocalDate.parse(makeAppointment.getBirthday()));
             customers.setPhonePatient(makeAppointment.getPhone());
             customers.setNamePatient(makeAppointment.getFullName());
+            customers.setIdentityCard(makeAppointment.getIdentityCard());
             appointments.setCustomers(customers);
             appointments.setDescription(makeAppointment.getDescription());
             appointmentsService.save(appointments);

@@ -6,10 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 
 @Getter
@@ -37,4 +39,7 @@ public class MakeAppointment {
 
     @Max(200)
     private String description;
+
+    @Length(max = 12,min = 12)
+    private String identityCard;
 }

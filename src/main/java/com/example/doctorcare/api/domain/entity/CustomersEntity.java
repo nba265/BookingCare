@@ -2,9 +2,11 @@ package com.example.doctorcare.api.domain.entity;
 
 
 import com.example.doctorcare.api.enums.Gender;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -28,6 +30,9 @@ public class CustomersEntity {
     @Column(name = "phone_patient")
     private String phonePatient;
 
+    @Column(name = "identity_card", length = 12)
+    private String identityCard;
+
     @Column(name = "email")
     @Email
     private String email;
@@ -37,7 +42,7 @@ public class CustomersEntity {
 
     private LocalDate birthday;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "customers")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customers")
     private Set<AppointmentsEntity> appointmentsSet;
 
     public CustomersEntity() {
@@ -76,6 +81,14 @@ public class CustomersEntity {
 
     public void setPhoneBooking(String phoneBooking) {
         this.phoneBooking = phoneBooking;
+    }
+
+    public String getIdentityCard() {
+        return identityCard;
+    }
+
+    public void setIdentityCard(String identityCard) {
+        this.identityCard = identityCard;
     }
 
     public String getNamePatient() {
