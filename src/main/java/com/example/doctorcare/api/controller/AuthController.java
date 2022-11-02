@@ -52,7 +52,7 @@ public class AuthController {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
-    @PostMapping("/sign_in")
+    @PostMapping("/signIn")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         if (SecurityUtils.checkInfoLogin(loginRequest, userDetailsService, encoder)) {
@@ -77,7 +77,7 @@ public class AuthController {
         } else return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong Username or Password"));
     }
 
-    @PostMapping("/sign_up")
+    @PostMapping("/signUp")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
