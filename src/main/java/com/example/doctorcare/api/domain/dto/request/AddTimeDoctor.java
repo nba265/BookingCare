@@ -15,8 +15,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddTimeDoctor {
-    private LocalTime timeStart;
-    private LocalTime timeEnd;
-    private LocalDate createDate;
-    private User doctor;
+    private Long id;
+    private String timeStart;
+    private String timeEnd;
+    private String createDate;
 }

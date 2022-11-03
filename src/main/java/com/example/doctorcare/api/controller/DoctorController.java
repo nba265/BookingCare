@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,9 +96,9 @@ public class DoctorController {
             TimeDoctors timeDoctors = new TimeDoctors();
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             timeDoctors.setDoctor(userMapper.convertToDto(user));
-            timeDoctors.setTimeStart(timeDoctors1.getTimeStart());
-            timeDoctors.setTimeEnd(timeDoctors1.getTimeEnd());
-            timeDoctors.setDate(timeDoctors1.getCreateDate());
+            timeDoctors.setTimeStart(LocalTime.parse(timeDoctors1.getTimeStart()));
+            timeDoctors.setTimeEnd(LocalTime.parse(timeDoctors1.getTimeEnd()));
+            timeDoctors.setDate(LocalDate.parse(timeDoctors1.getCreateDate()));
             timeDoctorService.save(timeDoctors);
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,9 +128,9 @@ public class DoctorController {
             TimeDoctors timeDoctors = new TimeDoctors();
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             timeDoctors.setDoctor(userMapper.convertToDto(user));
-            timeDoctors.setTimeStart(timeDoctors1.getTimeStart());
-            timeDoctors.setTimeEnd(timeDoctors1.getTimeEnd());
-            timeDoctors.setDate(timeDoctors1.getCreateDate());
+            timeDoctors.setTimeStart(LocalTime.parse(timeDoctors1.getTimeStart()));
+            timeDoctors.setTimeEnd(LocalTime.parse(timeDoctors1.getTimeEnd()));
+            timeDoctors.setDate(LocalDate.parse(timeDoctors1.getCreateDate()));
             timeDoctorService.save(timeDoctors);
         } catch (Exception e) {
             e.printStackTrace();
