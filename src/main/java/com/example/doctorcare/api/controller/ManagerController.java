@@ -60,7 +60,6 @@ public class ManagerController {
 
     @GetMapping("/appointmentHistory")
     public ResponseEntity<?> appointmentHistory(
-            @RequestParam(required = false) String bookName,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) LocalDate before,
@@ -71,7 +70,7 @@ public class ManagerController {
             List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
             List<AppointmentsEntity> appointmentsEntities;
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
-            Page<AppointmentsEntity> pageTuts = appointmentsService.findByHospitalCustomerCreateDate(hospitalClinicEntity.getId(), pagingSort, bookName, before, after);
+            Page<AppointmentsEntity> pageTuts = appointmentsService.findByHospitalCustomerCreateDate(hospitalClinicEntity.getId(), pagingSort, before, after);
             appointmentsEntities = pageTuts.getContent();
             if (appointmentsEntities.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
