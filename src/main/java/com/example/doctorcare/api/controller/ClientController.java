@@ -247,7 +247,7 @@ public class ClientController {
         }
     }
 
-    @GetMapping("/cancelAppoiment")
+    @GetMapping("/cancelAppointment")
     public ResponseEntity<?> doCancelAppointment(@RequestParam("appointmentId") Long id){
         try{
             return new ResponseEntity<>(new MessageResponse(appointmentsService.cancelAppointment(id)), HttpStatus.OK);
