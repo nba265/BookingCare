@@ -2,6 +2,8 @@ package com.example.doctorcare.api.service;
 
 import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
+import com.example.doctorcare.api.enums.AppointmentStatus;
+import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.repository.AppointmentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -73,5 +75,19 @@ public class AppointmentsService {
         } else {
             return appointmentsRepository.findByCreateDateBetweenAndDoctorId(id,beforeCreateDate, afterCreateDate, pageable);
         }
+    }
+
+    public String cancelAppointment(Long appointmentId){
+        AppointmentsEntity appointment = findById(appointmentId);
+        if (LocalDate.now().isBefore(appointment.getTimeDoctors().getDate())) {
+            if (appointment.getStatus().equals(AppointmentStatus.PENDING)) {
+                appointment.setStatus(AppointmentStatus.CANCEL);
+                appointment.getTimeDoctors().setTimeDoctorStatus(TimeDoctorStatus.AVAILABLE);
+                save(appointment);
+                return "Success!!";
+            }
+            else return "Error!!";
+        }
+        else return "You are only allowed to cancel 1 day in advance!!";
     }
 }

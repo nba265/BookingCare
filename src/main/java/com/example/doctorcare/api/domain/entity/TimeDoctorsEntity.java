@@ -28,7 +28,7 @@ public class TimeDoctorsEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
-    @OneToOne(mappedBy = "timeDoctors")
+    @OneToOne(mappedBy = "timeDoctors",cascade = CascadeType.ALL)
     private AppointmentsEntity appointments;
 
     @JsonIgnore

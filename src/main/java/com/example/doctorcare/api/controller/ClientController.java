@@ -8,6 +8,7 @@ import com.example.doctorcare.api.domain.dto.request.MakeAppointment;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.CustomersEntity;
+import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
@@ -169,6 +170,7 @@ public class ClientController {
             appointments.setCreateDate(LocalDateTime.now());
             appointments.setTimeDoctors(timeDoctorService.findByIdEntity(makeAppointment.getTimeDoctorId()));
             appointments.getTimeDoctors().setAppointments(appointments);
+            appointments.getTimeDoctors().setTimeDoctorStatus(TimeDoctorStatus.UNAVAILABLE);
             appointments.setServices(servicesService.findById(makeAppointment.getServId()));
             CustomersEntity customers = new CustomersEntity();
             customers.setEmail(user.getEmail());
@@ -221,21 +223,36 @@ public class ClientController {
     @GetMapping("/appointmentInfo")
     public ResponseEntity<?> appointmentInfo(@RequestParam("appointmentId") Long id) {
         try {
-            AppointmentCustomer appointmentCustomer = new AppointmentCustomer();
+            UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             AppointmentsEntity appointment = appointmentsService.findById(id);
-            User doctor = userDetailsService.findByTimeDoctorId(appointment.getTimeDoctors().getId());
-            appointmentCustomer.setDoctorName(doctor.getFullName());
-            appointmentCustomer.setPhoneDoctor(doctor.getPhone());
-            appointmentCustomer.setGenderDoctor(doctor.getGender().toString());
-            appointmentCustomer.setSpecialistDoctor(doctor.getSpecialist().getName());
-            appointmentCustomer.setGenderCustomer(appointment.getCustomers().getGender().toString());
-            appointmentCustomer.setBirthday(appointment.getCustomers().getBirthday().toString());
-            appointmentCustomer.setNamePatient(appointment.getCustomers().getNamePatient());
-            appointmentCustomer.setPhonePatient(appointment.getCustomers().getPhonePatient());
-            appointmentCustomer.setDescription(appointment.getDescription());
-            appointmentCustomer.setStatus(appointment.getStatus());
-            return new ResponseEntity<>(appointmentCustomer, HttpStatus.OK);
+            if (user.getId().equals(appointment.getUser().getId())) {
+                AppointmentCustomer appointmentCustomer = new AppointmentCustomer();
+                User doctor = userDetailsService.findByTimeDoctorId(appointment.getTimeDoctors().getId());
+                appointmentCustomer.setDoctorName(doctor.getFullName());
+                appointmentCustomer.setPhoneDoctor(doctor.getPhone());
+                appointmentCustomer.setGenderDoctor(doctor.getGender().toString());
+                appointmentCustomer.setSpecialistDoctor(doctor.getSpecialist().getName());
+                appointmentCustomer.setGenderCustomer(appointment.getCustomers().getGender().toString());
+                appointmentCustomer.setBirthday(appointment.getCustomers().getBirthday().toString());
+                appointmentCustomer.setNamePatient(appointment.getCustomers().getNamePatient());
+                appointmentCustomer.setPhonePatient(appointment.getCustomers().getPhonePatient());
+                appointmentCustomer.setDescription(appointment.getDescription());
+                appointmentCustomer.setStatus(appointment.getStatus());
+                return new ResponseEntity<>(appointmentCustomer, HttpStatus.OK);
+            }
+            else return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/cancelAppoiment")
+    public ResponseEntity<?> doCancelAppointment(@RequestParam("appointmentId") Long id){
+        try{
+            return new ResponseEntity<>(new MessageResponse(appointmentsService.cancelAppointment(id)), HttpStatus.OK);
+        }
+        catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

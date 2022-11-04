@@ -22,6 +22,10 @@ public class TimeDoctorService {
     public void save(TimeDoctors timeDoctors){
         timeDoctorRepository.save(timeDoctorsMapper.convertToEntity(timeDoctors));
     }
+
+    public void saveEntity(TimeDoctorsEntity timeDoctors){
+        timeDoctorRepository.save(timeDoctors);
+    }
     public List<TimeDoctors> findAllByDoctor(Long doctorId){
         List<TimeDoctors> timeDoctorsList= new ArrayList<>();
         timeDoctorRepository.findByDoctor_Id(doctorId).forEach(timeDoctors -> {timeDoctorsList.add(timeDoctorsMapper.convertToDto(timeDoctors));});
