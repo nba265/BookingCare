@@ -1,5 +1,6 @@
 package com.example.doctorcare.api.domain.entity;
 
+import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -35,6 +36,9 @@ public class TimeDoctorsEntity {
     @JoinColumn(name = "doctor_id")
     private UserEntity doctor;
 
+    @Enumerated(EnumType.STRING)
+    private TimeDoctorStatus timeDoctorStatus;
+
     public TimeDoctorsEntity() {
     }
 
@@ -44,6 +48,14 @@ public class TimeDoctorsEntity {
 
     public Long getId() {
         return id;
+    }
+
+    public TimeDoctorStatus getTimeDoctorStatus() {
+        return timeDoctorStatus;
+    }
+
+    public void setTimeDoctorStatus(TimeDoctorStatus timeDoctorStatus) {
+        this.timeDoctorStatus = timeDoctorStatus;
     }
 
     public void setId(Long id) {

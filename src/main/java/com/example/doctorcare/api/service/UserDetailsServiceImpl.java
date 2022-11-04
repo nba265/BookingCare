@@ -126,4 +126,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         user.setSpecialist(specialistMapper.convertToDto(userEntity.getSpecialist()));
         return user;
     }
+
+    public User findByTimeDoctorId(Long id){
+        UserEntity userEntity = userRepository.findByTimeDoctors_Id(id);
+        User user = userMapper.convertToDto(userEntity);
+        user.setHospitalClinicDoctor(hospitalClinicMapper.convertToDto(userEntity.getHospitalCilinicDoctor()));
+        user.setHospitalClinicMangager(hospitalClinicMapper.convertToDto(userEntity.getHospitalCilinicMangager()));
+        user.setSpecialist(specialistMapper.convertToDto(userEntity.getSpecialist()));
+        return user;
+    }
 }

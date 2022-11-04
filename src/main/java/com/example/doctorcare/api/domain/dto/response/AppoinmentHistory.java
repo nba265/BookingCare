@@ -27,4 +27,6 @@ public class AppoinmentHistory {
 
     private String appointmentCode;
 
+    private String status;
+
 }

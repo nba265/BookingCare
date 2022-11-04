@@ -31,6 +31,9 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     Boolean existsByEmail(String email);
 
+    @Query(value = "select u from UserEntity u join u.timeDoctors t where t.id = ?1")
+    UserEntity findByTimeDoctors_Id(Long id);
+
     Optional<UserEntity> findByUsername(@NotBlank @Size(max = 20) String username);
 
     @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 ", nativeQuery = false)

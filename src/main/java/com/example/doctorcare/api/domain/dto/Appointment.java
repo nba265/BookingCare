@@ -36,6 +36,7 @@ public class Appointment {
     @JsonIgnore
     private TimeDoctors timeDoctors;
 
+    @JsonIgnore
     private User user;
 
     private String appointmentCode;

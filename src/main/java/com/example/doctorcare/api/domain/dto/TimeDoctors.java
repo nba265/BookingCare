@@ -2,6 +2,7 @@ package com.example.doctorcare.api.domain.dto;
 
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +37,9 @@ public class TimeDoctors {
 
     @JsonIgnore
     private User doctor;
+
+    @Enumerated(EnumType.STRING)
+    private TimeDoctorStatus timeDoctorStatus;
 
     @Override
     public String toString() {

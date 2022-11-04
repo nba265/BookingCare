@@ -112,7 +112,7 @@ public class DoctorController {
         List<TimeDoctors> timeDoctorsList = timeDoctorService.findAllByDoctor(user.getId());
         List<TimeDoctor> timeDoctors = new ArrayList<>();
         timeDoctorsList.forEach(timeDoctors1 -> {
-            timeDoctors.add(new TimeDoctor(timeDoctors1.getId(), timeDoctors1.getTimeStart().toString(), timeDoctors1.getTimeEnd().toString(), timeDoctors1.getDate().toString()));
+            timeDoctors.add(new TimeDoctor(timeDoctors1.getId(), timeDoctors1.getTimeStart().toString(), timeDoctors1.getTimeEnd().toString(), timeDoctors1.getDate().toString(),timeDoctors1.getTimeDoctorStatus().toString()));
         });
         try {
             return new ResponseEntity<>(timeDoctors, HttpStatus.OK);
@@ -143,7 +143,7 @@ public class DoctorController {
     public ResponseEntity<?> editTimeDoctor(@RequestParam("id") Long id) {
         TimeDoctors timeDoctors = timeDoctorService.findById(id);
         try {
-            return new ResponseEntity<>(new TimeDoctor(timeDoctors.getId(), timeDoctors.getTimeStart().toString(), timeDoctors.getTimeEnd().toString(), timeDoctors.getDate().toString()), HttpStatus.OK);
+            return new ResponseEntity<>(new TimeDoctor(timeDoctors.getId(), timeDoctors.getTimeStart().toString(), timeDoctors.getTimeEnd().toString(), timeDoctors.getDate().toString(),timeDoctors.getTimeDoctorStatus().toString()), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }

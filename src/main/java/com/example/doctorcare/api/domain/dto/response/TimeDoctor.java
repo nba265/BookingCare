@@ -1,10 +1,14 @@
 package com.example.doctorcare.api.domain.dto.response;
 
+import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Setter
 @Getter
@@ -21,4 +25,6 @@ public class TimeDoctor {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String date;
+
+    private String timeDoctorStatus;
 }

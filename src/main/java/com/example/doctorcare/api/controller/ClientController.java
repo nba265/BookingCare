@@ -9,7 +9,10 @@ import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.CustomersEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.enums.AppointmentStatus;
+import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.service.*;
+import com.example.doctorcare.api.utilis.RandomStringGenaration;
 import com.example.doctorcare.api.utilis.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -140,13 +143,14 @@ public class ClientController {
             doctorSearchInfo.setHospName(doctor.getHospitalClinicDoctor().getName());
             doctorSearchInfo.setSpecialist(doctor.getSpecialist().getName());
             doctorSearchInfo.setDoctorId(doctorId);
-            List<TimeDoctors> timeDoctorsList = timeDoctorService.findFreeTimeByDoctorId(doctorId);
+            List<TimeDoctors> timeDoctorsList = timeDoctorService.findAllByDoctorAndStatus(doctorId,TimeDoctorStatus.AVAILABLE);
             timeDoctorsList.forEach(timeDoctors -> {
                 TimeDoctor timeDoctor = new TimeDoctor();
                 timeDoctor.setTimeEnd(timeDoctors.getTimeEnd().toString());
                 timeDoctor.setTimeStart(timeDoctors.getTimeStart().toString());
                 timeDoctor.setId(timeDoctors.getId());
                 timeDoctor.setDate(timeDoctors.getDate().toString());
+                timeDoctor.setTimeDoctorStatus(timeDoctors.getTimeDoctorStatus().toString());
                 doctorSearchInfo.getTimeDoctors().add(timeDoctor);
             });
             doctorSearchInfo.setHosId(doctor.getHospitalClinicDoctor().getId());
@@ -177,9 +181,13 @@ public class ClientController {
             customers.setIdentityCard(makeAppointment.getIdentityCard());
             appointments.setCustomers(customers);
             appointments.setDescription(makeAppointment.getDescription());
+            appointments.setStatus(AppointmentStatus.PENDING);
+            appointments.setUser(user);
+            appointments.setAppointmentCode(RandomStringGenaration.randomStringWithLength(10));
             appointmentsService.save(appointments);
-            return new ResponseEntity<>(appointmentMapper.convertToDto(appointments), HttpStatus.OK);
+            return new ResponseEntity<>(new MessageResponse("Appointment created successfully! \nPlease check it in history. "), HttpStatus.CREATED);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -199,6 +207,7 @@ public class ClientController {
                 appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
+                appointmentHistory.setStatus(appointments.getStatus().toString());
                 appointmentHistories.add(appointmentHistory);
             });
             if (appointmentHistories.isEmpty())
@@ -214,14 +223,17 @@ public class ClientController {
         try {
             AppointmentCustomer appointmentCustomer = new AppointmentCustomer();
             AppointmentsEntity appointment = appointmentsService.findById(id);
-            appointmentCustomer.setDoctorName(appointment.getUser().getFullName());
-            appointmentCustomer.setPhoneDoctor(appointment.getUser().getPhone());
-            appointmentCustomer.setGenderDoctor(appointment.getUser().getGender().toString());
+            User doctor = userDetailsService.findByTimeDoctorId(appointment.getTimeDoctors().getId());
+            appointmentCustomer.setDoctorName(doctor.getFullName());
+            appointmentCustomer.setPhoneDoctor(doctor.getPhone());
+            appointmentCustomer.setGenderDoctor(doctor.getGender().toString());
+            appointmentCustomer.setSpecialistDoctor(doctor.getSpecialist().getName());
             appointmentCustomer.setGenderCustomer(appointment.getCustomers().getGender().toString());
             appointmentCustomer.setBirthday(appointment.getCustomers().getBirthday().toString());
             appointmentCustomer.setNamePatient(appointment.getCustomers().getNamePatient());
             appointmentCustomer.setPhonePatient(appointment.getCustomers().getPhonePatient());
             appointmentCustomer.setDescription(appointment.getDescription());
+            appointmentCustomer.setStatus(appointment.getStatus());
             return new ResponseEntity<>(appointmentCustomer, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,6 +3,7 @@ package com.example.doctorcare.api.service;
 import com.example.doctorcare.api.domain.Mapper.TimeDoctorsMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
+import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.repository.TimeDoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,14 @@ public class TimeDoctorService {
         timeDoctorRepository.findByDoctor_Id(doctorId).forEach(timeDoctors -> {timeDoctorsList.add(timeDoctorsMapper.convertToDto(timeDoctors));});
     return timeDoctorsList;
     }
+
+    public List<TimeDoctors> findAllByDoctorAndStatus(Long doctorId, TimeDoctorStatus timeDoctorStatus){
+        List<TimeDoctors> timeDoctorsList= new ArrayList<>();
+        timeDoctorRepository.findByDoctor_IdAndTimeDoctorStatus(doctorId,timeDoctorStatus).forEach(timeDoctors -> {timeDoctorsList.add(timeDoctorsMapper.convertToDto(timeDoctors));});
+        return timeDoctorsList;
+    }
+
+
     public TimeDoctors findById(Long id){
         return timeDoctorsMapper.convertToDto(timeDoctorRepository.findById(id).get());
     }
