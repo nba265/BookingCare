@@ -6,6 +6,8 @@
 package com.example.doctorcare.api.config.security;
 
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.doctorcare.api.config.security.JWT.AuthEntryPointJwt;
 import com.example.doctorcare.api.config.security.JWT.AuthTokenFilter;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
@@ -86,7 +88,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated();
-
         http.csrf().disable();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

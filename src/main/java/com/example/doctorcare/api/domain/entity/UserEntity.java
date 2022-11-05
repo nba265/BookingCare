@@ -50,7 +50,8 @@ public class UserEntity implements Serializable {
 
     private String experience;
 
-    private String token;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -101,6 +102,14 @@ public class UserEntity implements Serializable {
         this.status = status;
         this.createDate = createDate;
         this.userRoles = userRoles;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
     public UserEntity(String email, String username, String password) {
@@ -251,14 +260,6 @@ public class UserEntity implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public Set<AppointmentsEntity> getAppointmentsEntities() {

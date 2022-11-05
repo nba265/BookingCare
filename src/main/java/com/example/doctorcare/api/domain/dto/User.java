@@ -35,6 +35,9 @@ public class User {
 
     private String phone;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
+
     private String degree;
 
     @Enumerated(EnumType.STRING)
