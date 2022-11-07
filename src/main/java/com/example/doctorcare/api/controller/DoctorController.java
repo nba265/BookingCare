@@ -5,8 +5,10 @@ import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
 import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
 import com.example.doctorcare.api.domain.dto.response.AppointmentHistoryForDoctor;
+import com.example.doctorcare.api.domain.dto.response.MessageResponse;
 import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
+import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.service.AppointmentsService;
@@ -89,23 +91,25 @@ public class DoctorController {
     @PostMapping("/createTimeDoctors")
     public ResponseEntity<?> createTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
         try {
-            TimeDoctors timeDoctors;
+            TimeDoctorsEntity timeDoctors;
             if (timeDoctors1.getId() != null) {
                 timeDoctors = timeDoctorService.findById(timeDoctors1.getId());
-                timeDoctors.setTimeDoctorStatus(TimeDoctorStatus.AVAILABLE);
             } else {
-                timeDoctors = new TimeDoctors();
+                timeDoctors = new TimeDoctorsEntity();
                 UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-                timeDoctors.setDoctor(userMapper.convertToDto(user));
+                timeDoctors.setDoctor(user);
             }
+            timeDoctors.setTimeDoctorStatus(TimeDoctorStatus.AVAILABLE);
             timeDoctors.setTimeStart(LocalTime.parse(timeDoctors1.getTimeStart()));
             timeDoctors.setTimeEnd(LocalTime.parse(timeDoctors1.getTimeEnd()));
             timeDoctors.setDate(LocalDate.parse(timeDoctors1.getCreateDate()));
             timeDoctorService.save(timeDoctors);
+            return new ResponseEntity<>(new MessageResponse("Time doctor has been created/updated successfully! \nPlease check it in history. "), HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(null, HttpStatus.OK);
+
     }
 
     @GetMapping("/getTimeDoctors")
@@ -124,7 +128,7 @@ public class DoctorController {
         }
     }
 
-    @PutMapping("/editTimeDoctors")
+    /*@PutMapping("/editTimeDoctors")
     public ResponseEntity<?> editTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
         try {
             TimeDoctors timeDoctors = new TimeDoctors();
@@ -140,8 +144,8 @@ public class DoctorController {
         }
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
-
-    @GetMapping("/displayEditTimeDoctors")
+*/
+    /*@GetMapping("/displayEditTimeDoctors")
     public ResponseEntity<?> editTimeDoctor(@RequestParam("id") Long id) {
         TimeDoctors timeDoctors = timeDoctorService.findById(id);
         try {
@@ -150,9 +154,9 @@ public class DoctorController {
             e.printStackTrace();
         }
         return new ResponseEntity<>(null, HttpStatus.OK);
-    }
+    }*/
 
-    @DeleteMapping("/deleteTimeDoctors")
+/*    @DeleteMapping("/deleteTimeDoctors")
     public ResponseEntity<?> deleteTimeDoctor(@RequestParam("id") Long id) {
         try {
             timeDoctorService.deleteById(id);
@@ -161,7 +165,7 @@ public class DoctorController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(null, HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping("/displayListAppointment")
     public ResponseEntity<?> getAppointmentHistory(@RequestParam(defaultValue = "1") int page,

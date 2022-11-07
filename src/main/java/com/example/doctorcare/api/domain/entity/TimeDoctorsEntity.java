@@ -101,4 +101,17 @@ public class TimeDoctorsEntity {
     public void setDoctor(UserEntity doctor) {
         this.doctor = doctor;
     }
+
+    @Override
+    public String toString() {
+        return "TimeDoctorsEntity{" +
+                "id=" + id +
+                ", timeStart=" + timeStart +
+                ", timeEnd=" + timeEnd +
+                ", date=" + date +
+                ", appointments=" + appointments +
+                ", doctor=" + doctor +
+                ", timeDoctorStatus=" + timeDoctorStatus +
+                '}';
+    }
 }
