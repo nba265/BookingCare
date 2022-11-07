@@ -19,8 +19,8 @@ public class TimeDoctorService {
     @Autowired
     private TimeDoctorsMapper timeDoctorsMapper;
 
-    public void save(TimeDoctors timeDoctors) {
-        timeDoctorRepository.save(timeDoctorsMapper.convertToEntity(timeDoctors));
+    public void save(TimeDoctorsEntity timeDoctors) {
+        timeDoctorRepository.save(timeDoctors);
     }
 
     public void saveEntity(TimeDoctorsEntity timeDoctors) {
@@ -40,8 +40,8 @@ public class TimeDoctorService {
     }
 
 
-    public TimeDoctors findById(Long id) {
-        return timeDoctorsMapper.convertToDto(timeDoctorRepository.findById(id).get());
+    public TimeDoctorsEntity findById(Long id) {
+        return timeDoctorRepository.findById(id).get();
     }
 
     public TimeDoctorsEntity findByIdEntity(Long id) {

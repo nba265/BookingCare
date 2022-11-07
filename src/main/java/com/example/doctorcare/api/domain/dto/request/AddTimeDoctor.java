@@ -19,4 +19,14 @@ public class AddTimeDoctor {
     private String timeStart;
     private String timeEnd;
     private String createDate;
+
+    @Override
+    public String toString() {
+        return "AddTimeDoctor{" +
+                "id=" + id +
+                ", timeStart='" + timeStart + '\'' +
+                ", timeEnd='" + timeEnd + '\'' +
+                ", createDate='" + createDate + '\'' +
+                '}';
+    }
 }
