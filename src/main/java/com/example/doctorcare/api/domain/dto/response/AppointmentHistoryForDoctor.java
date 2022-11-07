@@ -28,4 +28,6 @@ public class AppointmentHistoryForDoctor {
     private String status;
 
     private String description;
+
+    private String service;
 }

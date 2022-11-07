@@ -225,7 +225,7 @@ public class DoctorController {
                     userDetailsService.findByTimeDoctorId(appointments.getTimeDoctors().getId()).getSpecialist().getName(),
                     appointments.getAppointmentCode(),
                     appointments.getStatus().toString(),
-                    appointments.getDescription()), HttpStatus.OK);
+                    appointments.getDescription(),appointments.getServices().getName()), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -20,6 +20,5 @@ public class AddService {
 
     private Double price;
 
-    private Long HospitalId;
 
 }

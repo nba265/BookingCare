@@ -8,6 +8,7 @@ import com.example.doctorcare.api.repository.HospitalClinicRepository;
 import com.example.doctorcare.api.repository.ServicesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +50,16 @@ public class ServicesService {
 
     public void save(Services services) {
         servicesRepository.save(serviceMapper.convertToEntity(services));
-
     }
 
 
-
+    @Transactional(rollbackFor = {Exception.class, Throwable.class})
+    public void saveEntity(ServicesEntity servicesEntity) throws Exception {
+        try {
+            servicesRepository.save(servicesEntity);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

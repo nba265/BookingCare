@@ -3,13 +3,14 @@ package com.example.doctorcare.api.controller;
 import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
-import com.example.doctorcare.api.domain.dto.Services;
 import com.example.doctorcare.api.domain.dto.request.AddService;
 import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
-import com.example.doctorcare.api.domain.dto.response.AppointmentCustomer;
+import com.example.doctorcare.api.domain.dto.response.AppointmentInfoForUser;
+import com.example.doctorcare.api.domain.dto.response.MessageResponse;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.ServicesEntity;
+import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.ServiceEnum;
 import com.example.doctorcare.api.service.AppointmentsService;
@@ -27,10 +28,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -99,17 +97,19 @@ public class ManagerController {
     @GetMapping("/appointmentInfo")
     public ResponseEntity<?> appointmentInfo(@RequestParam("id") Long id) {
         try {
-            AppointmentCustomer appointmentCustomer = new AppointmentCustomer();
+            AppointmentInfoForUser appointmentInfoForUser = new AppointmentInfoForUser();
             AppointmentsEntity appointment = appointmentsService.findById(id);
-            appointmentCustomer.setDoctorName(appointment.getUser().getFullName());
-            appointmentCustomer.setPhoneDoctor(appointment.getUser().getPhone());
-            appointmentCustomer.setGenderDoctor(appointment.getUser().getGender().toString());
-            appointmentCustomer.setGenderCustomer(appointment.getCustomers().getGender().toString());
-            appointmentCustomer.setBirthday(appointment.getCustomers().getBirthday().toString());
-            appointmentCustomer.setNamePatient(appointment.getCustomers().getNamePatient());
-            appointmentCustomer.setPhonePatient(appointment.getCustomers().getPhonePatient());
-            appointmentCustomer.setStatus(appointment.getStatus());
-            return new ResponseEntity<>(appointmentCustomer, HttpStatus.OK);
+            appointmentInfoForUser.setDoctorName(appointment.getUser().getFullName());
+            appointmentInfoForUser.setPhoneDoctor(appointment.getUser().getPhone());
+            appointmentInfoForUser.setGenderDoctor(appointment.getUser().getGender().toString());
+            appointmentInfoForUser.setGenderCustomer(appointment.getCustomers().getGender().toString());
+            appointmentInfoForUser.setBirthday(appointment.getCustomers().getBirthday().toString());
+            appointmentInfoForUser.setNamePatient(appointment.getCustomers().getNamePatient());
+            appointmentInfoForUser.setPhonePatient(appointment.getCustomers().getPhonePatient());
+            appointmentInfoForUser.setStatus(appointment.getStatus());
+            appointmentInfoForUser.setService(appointment.getServices().getName());
+            appointmentInfoForUser.setPrice(appointment.getServices().getPrice().toString());
+            return new ResponseEntity<>(appointmentInfoForUser, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -144,22 +144,30 @@ public class ManagerController {
     }
 
     @PostMapping("/createEditService")
-    public ResponseEntity<?> createTimeService(@RequestBody AddService service) {
+    public ResponseEntity<?> createOrEditService(@RequestBody AddService service) {
         try {
-            HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername());
-            Services services = new Services();
-            if (service.getId() == null) {
-                services.setId(0L);
-            } else services.setId(service.getId());
-            services.setName(service.getName());
-            services.setPrice(service.getPrice());
-            services.setDescription(service.getDescription());
-            services.setHospitalCilinic(hospitalClinicEntity);
-            if (services.getServiceEnum() == null) {
-                services.setServiceEnum(ServiceEnum.AVAILABLE);
+            UserEntity manager = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
+            ServicesEntity servicesEntity = new ServicesEntity();
+            Long hospitalId = null;
+            if (service.getId() != null) {
+                servicesEntity = servicesService.findById(service.getId());
+                hospitalId = servicesEntity.getHospitalCilinic().getId();
             }
-            servicesService.save(services);
-            return new ResponseEntity<>(services, HttpStatus.OK);
+            HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(manager.getUsername());
+            if (hospitalId == null || Objects.equals(hospitalClinicEntity.getId(), hospitalId)) {
+/*                if (service.getId() == null) {
+                    servicesEntity.setId(0L);
+                } else servicesEntity.setId(service.getId());*/
+                servicesEntity.setName(service.getName());
+                servicesEntity.setPrice(service.getPrice());
+                servicesEntity.setDescription(service.getDescription());
+                servicesEntity.setHospitalCilinic(hospitalClinicEntity);
+                if (servicesEntity.getServiceEnum() == null) {
+                    servicesEntity.setServiceEnum(ServiceEnum.AVAILABLE);
+                }
+                servicesService.saveEntity(servicesEntity);
+                return new ResponseEntity<>("Success!", HttpStatus.OK);
+            } else return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -217,21 +225,21 @@ public class ManagerController {
     }
 
 
-    @PostMapping("/addService")
+/*    @PostMapping("/addService")
 
     public ResponseEntity<?> addService(@RequestBody AddService addService) {
         try {
-            Services services = new Services();
+            ServicesEntity services = new ServicesEntity();
             services.setName(addService.getName());
-            services.setDescription(addService.getName());
+            services.setDescription(addService.getDescription());
             services.setPrice(addService.getPrice());
-            services.setHospitalCilinic(hospitalClinicService.findById(addService.getId()));
-            servicesService.save(services);
-        } catch (Exception e
-        ) {
+            services.setHospitalCilinic(hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername()));
+            services.setServiceEnum(ServiceEnum.AVAILABLE);
+            servicesService.saveEntity(services);
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(null, HttpStatus.OK);
-    }
+        return new ResponseEntity<>(new MessageResponse("Success!"), HttpStatus.CREATED);
+    }*/
 }

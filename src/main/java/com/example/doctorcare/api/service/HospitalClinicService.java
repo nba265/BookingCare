@@ -47,7 +47,6 @@ public class HospitalClinicService {
     }
     public HospitalClinicEntity findByManagerUsername(String username){
         return hospitalClinicRepository.findByManager_Username(username);
-
     }
 
     public HospitalClinicEntity findById(Long id){

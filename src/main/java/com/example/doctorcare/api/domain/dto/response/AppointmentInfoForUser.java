@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppointmentCustomer {
+public class AppointmentInfoForUser {
 
     private String namePatient;
 
@@ -31,4 +31,8 @@ public class AppointmentCustomer {
     private AppointmentStatus status;
 
     private String description;
+
+    private String service;
+
+    private String price;
 }

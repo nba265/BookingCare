@@ -8,7 +8,6 @@ import com.example.doctorcare.api.domain.dto.request.MakeAppointment;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.CustomersEntity;
-import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
@@ -25,7 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin(origins = "*")
@@ -223,24 +222,28 @@ public class ClientController {
     @GetMapping("/appointmentInfo")
     public ResponseEntity<?> appointmentInfo(@RequestParam("appointmentId") Long id) {
         try {
-            UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-            AppointmentsEntity appointment = appointmentsService.findById(id);
-            if (user.getId().equals(appointment.getUser().getId())) {
-                AppointmentCustomer appointmentCustomer = new AppointmentCustomer();
-                User doctor = userDetailsService.findByTimeDoctorId(appointment.getTimeDoctors().getId());
-                appointmentCustomer.setDoctorName(doctor.getFullName());
-                appointmentCustomer.setPhoneDoctor(doctor.getPhone());
-                appointmentCustomer.setGenderDoctor(doctor.getGender().toString());
-                appointmentCustomer.setSpecialistDoctor(doctor.getSpecialist().getName());
-                appointmentCustomer.setGenderCustomer(appointment.getCustomers().getGender().toString());
-                appointmentCustomer.setBirthday(appointment.getCustomers().getBirthday().toString());
-                appointmentCustomer.setNamePatient(appointment.getCustomers().getNamePatient());
-                appointmentCustomer.setPhonePatient(appointment.getCustomers().getPhonePatient());
-                appointmentCustomer.setDescription(appointment.getDescription());
-                appointmentCustomer.setStatus(appointment.getStatus());
-                return new ResponseEntity<>(appointmentCustomer, HttpStatus.OK);
+            Optional<UserEntity> user = userDetailsService.findByUsername(SecurityUtils.getUsername());
+            if (user.isPresent()) {
+                AppointmentsEntity appointment = appointmentsService.findById(id);
+                if (user.get().getId().equals(appointment.getUser().getId())) {
+                    AppointmentInfoForUser appointmentInfoForUser = new AppointmentInfoForUser();
+                    User doctor = userDetailsService.findByTimeDoctorId(appointment.getTimeDoctors().getId());
+                    appointmentInfoForUser.setDoctorName(doctor.getFullName());
+                    appointmentInfoForUser.setPhoneDoctor(doctor.getPhone());
+                    appointmentInfoForUser.setGenderDoctor(doctor.getGender().toString());
+                    appointmentInfoForUser.setSpecialistDoctor(doctor.getSpecialist().getName());
+                    appointmentInfoForUser.setGenderCustomer(appointment.getCustomers().getGender().toString());
+                    appointmentInfoForUser.setBirthday(appointment.getCustomers().getBirthday().toString());
+                    appointmentInfoForUser.setNamePatient(appointment.getCustomers().getNamePatient());
+                    appointmentInfoForUser.setPhonePatient(appointment.getCustomers().getPhonePatient());
+                    appointmentInfoForUser.setDescription(appointment.getDescription());
+                    appointmentInfoForUser.setStatus(appointment.getStatus());
+                    appointmentInfoForUser.setService(appointment.getServices().getName());
+                    appointmentInfoForUser.setPrice(appointment.getServices().getPrice().toString());
+                    return new ResponseEntity<>(appointmentInfoForUser, HttpStatus.OK);
+                }
             }
-            else return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
