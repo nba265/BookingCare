@@ -1,6 +1,6 @@
 package com.example.doctorcare.api.domain.dto.response;
 
-import com.example.doctorcare.api.enums.AppointmentStatus;
+
 import com.example.doctorcare.api.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,4 +24,8 @@ public class AppointmentHistoryForDoctor {
     private String specialist;
 
     private String appointmentCode;
+
+    private String status;
+
+    private String description;
 }

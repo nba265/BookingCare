@@ -41,15 +41,15 @@ public class AppointmentsService {
             afterCreateDate = null;
         } else afterCreateDate = after.atStartOfDay();
 
-            if (beforeCreateDate == null && afterCreateDate == null) {
-                return appointmentsRepository.findByHostpital(id, pageable);
-            } else if (beforeCreateDate != null && afterCreateDate == null) {
-                return appointmentsRepository.findByCreateDateAfterAndHospital(id,beforeCreateDate, pageable);
-            } else if (beforeCreateDate == null) {
-                return appointmentsRepository.findByCreateDateBeforeAndHospital(id,afterCreateDate, pageable);
-            } else {
-                return appointmentsRepository.findByCreateDateBetweenAndHospital(id,beforeCreateDate, afterCreateDate, pageable);
-            }
+        if (beforeCreateDate == null && afterCreateDate == null) {
+            return appointmentsRepository.findByServices_HospitalCilinic_Id(id, pageable);
+        } else if (beforeCreateDate != null && afterCreateDate == null) {
+            return appointmentsRepository.findByServices_HospitalCilinic_IdAndCreateDateAfter(id, beforeCreateDate, pageable);
+        } else if (beforeCreateDate == null) {
+            return appointmentsRepository.findByServices_HospitalCilinic_IdAndCreateDateBefore(id, afterCreateDate, pageable);
+        } else {
+            return appointmentsRepository.findByServices_HospitalCilinic_IdAndCreateDateBetween(id, beforeCreateDate, afterCreateDate, pageable);
+        }
 
     }
 
@@ -67,17 +67,17 @@ public class AppointmentsService {
             afterCreateDate = null;
         } else afterCreateDate = after.atStartOfDay();
         if (beforeCreateDate == null && afterCreateDate == null) {
-            return appointmentsRepository.findByDoctorsId(id, pageable);
+            return appointmentsRepository.findByTimeDoctors_Doctor_Id(id, pageable);
         } else if (beforeCreateDate != null && afterCreateDate == null) {
-            return appointmentsRepository.findByCreateDateAfterAndDoctorId(id,beforeCreateDate, pageable);
+            return appointmentsRepository.findByTimeDoctors_Doctor_IdAndCreateDateAfter(id, beforeCreateDate, pageable);
         } else if (beforeCreateDate == null) {
-            return appointmentsRepository.findByCreateDateBeforeAndDoctorId(id,afterCreateDate, pageable);
+            return appointmentsRepository.findByTimeDoctors_Doctor_IdAndCreateDateBefore(id, afterCreateDate, pageable);
         } else {
-            return appointmentsRepository.findByCreateDateBetweenAndDoctorId(id,beforeCreateDate, afterCreateDate, pageable);
+            return appointmentsRepository.findByTimeDoctors_Doctor_IdAndCreateDateBetween(id, beforeCreateDate, afterCreateDate, pageable);
         }
     }
 
-    public String cancelAppointment(Long appointmentId){
+    public String cancelAppointment(Long appointmentId) {
         AppointmentsEntity appointment = findById(appointmentId);
         if (LocalDate.now().isBefore(appointment.getTimeDoctors().getDate())) {
             if (appointment.getStatus().equals(AppointmentStatus.PENDING)) {
@@ -85,9 +85,7 @@ public class AppointmentsService {
                 appointment.getTimeDoctors().setTimeDoctorStatus(TimeDoctorStatus.AVAILABLE);
                 save(appointment);
                 return "Success!!";
-            }
-            else return "Error!!";
-        }
-        else return "You are only allowed to cancel 1 day in advance!!";
+            } else return "Error!!";
+        } else return "You are only allowed to cancel 1 day in advance!!";
     }
 }

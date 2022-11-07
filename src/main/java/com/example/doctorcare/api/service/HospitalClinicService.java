@@ -58,8 +58,8 @@ public class HospitalClinicService {
         return hospitalClinicMapper.convertToDto(userRepository.findById(docId).get().getHospitalCilinicDoctor());
     }
 
-    public HospitalClinic findByAppointment_Id(Long id){
-        return hospitalClinicMapper.convertToDto(hospitalClinicRepository.findByAppointment_Id(id));
+    public HospitalClinicEntity findByAppointment_Id(Long id){
+        return hospitalClinicRepository.findByAppointment_Id(id);
     }
 
 }

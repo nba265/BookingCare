@@ -61,7 +61,7 @@ public class ManagerController {
     @GetMapping("/appointmentHistory")
     public ResponseEntity<?> appointmentHistory(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(required = false) LocalDate before,
             @RequestParam(required = false) LocalDate after
     ) {

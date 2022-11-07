@@ -8,7 +8,6 @@ import com.example.doctorcare.api.repository.TimeDoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,35 +18,37 @@ public class TimeDoctorService {
     private TimeDoctorRepository timeDoctorRepository;
     @Autowired
     private TimeDoctorsMapper timeDoctorsMapper;
-    public void save(TimeDoctors timeDoctors){
+
+    public void save(TimeDoctors timeDoctors) {
         timeDoctorRepository.save(timeDoctorsMapper.convertToEntity(timeDoctors));
     }
 
-    public void saveEntity(TimeDoctorsEntity timeDoctors){
+    public void saveEntity(TimeDoctorsEntity timeDoctors) {
         timeDoctorRepository.save(timeDoctors);
     }
-    public List<TimeDoctors> findAllByDoctor(Long doctorId){
-        List<TimeDoctors> timeDoctorsList= new ArrayList<>();
-        timeDoctorRepository.findByDoctor_Id(doctorId).forEach(timeDoctors -> {timeDoctorsList.add(timeDoctorsMapper.convertToDto(timeDoctors));});
-    return timeDoctorsList;
+
+    public List<TimeDoctors> findAllByDoctor(Long doctorId) {
+        List<TimeDoctors> timeDoctorsList = new ArrayList<>();
+        timeDoctorRepository.findByDoctor_IdAndTimeStamp(doctorId).forEach(timeDoctors -> timeDoctorsList.add(timeDoctorsMapper.convertToDto(timeDoctors)));
+        return timeDoctorsList;
     }
 
-    public List<TimeDoctors> findAllByDoctorAndStatus(Long doctorId, TimeDoctorStatus timeDoctorStatus){
-        List<TimeDoctors> timeDoctorsList= new ArrayList<>();
-        timeDoctorRepository.findByDoctor_IdAndTimeDoctorStatus(doctorId,timeDoctorStatus).forEach(timeDoctors -> {timeDoctorsList.add(timeDoctorsMapper.convertToDto(timeDoctors));});
+    public List<TimeDoctors> findAllByDoctorAndStatus(Long doctorId, TimeDoctorStatus timeDoctorStatus) {
+        List<TimeDoctors> timeDoctorsList = new ArrayList<>();
+        timeDoctorRepository.findByDoctor_IdAndTimeDoctorStatus(doctorId, timeDoctorStatus).forEach(timeDoctors -> timeDoctorsList.add(timeDoctorsMapper.convertToDto(timeDoctors)));
         return timeDoctorsList;
     }
 
 
-    public TimeDoctors findById(Long id){
+    public TimeDoctors findById(Long id) {
         return timeDoctorsMapper.convertToDto(timeDoctorRepository.findById(id).get());
     }
 
-    public TimeDoctorsEntity findByIdEntity(Long id){
+    public TimeDoctorsEntity findByIdEntity(Long id) {
         return timeDoctorRepository.findById(id).get();
     }
 
-    public List<TimeDoctors> findFreeTimeByDoctorId(Long id){
+    public List<TimeDoctors> findFreeTimeByDoctorId(Long id) {
         List<TimeDoctors> timeDoctors = findAllByDoctor(id);
         timeDoctors.forEach(timeDoctors1 -> {
             if (timeDoctors1.getAppointments() != null) timeDoctors.remove(timeDoctors1);
@@ -55,8 +56,7 @@ public class TimeDoctorService {
         return timeDoctors;
     }
 
-    public void deleteById(Long id)
-    {
+    public void deleteById(Long id) {
         timeDoctorRepository.deleteById(id);
     }
 
