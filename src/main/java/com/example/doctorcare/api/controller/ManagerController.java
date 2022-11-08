@@ -96,7 +96,7 @@ public class ManagerController {
     }
 
     @GetMapping("/appointmentInfo")
-    public ResponseEntity<?> appointmentInfo(@RequestParam("id") Long id) {
+    public ResponseEntity<?> appointmentInfo(@RequestParam("appointmentId") Long id) {
         try {
             AppointmentInfoForUser appointmentInfoForUser = new AppointmentInfoForUser();
             AppointmentsEntity appointment = appointmentsService.findById(id);
@@ -230,7 +230,6 @@ public class ManagerController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 /*    @PostMapping("/addService")
 
