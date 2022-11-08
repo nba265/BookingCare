@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ServicesService {
@@ -35,8 +36,8 @@ public class ServicesService {
         return services;
     }
 
-    public ServicesEntity findById(Long id){
-        return servicesRepository.findById(id).get();
+    public Optional<ServicesEntity> findById(Long id){
+        return servicesRepository.findById(id);
     }
 
 

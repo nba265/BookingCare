@@ -7,6 +7,7 @@ import com.example.doctorcare.api.domain.dto.request.AddService;
 import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
 import com.example.doctorcare.api.domain.dto.response.AppointmentInfoForUser;
 import com.example.doctorcare.api.domain.dto.response.MessageResponse;
+import com.example.doctorcare.api.domain.dto.response.Service;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.ServicesEntity;
@@ -59,7 +60,7 @@ public class ManagerController {
     @GetMapping("/appointmentHistory")
     public ResponseEntity<?> appointmentHistory(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "7") int size,
             @RequestParam(required = false) LocalDate before,
             @RequestParam(required = false) LocalDate after
     ) {
@@ -133,7 +134,7 @@ public class ManagerController {
     public ResponseEntity<?> editServiceAppointment(@RequestParam("idAppointment") Long idAppointment, @RequestParam("idService") Long idService) {
         try {
             AppointmentsEntity appointmentsEntity = appointmentsService.findById(idAppointment);
-            ServicesEntity servicesEntity = servicesService.findById(idService);
+            ServicesEntity servicesEntity = servicesService.findById(idService).get();
             appointmentsEntity.setServices(servicesEntity);
             appointmentsService.save(appointmentsEntity);
             return new ResponseEntity<>(null, HttpStatus.OK);
@@ -150,7 +151,7 @@ public class ManagerController {
             ServicesEntity servicesEntity = new ServicesEntity();
             Long hospitalId = null;
             if (service.getId() != null) {
-                servicesEntity = servicesService.findById(service.getId());
+                servicesEntity = servicesService.findById(service.getId()).get();
                 hospitalId = servicesEntity.getHospitalCilinic().getId();
             }
             HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(manager.getUsername());
@@ -197,9 +198,15 @@ public class ManagerController {
 
 
     @GetMapping("/getServiceById")
-    public ResponseEntity<?> displayEditSerivice(Long id) {
+    public ResponseEntity<?> displayEditService(@RequestParam("idService") Long id) {
         try {
-            return new ResponseEntity<>(serviceMapper.convertToDto(servicesService.findById(id)), HttpStatus.OK);
+            ServicesEntity services;
+            if(servicesService.findById(id).isEmpty()){
+
+                return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
+            }
+            services=servicesService.findById(id).get();
+            return new ResponseEntity<>(new Service(services.getId(),services.getName(),services.getDescription(), services.getPrice(), services.getDescription()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -208,7 +215,7 @@ public class ManagerController {
     @DeleteMapping("/deleteServiceById")
     public ResponseEntity<?> deleteService(Long id) {
         try {
-            return new ResponseEntity<>(serviceMapper.convertToDto(servicesService.findById(id)), HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

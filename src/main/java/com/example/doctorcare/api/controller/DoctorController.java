@@ -169,7 +169,7 @@ public class DoctorController {
 
     @GetMapping("/displayListAppointment")
     public ResponseEntity<?> getAppointmentHistory(@RequestParam(defaultValue = "1") int page,
-                                                   @RequestParam(defaultValue = "5") int size,
+                                                   @RequestParam(defaultValue = "7") int size,
                                                    @RequestParam(required = false) String before,
                                                    @RequestParam(required = false) String after) {
         try {

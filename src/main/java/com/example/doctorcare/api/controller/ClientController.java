@@ -170,7 +170,7 @@ public class ClientController {
             appointments.setTimeDoctors(timeDoctorService.findByIdEntity(makeAppointment.getTimeDoctorId()));
             appointments.getTimeDoctors().setAppointments(appointments);
             appointments.getTimeDoctors().setTimeDoctorStatus(TimeDoctorStatus.UNAVAILABLE);
-            appointments.setServices(servicesService.findById(makeAppointment.getServId()));
+            appointments.setServices(servicesService.findById(makeAppointment.getServId()).get());
             CustomersEntity customers = new CustomersEntity();
             customers.setEmail(user.getEmail());
             customers.setNameBooking(user.getFullName());
