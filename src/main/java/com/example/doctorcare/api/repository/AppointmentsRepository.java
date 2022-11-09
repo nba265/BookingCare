@@ -23,8 +23,20 @@ public interface AppointmentsRepository extends CrudRepository<AppointmentsEntit
                                                               Pageable pageable);
 
     //@Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where hospital_cilinic_id=?1 and date(?2) <= td.date", nativeQuery = true)
-    Page<AppointmentsEntity> findByServices_HospitalCilinic_IdAndCreateDateBefore(Long id, LocalDateTime after,
+    Page<AppointmentsEntity> findByUser_IdAndCreateDateBefore(Long id, LocalDateTime after,
                                                                Pageable pageable);
+    Page<AppointmentsEntity> findByUser_Id(Long id, Pageable pageable);
+
+    //@Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where hospital_cilinic_id=?1 and date(?2) >= td.date", nativeQuery = true)
+    Page<AppointmentsEntity> findByUser_IdAndCreateDateAfter(Long id, LocalDateTime before,
+                                                                                 Pageable pageable);
+
+    Page<AppointmentsEntity> findByUser_IdAndCreateDateBetween(Long id, LocalDateTime before, LocalDateTime after, Pageable pageable);
+
+
+    //@Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where hospital_cilinic_id=?1 and date(?2) <= td.date", nativeQuery = true)
+    Page<AppointmentsEntity> findByServices_HospitalCilinic_IdAndCreateDateBefore(Long id, LocalDateTime after,
+                                                                                  Pageable pageable);
 
 
     //@Query(value = "select a.* from appointments a join time_doctors td on a.time_doctors_id=td.id join `user` u on td.doctor_id= u.id where u.id = ?1 and date(?2) >= td.date ", nativeQuery = true)

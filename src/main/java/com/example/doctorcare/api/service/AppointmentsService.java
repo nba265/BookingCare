@@ -53,6 +53,28 @@ public class AppointmentsService {
 
     }
 
+    public Page<AppointmentsEntity> findByUserCreateDate(Long id, Pageable pageable, LocalDate before, LocalDate after) {
+        LocalDateTime beforeCreateDate;
+        LocalDateTime afterCreateDate;
+        if (before == null) {
+            beforeCreateDate = null;
+        } else beforeCreateDate = before.atStartOfDay();
+        if (after == null) {
+            afterCreateDate = null;
+        } else afterCreateDate = after.atStartOfDay();
+
+        if (beforeCreateDate == null && afterCreateDate == null) {
+            return appointmentsRepository.findByUser_Id(id, pageable);
+        } else if (beforeCreateDate != null && afterCreateDate == null) {
+            return appointmentsRepository.findByUser_IdAndCreateDateAfter(id, beforeCreateDate, pageable);
+        } else if (beforeCreateDate == null) {
+            return appointmentsRepository.findByUser_IdAndCreateDateBefore(id, afterCreateDate, pageable);
+        } else {
+            return appointmentsRepository.findByUser_IdAndCreateDateBetween(id, beforeCreateDate, afterCreateDate, pageable);
+        }
+
+    }
+
     public AppointmentsEntity findByTimeDoctorsId(Long id) {
         return appointmentsRepository.findByTimeDoctors_Id(id);
     }

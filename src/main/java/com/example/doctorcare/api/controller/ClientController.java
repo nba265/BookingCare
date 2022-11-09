@@ -8,13 +8,17 @@ import com.example.doctorcare.api.domain.dto.request.MakeAppointment;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.CustomersEntity;
+import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.service.*;
+import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
 import com.example.doctorcare.api.utilis.RandomStringGenaration;
 import com.example.doctorcare.api.utilis.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,10 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -56,6 +57,8 @@ public class ClientController {
 
     @Autowired
     AppointmentMapper appointmentMapper;
+
+    PaginationAndSortUtil paginationAndSortUtil = new PaginationAndSortUtil();
 
 /*    @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital() {
@@ -193,7 +196,7 @@ public class ClientController {
         }
     }
 
-    @GetMapping("/appointmentHistory")
+/*    @GetMapping("/appointmentHistory")
     public ResponseEntity<?> appointmentHistory() {
         try {
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
@@ -207,7 +210,6 @@ public class ClientController {
                 appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
                 appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
-                appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistory.setStatus(appointments.getStatus().toString());
                 appointmentHistories.add(appointmentHistory);
             });
@@ -215,6 +217,46 @@ public class ClientController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             return new ResponseEntity<>(appointmentHistories, HttpStatus.OK);
         } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
+
+    @GetMapping("/appointmentHistory")
+    public ResponseEntity<?> appointmentHistory(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "7") int size,
+            @RequestParam(required = false) LocalDate before,
+            @RequestParam(required = false) LocalDate after
+    ) {
+        try {
+            UserEntity userEntity = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
+            List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
+            List<AppointmentsEntity> appointmentsEntities;
+            Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
+            Page<AppointmentsEntity> pageTuts = appointmentsService.findByUserCreateDate(userEntity.getId(), pagingSort, before, after);
+            appointmentsEntities = pageTuts.getContent();
+            if (appointmentsEntities.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            appointmentsEntities.forEach(appointments -> {
+                AppoinmentHistory appointmentHistory = new AppoinmentHistory();
+                appointmentHistory.setId(appointments.getId());
+                appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId()).getName());
+                appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
+                appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
+                appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
+                appointmentHistory.setStatus(appointments.getStatus().toString());
+                appointmentHistories.add(appointmentHistory);
+            });
+            Map<String, Object> response = new HashMap<>();
+            response.put("appointmentList", appointmentHistories);
+            response.put("currentPage", pageTuts.getNumber() + 1);
+            response.put("totalItems", pageTuts.getTotalElements());
+            response.put("totalPages", pageTuts.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

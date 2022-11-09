@@ -67,4 +67,9 @@ public class SecurityUtils {
         Optional<UserEntity> user = userDetailsService.findByUsername(loginRequest.getUsername());
         return user.filter(userEntity -> encoder.matches(loginRequest.getPassword(), userEntity.getPassword())).isPresent();
     }
+
+    public static boolean checkOldPassword(UserEntity user,String oldPassword){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.matches(oldPassword, user.getPassword());
+    }
 }
