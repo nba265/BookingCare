@@ -3,6 +3,7 @@ package com.example.doctorcare.api.service;
 import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.HospitalClinic;
+import com.example.doctorcare.api.domain.dto.response.HospitalClinicInfoResponse;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.repository.HospitalClinicRepository;
 import com.example.doctorcare.api.repository.UserRepository;
@@ -27,9 +28,9 @@ public class HospitalClinicService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<HospitalClinic> hospitalCilinicList(){
-        List<HospitalClinic> hospitalClinics = new ArrayList<>();
-        hospitalClinicRepository.findAll().forEach(hospitalCilinicEntity -> hospitalClinics.add(hospitalClinicMapper.convertToDto(hospitalCilinicEntity)));
+    public List<HospitalClinicInfoResponse> hospitalCilinicList(){
+        List<HospitalClinicInfoResponse> hospitalClinics = new ArrayList<>();
+        hospitalClinicRepository.findAll().forEach(hospitalCilinicEntity -> hospitalClinics.add( new HospitalClinicInfoResponse(hospitalCilinicEntity.getId(),hospitalCilinicEntity.getName(),hospitalCilinicEntity.getAddress(),hospitalCilinicEntity.getPhone()) ));
         return hospitalClinics;
     }
 
