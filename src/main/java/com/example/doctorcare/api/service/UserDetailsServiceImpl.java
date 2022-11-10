@@ -52,7 +52,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return UserDetailsImpl.build(user);
     }
     public boolean checkUser(String name){
-        return userRepository.existsByUsername(name);
+        return (userRepository.existsByUsername(name) && userRepository.findByUsername(name).get().getUserRoles().stream().anyMatch(userRoleEntity -> userRoleEntity.getRole().toString().equalsIgnoreCase("ROLE_MANAGER")));
     }
 
     public Iterable<UserEntity> findAll(){

@@ -37,11 +37,21 @@ public class AdminController {
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/checkUser")
+    public ResponseEntity<?> getUsers(@RequestParam ("username") String username){
+        try{
+
+            return new ResponseEntity<>(userDetailsService.checkUser(username), HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @PostMapping("/addHospital")
     public ResponseEntity<?> addHospital(@RequestBody AddHospital hospitalCilinic){
         try{
-            if(userDetailsService.checkUser(hospitalCilinic.getManagerUserName())){
-                UserEntity user=userDetailsService.findByUsername(hospitalCilinic.getManagerUserName()).get();
+            if(userDetailsService.checkUser(hospitalCilinic.getUsername())){
+                UserEntity user=userDetailsService.findByUsername(hospitalCilinic.getUsername()).get();
                 if(user.getId()==null){
                     return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
                 }
@@ -50,7 +60,7 @@ public class AdminController {
                 hospitalClinicEntity.setManager(user);
                 hospitalClinicEntity.setName(hospitalCilinic.getName());
                 hospitalClinicService.save(hospitalClinicEntity);
-                return new ResponseEntity<>(null,HttpStatus.OK);
+                return new ResponseEntity<>(new MessageResponse("success"),HttpStatus.OK);
             }
             else return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong Username or Password"));
         }

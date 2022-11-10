@@ -28,7 +28,6 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
 
     Boolean existsByUsername(String username);
-
     Boolean existsByEmail(String email);
 
     @Query(value = "select u from UserEntity u join u.timeDoctors t where t.id = ?1")

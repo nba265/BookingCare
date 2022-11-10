@@ -10,8 +10,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddHospital {
+    private Long id;
 
     private String name;
 
-    private String managerUserName;
+    private String username;
+
+    private String address;
+
+    private String phone;
+
 }
