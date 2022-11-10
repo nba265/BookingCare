@@ -49,8 +49,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/listUser")
-
     @PostMapping("/editProfileUser")
     public ResponseEntity<?> doEditProfileUser(@RequestBody UserInformation userInformation) {
         try {

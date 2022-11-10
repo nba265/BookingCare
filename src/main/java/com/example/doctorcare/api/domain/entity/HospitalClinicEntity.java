@@ -18,7 +18,6 @@ public class HospitalClinicEntity {
 
     private String address;
 
-    @Size(max = 10)
     private String phone;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "manager_id", referencedColumnName = "id")

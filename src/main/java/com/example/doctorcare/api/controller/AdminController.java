@@ -29,44 +29,47 @@ public class AdminController {
 
 
     @GetMapping("/listHospital")
-    public ResponseEntity<?> getAllHospital(){
-        try{
+    public ResponseEntity<?> getAllHospital() {
+        try {
             return new ResponseEntity<>(hospitalClinicService.hospitalCilinicList(), HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/checkUser")
-    public ResponseEntity<?> getUsers(@RequestParam ("username") String username){
-        try{
+    public ResponseEntity<?> getUsers(@RequestParam("username") String username) {
+        try {
 
             return new ResponseEntity<>(userDetailsService.checkUser(username), HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/addHospital")
-    public ResponseEntity<?> addHospital(@RequestBody AddHospital hospitalCilinic){
-        try{
-            if(userDetailsService.checkUser(hospitalCilinic.getUsername())){
-                UserEntity user=userDetailsService.findByUsername(hospitalCilinic.getUsername()).get();
-                if(user.getId()==null){
-                    return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> addHospital(@RequestBody AddHospital hospitalCilinic) {
+        try {
+            if (userDetailsService.checkUser(hospitalCilinic.getUsername())) {
+                UserEntity user = userDetailsService.findByUsername(hospitalCilinic.getUsername()).get();
+                HospitalClinicEntity hospitalClinicEntity;
+                if (hospitalCilinic.getId() == null) {
+                    hospitalClinicEntity = new HospitalClinicEntity();
+                } else {
+                    hospitalClinicEntity = hospitalClinicService.findById(hospitalCilinic.getId());
                 }
-                user.getUserRoles().add(userRoleService.findById(2L).get());
-                HospitalClinicEntity hospitalClinicEntity = new HospitalClinicEntity();
+                hospitalClinicEntity.setAddress(hospitalCilinic.getAddress());
+                hospitalClinicEntity.setPhone(hospitalCilinic.getPhone());
                 hospitalClinicEntity.setManager(user);
                 hospitalClinicEntity.setName(hospitalCilinic.getName());
                 hospitalClinicService.save(hospitalClinicEntity);
-                return new ResponseEntity<>(new MessageResponse("success"),HttpStatus.OK);
-            }
-            else return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong Username or Password"));
-        }
-        catch (Exception e){
+                return new ResponseEntity<>(new MessageResponse("success"), HttpStatus.OK);
+            } else return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong Manager Username"));
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

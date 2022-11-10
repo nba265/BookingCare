@@ -146,7 +146,7 @@ public class ClientController {
             doctorSearchInfo.setHospName(doctor.getHospitalClinicDoctor().getName());
             doctorSearchInfo.setSpecialist(doctor.getSpecialist().getName());
             doctorSearchInfo.setDoctorId(doctorId);
-            List<TimeDoctors> timeDoctorsList = timeDoctorService.findAllByDoctorAndStatus(doctorId,TimeDoctorStatus.AVAILABLE);
+            List<TimeDoctors> timeDoctorsList = timeDoctorService.findByDoctor_IdAndTimeStampAndStatus(doctorId,TimeDoctorStatus.AVAILABLE);
             timeDoctorsList.forEach(timeDoctors -> {
                 TimeDoctor timeDoctor = new TimeDoctor();
                 timeDoctor.setTimeEnd(timeDoctors.getTimeEnd().toString());

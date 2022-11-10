@@ -17,6 +17,9 @@ public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity, 
     @Query(value = "select t from TimeDoctorsEntity t where t.doctor.id = ?1 and t.timeDoctorStatus = ?2")
     Set<TimeDoctorsEntity> findByDoctor_IdAndTimeDoctorStatus(Long doctor_id, TimeDoctorStatus timeDoctorStatus);
 
+    @Query(value = "select * from time_doctors td where TIMESTAMP(`date`, time_start) > timestamp(curdate(),current_time()) and td.doctor_id=?1 and td.time_doctor_status = ?2", nativeQuery = true)
+    Set<TimeDoctorsEntity> findByDoctor_IdAndTimeStampAndStatus(Long doctorId,String timeDoctorStatus);
+
     Optional<TimeDoctorsEntity> findById(Long id);
 
     void deleteById(Long id);

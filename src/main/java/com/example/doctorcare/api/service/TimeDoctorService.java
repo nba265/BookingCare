@@ -33,9 +33,9 @@ public class TimeDoctorService {
         return timeDoctorsList;
     }
 
-    public List<TimeDoctors> findAllByDoctorAndStatus(Long doctorId, TimeDoctorStatus timeDoctorStatus) {
+    public List<TimeDoctors> findByDoctor_IdAndTimeStampAndStatus(Long doctorId, TimeDoctorStatus timeDoctorStatus) {
         List<TimeDoctors> timeDoctorsList = new ArrayList<>();
-        timeDoctorRepository.findByDoctor_IdAndTimeDoctorStatus(doctorId, timeDoctorStatus).forEach(timeDoctors -> timeDoctorsList.add(timeDoctorsMapper.convertToDto(timeDoctors)));
+        timeDoctorRepository.findByDoctor_IdAndTimeStampAndStatus(doctorId, timeDoctorStatus.toString()).forEach(timeDoctors -> timeDoctorsList.add(timeDoctorsMapper.convertToDto(timeDoctors)));
         return timeDoctorsList;
     }
 
