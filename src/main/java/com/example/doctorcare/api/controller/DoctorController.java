@@ -1,7 +1,6 @@
 package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
-import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
 import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
 import com.example.doctorcare.api.domain.dto.response.AppointmentHistoryForDoctor;
@@ -49,6 +48,8 @@ public class DoctorController {
 
     @Autowired
     HospitalClinicService hospitalClinicService;
+
+
 
     /*@GetMapping("/appointmentHistory")
     public ResponseEntity<?> appointmentHistory(
@@ -113,15 +114,39 @@ public class DoctorController {
     }
 
     @GetMapping("/getTimeDoctors")
-    public ResponseEntity<?> getTimeDoctor() {
-        UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-        List<TimeDoctors> timeDoctorsList = timeDoctorService.findAllByDoctor(user.getId());
-        List<TimeDoctor> timeDoctors = new ArrayList<>();
-        timeDoctorsList.forEach(timeDoctors1 -> {
-            timeDoctors.add(new TimeDoctor(timeDoctors1.getId(), timeDoctors1.getTimeStart().toString(), timeDoctors1.getTimeEnd().toString(), timeDoctors1.getDate().toString(), timeDoctors1.getTimeDoctorStatus().toString()));
-        });
+    public ResponseEntity<?> getTimeDoctor(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "7") int size,
+            @RequestParam(required = false) String before,
+            @RequestParam(required = false) String after
+    ) {
         try {
-            return new ResponseEntity<>(timeDoctors, HttpStatus.OK);
+            UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
+            List<TimeDoctorsEntity> timeDoctorsList;
+            List<TimeDoctor> timeDoctors = new ArrayList<>();
+            LocalDate before1 = null;
+            LocalDate after1 = null;
+            if (before != null) {
+                before1 = LocalDate.parse(before);
+            }
+            if (after != null) {
+                after1 = LocalDate.parse(after);
+            }
+            Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
+            Page<TimeDoctorsEntity> pageTuts = timeDoctorService.findByDoctorsId(user.getId(), pagingSort, before1, after1);
+            timeDoctorsList = pageTuts.getContent();
+            if (timeDoctorsList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            timeDoctorsList.forEach(timeDoctors1 -> {
+                timeDoctors.add(new TimeDoctor(timeDoctors1.getId(), timeDoctors1.getTimeStart().toString(), timeDoctors1.getTimeEnd().toString(), timeDoctors1.getDate().toString(), timeDoctors1.getTimeDoctorStatus().toString()));
+            });
+            Map<String, Object> response = new HashMap<>();
+            response.put("timeDoctorLists", timeDoctors);
+            response.put("currentPage", pageTuts.getNumber() + 1);
+            response.put("totalItems", pageTuts.getTotalElements());
+            response.put("totalPages", pageTuts.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -177,18 +202,18 @@ public class DoctorController {
             List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
             List<AppointmentsEntity> appointmentsEntities;
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
-            LocalDate before1=null;
-            LocalDate after1=null;
+            LocalDate before1 = null;
+            LocalDate after1 = null;
 
-            if(before!=null){
-                before1=LocalDate.parse(before);
-
-            }
-            if(after!=null){
-                after1=LocalDate.parse(after);
+            if (before != null) {
+                before1 = LocalDate.parse(before);
 
             }
-            System.out.println(after1);
+            if (after != null) {
+                after1 = LocalDate.parse(after);
+
+            }
+            /*      System.out.println(after1);*/
             Page<AppointmentsEntity> pageTuts = appointmentsService.findByDoctorsId(user.getId(), pagingSort, before1, after1);
             appointmentsEntities = pageTuts.getContent();
             if (appointmentsEntities.isEmpty()) {
@@ -229,7 +254,7 @@ public class DoctorController {
                     userDetailsService.findByTimeDoctorId(appointments.getTimeDoctors().getId()).getSpecialist().getName(),
                     appointments.getAppointmentCode(),
                     appointments.getStatus().toString(),
-                    appointments.getDescription(),appointments.getServices().getName()), HttpStatus.OK);
+                    appointments.getDescription(), appointments.getServices().getName()), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -225,15 +225,23 @@ public class ClientController {
     public ResponseEntity<?> appointmentHistory(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "7") int size,
-            @RequestParam(required = false) LocalDate before,
-            @RequestParam(required = false) LocalDate after
+            @RequestParam(required = false) String before,
+            @RequestParam(required = false) String after
     ) {
         try {
             UserEntity userEntity = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
             List<AppointmentsEntity> appointmentsEntities;
+            LocalDate before1 = null;
+            LocalDate after1 = null;
+            if (before != null) {
+                before1 = LocalDate.parse(before);
+            }
+            if (after != null) {
+                after1 = LocalDate.parse(after);
+            }
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
-            Page<AppointmentsEntity> pageTuts = appointmentsService.findByUserCreateDate(userEntity.getId(), pagingSort, before, after);
+            Page<AppointmentsEntity> pageTuts = appointmentsService.findByUserCreateDate(userEntity.getId(), pagingSort, before1, after1);
             appointmentsEntities = pageTuts.getContent();
             if (appointmentsEntities.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);

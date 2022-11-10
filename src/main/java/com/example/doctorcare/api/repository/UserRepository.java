@@ -7,8 +7,12 @@ package com.example.doctorcare.api.repository;
 
 
 import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.Gender;
 import com.example.doctorcare.api.enums.UserStatus;
+import io.lettuce.core.dynamic.annotation.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.core.userdetails.User;
@@ -16,6 +20,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,5 +48,13 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 and u.specialist.id = ?2 and u.gender = ?3")
     Set<UserEntity> findDoctorByHospitalCilinicIdAndSpecIdAndGender(Long hosId, Long specId, Gender gender);
 
-
+    Page<UserEntity> findAll(Pageable pageable);
+/*
+    Page<UserEntity> findByEmailContainsIgnoreCaseOrFullNameContainsIgnoreCaseOrUsernameContainsIgnoreCaseOrHospitalCilinicDoctor_Name(String email, String fullName, @NotBlank @Size(max = 20) String username, String hospitalCilinicDoctor_name, Pageable pageable);
+*/
+    @Query(value = "select u.* from user u join user_role_relationship urr " +
+            "on u.id = urr.user_id join user_role ur on urr.role_id = ur.id " +
+            "left join hospital_cilinic hc on u.hospital_cilinic_id = hc.id " +
+            "where u.username like ?1 or full_name like ?1 or email like ?1 or hc.name like ?1 or ur.id = ?2",nativeQuery=true)
+    List<UserEntity> findByEmailContainsIgnoreCaseOrFullNameContainsIgnoreCaseOrUsernameContainsIgnoreCaseOrHospitalCilinicDoctor_Name(String keyword,Long roleId);
 }

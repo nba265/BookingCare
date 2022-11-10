@@ -2,17 +2,30 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.request.AddHospital;
+import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
 import com.example.doctorcare.api.domain.dto.response.MessageResponse;
+import com.example.doctorcare.api.domain.dto.response.UserInformationForAdmin;
+import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.service.HospitalClinicService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import com.example.doctorcare.api.service.UserRoleService;
+import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -26,6 +39,8 @@ public class AdminController {
     private UserMapper userMapper;
     @Autowired
     private UserRoleService userRoleService;
+
+    PaginationAndSortUtil paginationAndSortUtil = new PaginationAndSortUtil();
 
 
     @GetMapping("/listHospital")
@@ -48,6 +63,45 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/getAllUser")
+    public ResponseEntity<?> getAllUsers(
+            @RequestParam(value = "role", required = false,defaultValue = "0") Long roleId,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "7") int size) {
+        try {
+            List<UserInformationForAdmin> userInformationForAdmins = new ArrayList<>();
+            List<UserEntity> userEntities;
+            Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
+            Page<UserEntity> pageTuts = userDetailsService.findUser(keyword, roleId, pagingSort);
+            userEntities = pageTuts.getContent();
+            if (userEntities.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            userEntities.forEach(user -> {
+                UserInformationForAdmin userInformation = new UserInformationForAdmin();
+                BeanUtils.copyProperties(user,userInformation,"createDate","birthday");
+                userInformation.setCreateDate(user.getCreateDate().toString());
+                if (user.getHospitalCilinicDoctor() != null) {
+                    userInformation.setHospitalName(user.getHospitalCilinicDoctor().getName());
+                }
+                userInformation.setRole(user.getUserRoles().stream().findFirst().get().getRole());
+                userInformation.setBirthday(user.getBirthday().toString());
+                userInformationForAdmins.add(userInformation);
+            });
+            Map<String, Object> response = new HashMap<>();
+            response.put("userInformationForAdmins", userInformationForAdmins);
+            response.put("currentPage", pageTuts.getNumber() + 1);
+            response.put("totalItems", pageTuts.getTotalElements());
+            response.put("totalPages", pageTuts.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @PostMapping("/addHospital")
     public ResponseEntity<?> addHospital(@RequestBody AddHospital hospitalCilinic) {
