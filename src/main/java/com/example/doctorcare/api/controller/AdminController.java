@@ -66,15 +66,16 @@ public class AdminController {
 
     @GetMapping("/getAllUser")
     public ResponseEntity<?> getAllUsers(
-            @RequestParam(value = "role", required = false,defaultValue = "0") Long roleId,
-            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "role", required = false,defaultValue = "0") String roleId,
+            @RequestParam(value = "keyword", required = false,defaultValue = "") String keyword,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "7") int size) {
         try {
+            System.out.println(roleId+""+keyword+""+page+""+size);
             List<UserInformationForAdmin> userInformationForAdmins = new ArrayList<>();
             List<UserEntity> userEntities;
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
-            Page<UserEntity> pageTuts = userDetailsService.findUser(keyword, roleId, pagingSort);
+            Page<UserEntity> pageTuts = userDetailsService.findUser(keyword, Long.parseLong(roleId), pagingSort);
             userEntities = pageTuts.getContent();
             if (userEntities.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -82,11 +83,13 @@ public class AdminController {
             userEntities.forEach(user -> {
                 UserInformationForAdmin userInformation = new UserInformationForAdmin();
                 BeanUtils.copyProperties(user,userInformation,"createDate","birthday");
+                userInformation.setGender(user.getGender().toString());
+                userInformation.setStatus(user.getStatus().toString());
                 userInformation.setCreateDate(user.getCreateDate().toString());
                 if (user.getHospitalCilinicDoctor() != null) {
                     userInformation.setHospitalName(user.getHospitalCilinicDoctor().getName());
                 }
-                userInformation.setRole(user.getUserRoles().stream().findFirst().get().getRole());
+                userInformation.setRole(user.getUserRoles().stream().findFirst().get().getRole().toString());
                 userInformation.setBirthday(user.getBirthday().toString());
                 userInformationForAdmins.add(userInformation);
             });
@@ -95,6 +98,7 @@ public class AdminController {
             response.put("currentPage", pageTuts.getNumber() + 1);
             response.put("totalItems", pageTuts.getTotalElements());
             response.put("totalPages", pageTuts.getTotalPages());
+
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

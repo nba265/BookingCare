@@ -41,6 +41,7 @@ public class UserController {
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             UserInformation userInformation = new UserInformation();
             BeanUtils.copyProperties(user, userInformation, "birthday");
+            userInformation.setGender(user.getGender().toString());
             userInformation.setBirthday(user.getBirthday().toString());
             return new ResponseEntity<>(userInformation, HttpStatus.OK);
         } catch (Exception e) {

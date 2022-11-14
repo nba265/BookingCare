@@ -35,7 +35,7 @@ public class UserInformation {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private String gender;
 
     private String phone;
 

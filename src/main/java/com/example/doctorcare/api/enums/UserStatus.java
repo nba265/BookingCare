@@ -8,5 +8,5 @@ package com.example.doctorcare.api.enums;
 public enum UserStatus {
     ACTIVE,
     BLOCK,
-    UNACTIVE;
+    INACTIVE;
 }

@@ -11,10 +11,8 @@ import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.SpecialistMapper;
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.User;
-import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.domain.entity.UserRoleEntity;
-import com.example.doctorcare.api.enums.Role;
 import com.example.doctorcare.api.enums.UserStatus;
 import com.example.doctorcare.api.repository.UserRepository;
 import com.example.doctorcare.api.repository.UserRoleRepository;
@@ -28,9 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -144,9 +140,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public Page<UserEntity> findUser(String keyword, Long roleId, Pageable pageable) {
-        Set<UserRoleEntity> userRoleEntities = new HashSet<>();
-        List<UserEntity> userEntities = new ArrayList<>();
-        if (roleId == 0 && keyword == null) {
+        List<UserEntity> userEntities;
+        if (roleId == 0 && Objects.equals(keyword, "")) {
             return userRepository.findAll(pageable);
         }/* else if (roleId != 0){
             userRepository.findByEmailContainsIgnoreCaseOrFullNameContainsIgnoreCaseOrUsernameContainsIgnoreCaseOrHospitalCilinicDoctor_Name(keyword,roleId)
@@ -157,10 +152,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         }
                     });
             return new PageImpl<>(userEntities,pageable,userEntities.size());
-        }*/
-        else{
-            userEntities=userRepository.findByEmailContainsIgnoreCaseOrFullNameContainsIgnoreCaseOrUsernameContainsIgnoreCaseOrHospitalCilinicDoctor_Name(keyword ,roleId);
-            final int start = (int)pageable.getOffset();
+        }*/ else {
+            userEntities = userRepository.findByEmailContainsIgnoreCaseOrFullNameContainsIgnoreCaseOrUsernameContainsIgnoreCaseOrHospitalCilinicDoctor_Name(keyword, roleId);
+
+            final int start = (int) pageable.getOffset();
             final int end = Math.min((start + pageable.getPageSize()), userEntities.size());
             return new PageImpl<>(userEntities.subList(start, end), pageable, userEntities.size());
         }

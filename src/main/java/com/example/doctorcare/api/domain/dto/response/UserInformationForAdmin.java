@@ -37,8 +37,7 @@ public class UserInformationForAdmin {
     private String fullName;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private String gender;
 
     private String phone;
 
@@ -51,15 +50,12 @@ public class UserInformationForAdmin {
     @Nullable
     private String experience;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String role;
 
     private String hospitalName;
 
     private String createDate;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    private String status;
 
 }
