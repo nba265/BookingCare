@@ -23,7 +23,7 @@ public class UserInformation {
 
     public Long id;
 
-    public String birthday;
+    public String birthday; 
 
     @Email
     public String email;

@@ -18,7 +18,9 @@ import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
 import com.example.doctorcare.api.utilis.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -126,26 +129,33 @@ public class DoctorController {
             List<TimeDoctor> timeDoctors = new ArrayList<>();
             LocalDate before1 = null;
             LocalDate after1 = null;
-            if (before != null) {
+            if (!Objects.equals(before, "")) {
                 before1 = LocalDate.parse(before);
             }
-            if (after != null) {
+            if (!Objects.equals(after, "")) {
                 after1 = LocalDate.parse(after);
             }
-            Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
+            Pageable pagingSort = PageRequest.of(page-1,7,Sort.by("date").ascending().and(Sort.by("timeStart")));
             Page<TimeDoctorsEntity> pageTuts = timeDoctorService.findByDoctorsId(user.getId(), pagingSort, before1, after1);
             timeDoctorsList = pageTuts.getContent();
             if (timeDoctorsList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
+           /* List<TimeDoctor> finalTimeDoctors = timeDoctors;*/
             timeDoctorsList.forEach(timeDoctors1 -> {
                 timeDoctors.add(new TimeDoctor(timeDoctors1.getId(), timeDoctors1.getTimeStart().toString(), timeDoctors1.getTimeEnd().toString(), timeDoctors1.getDate().toString(), timeDoctors1.getTimeDoctorStatus().toString()));
             });
+
+            /*timeDoctors = finalTimeDoctors.stream().sorted(Comparator.comparing(TimeDoctor::getDate).thenComparing(TimeDoctor::getTimeStart)).collect(Collectors.toList());*/
+
             Map<String, Object> response = new HashMap<>();
             response.put("timeDoctorLists", timeDoctors);
             response.put("currentPage", pageTuts.getNumber() + 1);
             response.put("totalItems", pageTuts.getTotalElements());
             response.put("totalPages", pageTuts.getTotalPages());
+            timeDoctors.forEach(timeDoctor -> {
+                System.out.println(timeDoctor.getTimeStart());
+            });
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
