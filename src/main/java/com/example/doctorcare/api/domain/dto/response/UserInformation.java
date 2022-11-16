@@ -39,13 +39,10 @@ public class UserInformation {
 
     private String phone;
 
-    @Nullable
     private String degree;
 
-    @Nullable
     private String nationality;
 
-    @Nullable
     private String experience;
 
 }

@@ -89,6 +89,9 @@ public class AdminController {
                 if (user.getHospitalCilinicDoctor() != null) {
                     userInformation.setHospitalName(user.getHospitalCilinicDoctor().getName());
                 }
+                if (user.getHospitalCilinicMangager() != null){
+                    userInformation.setHospitalName(user.getHospitalCilinicMangager().getName());
+                }
                 userInformation.setRole(user.getUserRoles().stream().findFirst().get().getRole().toString());
                 userInformation.setBirthday(user.getBirthday().toString());
                 userInformationForAdmins.add(userInformation);
@@ -123,6 +126,7 @@ public class AdminController {
                 hospitalClinicEntity.setManager(user);
                 hospitalClinicEntity.setName(hospitalCilinic.getName());
                 hospitalClinicService.save(hospitalClinicEntity);
+                user.setHospitalCilinicDoctor(hospitalClinicEntity);
                 return new ResponseEntity<>(new MessageResponse("success"), HttpStatus.OK);
             } else return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong Manager Username"));
         } catch (Exception e) {

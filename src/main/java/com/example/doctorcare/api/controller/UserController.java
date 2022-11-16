@@ -77,11 +77,11 @@ public class UserController {
             if (SecurityUtils.checkOldPassword(user,changePassword.getOldPassword())) {
                 user.setPassword(SecurityUtils.encrytePassword(changePassword.getNewPassword()));
                 userDetailsService.save(user);
-                return new ResponseEntity<>("Success", HttpStatus.OK);
+                return new ResponseEntity<>(new MessageResponse("Success"), HttpStatus.OK);
             } else return new ResponseEntity<>(new MessageResponse("Wrong password"), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new MessageResponse("Error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

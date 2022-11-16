@@ -30,7 +30,7 @@ public class HospitalClinicService {
 
     public List<HospitalClinicInfoResponse> hospitalCilinicList(){
         List<HospitalClinicInfoResponse> hospitalClinics = new ArrayList<>();
-        hospitalClinicRepository.findAll().forEach(hospitalCilinicEntity -> hospitalClinics.add( new HospitalClinicInfoResponse(hospitalCilinicEntity.getId(),hospitalCilinicEntity.getName(),hospitalCilinicEntity.getAddress(),hospitalCilinicEntity.getPhone()) ));
+        hospitalClinicRepository.findAll().forEach(hospitalCilinicEntity -> hospitalClinics.add( new HospitalClinicInfoResponse(hospitalCilinicEntity.getId(),hospitalCilinicEntity.getName(),hospitalCilinicEntity.getAddress(),hospitalCilinicEntity.getPhone(),hospitalCilinicEntity.getManager().getUsername())));
         return hospitalClinics;
     }
 

@@ -88,12 +88,12 @@ public class ClientController {
         }
     }*/
 
-    @GetMapping("/listHospital")
+        @GetMapping("/listHospital")
     public ResponseEntity<?> searchHospital(@RequestParam(name = "keyword", required = false) String keyword) {
         try {
             List<HospitalClinicInfoResponse> responses = new ArrayList<>();
             hospitalClinicService.findByKeywords(keyword).forEach(hospitalCilinic -> {
-                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(), hospitalCilinic.getName(),hospitalCilinic.getAddress(),hospitalCilinic.getPhone()));
+                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(), hospitalCilinic.getName(),hospitalCilinic.getAddress(),hospitalCilinic.getPhone(),null));
             });
             return new ResponseEntity<>(responses, HttpStatus.OK);
         } catch (Exception e) {

@@ -77,9 +77,11 @@ public class ManagerController {
             appointmentsEntities.forEach(appointments -> {
                 AppoinmentHistory appointmentHistory = new AppoinmentHistory();
                 appointmentHistory.setId(appointments.getId());
+                appointmentHistory.setHospitalName(hospitalClinicEntity.getName());
                 appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
                 appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
                 appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                appointmentHistory.setStatus(appointments.getStatus().toString());
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistories.add(appointmentHistory);
             });

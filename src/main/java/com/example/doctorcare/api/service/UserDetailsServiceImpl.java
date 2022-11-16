@@ -56,7 +56,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public boolean checkUser(String name) {
-        return (userRepository.existsByUsername(name) && userRepository.findByUsername(name).get().getUserRoles().stream().anyMatch(userRoleEntity -> userRoleEntity.getRole().toString().equalsIgnoreCase("ROLE_MANAGER")));
+        return (userRepository.existsByUsername(name) && userRepository.findByUsername(name).get().getHospitalCilinicMangager() == null && userRepository.findByUsername(name).get().getUserRoles().stream().anyMatch(userRoleEntity -> userRoleEntity.getRole().toString().equalsIgnoreCase("ROLE_MANAGER")));
     }
 
     public Iterable<UserEntity> findAll() {
@@ -152,13 +152,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         }
                     });
             return new PageImpl<>(userEntities,pageable,userEntities.size());
-        }*/ else {
-            userEntities = userRepository.findByEmailContainsIgnoreCaseOrFullNameContainsIgnoreCaseOrUsernameContainsIgnoreCaseOrHospitalCilinicDoctor_Name(keyword, roleId);
-
-            final int start = (int) pageable.getOffset();
-            final int end = Math.min((start + pageable.getPageSize()), userEntities.size());
-            return new PageImpl<>(userEntities.subList(start, end), pageable, userEntities.size());
+        }*/ else if (roleId != 0 && !Objects.equals(keyword, "")) {
+            userEntities = userRepository.findUserByKeywordAndRole_Id(keyword, roleId);
+        } else if (roleId != 0 && Objects.equals(keyword, "")) {
+            userEntities = userRepository.findByRole_Id(roleId);
+        } else {
+            userEntities = userRepository.findUserByKeywordOrRole_Id(keyword, roleId);
         }
+        final int start = (int) pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), userEntities.size());
+        return new PageImpl<>(userEntities.subList(start, end), pageable, userEntities.size());
     }
-
 }
