@@ -63,10 +63,10 @@ public class UserController {
             user.setPhone(userInformation.getPhone());
             user.setAddress(userInformation.getAddress());*/
             userDetailsService.save(user);
-            return new ResponseEntity<>("Success", HttpStatus.OK);
+            return new ResponseEntity<>(new MessageResponse("Success"), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new MessageResponse("Error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,7 +78,7 @@ public class UserController {
                 user.setPassword(SecurityUtils.encrytePassword(changePassword.getNewPassword()));
                 userDetailsService.save(user);
                 return new ResponseEntity<>(new MessageResponse("Success"), HttpStatus.OK);
-            } else return new ResponseEntity<>(new MessageResponse("Wrong password"), HttpStatus.UNAUTHORIZED);
+            } else return new ResponseEntity<>(new MessageResponse("Wrong password"), HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new MessageResponse("Error"), HttpStatus.INTERNAL_SERVER_ERROR);
