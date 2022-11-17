@@ -1,7 +1,5 @@
 package com.example.doctorcare.api.domain.dto.request;
 
-import com.example.doctorcare.api.domain.dto.User;
-import com.example.doctorcare.api.domain.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +13,18 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddTimeDoctor {
+
     private Long id;
+
     private String timeStart;
+
     private String timeEnd;
+
     private String createDate;
+
+    private String endDate;
+
+    private String[] dateOfWeek;
 
     @Override
     public String toString() {
@@ -27,6 +33,7 @@ public class AddTimeDoctor {
                 ", timeStart='" + timeStart + '\'' +
                 ", timeEnd='" + timeEnd + '\'' +
                 ", createDate='" + createDate + '\'' +
+                ", endDate='" + endDate + '\'' +
                 '}';
     }
 }

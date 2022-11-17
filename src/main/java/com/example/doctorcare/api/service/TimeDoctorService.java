@@ -2,8 +2,11 @@ package com.example.doctorcare.api.service;
 
 import com.example.doctorcare.api.domain.Mapper.TimeDoctorsMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
+import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
+import com.example.doctorcare.api.domain.dto.response.MessageResponse;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
+import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.repository.TimeDoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TimeDoctorService {
@@ -84,5 +88,21 @@ public class TimeDoctorService {
             return timeDoctorRepository.findByDoctor_IdAndDateIsAfter(id, beforeCreateDate, pageable);
         } else
             return timeDoctorRepository.findByDoctor_IdAndDateBetween(id, Objects.requireNonNullElseGet(beforeCreateDate, LocalDate::now), after, pageable);
+    }
+
+    public void addTimeDoctor(AddTimeDoctor addTimeDoctor, UserEntity doctor) {
+        LocalDate startDate = LocalDate.parse(addTimeDoctor.getCreateDate());
+        LocalDate endDate = LocalDate.parse(addTimeDoctor.getEndDate());
+        List<Integer> dateOfWeek = Arrays.stream(addTimeDoctor.getDateOfWeek()).map(Integer::parseInt).toList();
+        List<TimeDoctorsEntity> timeDoctorsEntities = new ArrayList<>();
+        Set<TimeDoctorsEntity> timeDoctorsEntitySet = timeDoctorRepository.findByDoctor_IdAndDateBetween(doctor.getId(), startDate, endDate);
+        for (LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
+            TimeDoctorsEntity timeDoctors = new TimeDoctorsEntity(LocalTime.parse(addTimeDoctor.getTimeStart()),
+                    LocalTime.parse(addTimeDoctor.getTimeEnd()), date, doctor, TimeDoctorStatus.AVAILABLE);
+            if (dateOfWeek.contains((Integer) date.getDayOfWeek().getValue()) && (timeDoctorsEntitySet.isEmpty() || !timeDoctorsEntitySet.contains(timeDoctors))) {
+                timeDoctorsEntities.add(timeDoctors);
+            }
+        }
+        timeDoctorRepository.saveAll(timeDoctorsEntities);
     }
 }

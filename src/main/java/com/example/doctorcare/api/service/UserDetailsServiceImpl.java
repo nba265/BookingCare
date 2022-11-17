@@ -131,7 +131,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
     public Page<UserEntity> findDoctorByHospital(String keyword, Long hosId,Pageable pageable){
         if(Objects.equals(keyword, ""))  {
-            return userRepository.findByHospitalCilinicDoctor(hosId,pageable);
+            return userRepository.findByHospitalCilinicDoctor_Id(hosId,pageable);
 
         }
         else return userRepository.findByFullNameOrSpecialistAndHospitalCilinicDoctor_Id(keyword,hosId,pageable);

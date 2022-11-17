@@ -31,7 +31,7 @@ public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity, 
 
     Page<TimeDoctorsEntity> findByDoctor_IdAndDateBetween(Long doctor_id, LocalDate date, LocalDate date2, Pageable pageable);
 
-
+    Set<TimeDoctorsEntity> findByDoctor_IdAndDateBetween(Long doctor_id, LocalDate date, LocalDate date2);
 
     void deleteById(Long id);
 

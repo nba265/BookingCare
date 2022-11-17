@@ -92,8 +92,8 @@ public class DoctorController {
         }
     }*/
 
-    @PostMapping("/createTimeDoctors")
-    public ResponseEntity<?> createTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
+    @PostMapping("/editTimeDoctors")
+    public ResponseEntity<?> editTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
         try {
             TimeDoctorsEntity timeDoctors;
             if (timeDoctors1.getId() != null) {
@@ -113,15 +113,27 @@ public class DoctorController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
+
+    @PostMapping("/createTimeDoctors")
+    public ResponseEntity<?> createTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
+        try {
+                    UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
+            timeDoctorService.addTimeDoctor(timeDoctors1, user);
+            return new ResponseEntity<>(new MessageResponse("Time doctor has been created successfully! \nPlease check it in history."), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @GetMapping("/getTimeDoctors")
     public ResponseEntity<?> getTimeDoctor(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "7") int size,
-            @RequestParam(required = false) String before,
-            @RequestParam(required = false) String after
+            @RequestParam(required = false,defaultValue = "") String before,
+            @RequestParam(required = false,defaultValue = "") String after
     ) {
         try {
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
@@ -135,13 +147,13 @@ public class DoctorController {
             if (!Objects.equals(after, "")) {
                 after1 = LocalDate.parse(after);
             }
-            Pageable pagingSort = PageRequest.of(page-1,7,Sort.by("date").ascending().and(Sort.by("timeStart")));
+            Pageable pagingSort = PageRequest.of(page - 1, 7, Sort.by("date").ascending().and(Sort.by("timeStart")));
             Page<TimeDoctorsEntity> pageTuts = timeDoctorService.findByDoctorsId(user.getId(), pagingSort, before1, after1);
             timeDoctorsList = pageTuts.getContent();
             if (timeDoctorsList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-           /* List<TimeDoctor> finalTimeDoctors = timeDoctors;*/
+            /* List<TimeDoctor> finalTimeDoctors = timeDoctors;*/
             timeDoctorsList.forEach(timeDoctors1 -> {
                 timeDoctors.add(new TimeDoctor(timeDoctors1.getId(), timeDoctors1.getTimeStart().toString(), timeDoctors1.getTimeEnd().toString(), timeDoctors1.getDate().toString(), timeDoctors1.getTimeDoctorStatus().toString()));
             });
