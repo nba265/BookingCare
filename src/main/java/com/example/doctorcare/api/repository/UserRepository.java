@@ -72,6 +72,6 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     List<UserEntity> findByRole_Id(Long roleId);
 
 
-    Page<UserEntity> findByFullNameOrSpecialistAndHospitalCilinicDoctor_Id(String keyword,Long hosId,Pageable pageable);
-    Page<UserEntity> findByHospitalCilinicDoctor(Long id,Pageable pageable);
+    Page<UserEntity> findByFullNameOrSpecialist_NameAndHospitalCilinicDoctor_Id(String keyword,String keyword1,Long hosId,Pageable pageable);
+    Page<UserEntity> findByHospitalCilinicDoctor_Id(Long id,Pageable pageable);
 }
