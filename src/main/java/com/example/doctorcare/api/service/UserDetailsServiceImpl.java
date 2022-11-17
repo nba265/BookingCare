@@ -129,7 +129,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         user.setSpecialist(specialistMapper.convertToDto(userEntity.getSpecialist()));
         return user;
     }
+    public Page<UserEntity> findDoctorByHospital(String keyword, Long hosId,Pageable pageable){
+        if(Objects.equals(keyword, ""))  {
+            return userRepository.findByHospitalCilinicDoctor(hosId,pageable);
 
+        }
+        else return userRepository.findByFullNameOrSpecialistAndHospitalCilinicDoctor_Id(keyword,hosId,pageable);
+    }
     public User findByTimeDoctorId(Long id) {
         UserEntity userEntity = userRepository.findByTimeDoctors_Id(id);
         User user = userMapper.convertToDto(userEntity);

@@ -71,7 +71,7 @@ public class AdminController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "7") int size) {
         try {
-            System.out.println(roleId+""+keyword+""+page+""+size);
+
             List<UserInformationForAdmin> userInformationForAdmins = new ArrayList<>();
             List<UserEntity> userEntities;
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
@@ -83,6 +83,7 @@ public class AdminController {
             userEntities.forEach(user -> {
                 UserInformationForAdmin userInformation = new UserInformationForAdmin();
                 BeanUtils.copyProperties(user,userInformation,"createDate","birthday");
+                userInformation.setSpecialist(user.getSpecialist().getName());
                 userInformation.setGender(user.getGender().toString());
                 userInformation.setStatus(user.getStatus().toString());
                 userInformation.setCreateDate(user.getCreateDate().toString());

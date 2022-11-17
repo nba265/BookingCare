@@ -42,7 +42,11 @@ public class UserInformation {
     private String degree;
 
     private String nationality;
-
+    private String specialist;
     private String experience;
+
+    private String createDate;
+
+    private String status;
 
 }

@@ -40,7 +40,7 @@ public class UserInformationForAdmin {
     private String gender;
 
     private String phone;
-
+    private String specialist;
     @Nullable
     private String degree;
 

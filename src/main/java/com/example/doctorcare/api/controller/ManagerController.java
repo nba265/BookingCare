@@ -4,10 +4,7 @@ import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
 import com.example.doctorcare.api.domain.dto.request.AddService;
-import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
-import com.example.doctorcare.api.domain.dto.response.AppointmentInfoForUser;
-import com.example.doctorcare.api.domain.dto.response.MessageResponse;
-import com.example.doctorcare.api.domain.dto.response.Service;
+import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.ServicesEntity;
@@ -20,6 +17,7 @@ import com.example.doctorcare.api.service.ServicesService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
 import com.example.doctorcare.api.utilis.SecurityUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,6 +51,7 @@ public class ManagerController {
     AppointmentsService appointmentsService;
     @Autowired
     AppointmentMapper appointmentMapper;
+
 
     PaginationAndSortUtil paginationAndSortUtil = new PaginationAndSortUtil();
 
@@ -187,6 +186,44 @@ public class ManagerController {
         }
     }
 
+    @GetMapping("/getAllDoctors")
+    public ResponseEntity<?> getAllDoctors(
+            @RequestParam(value = "keyword", required = false,defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "7") int size
+    ) {
+        try {
+            Long hosId= userDetailsService.findByUsername(SecurityUtils.getUsername()).get().getHospitalCilinicMangager().getId();
+            List<UserInformationForAdmin> userInformation = new ArrayList<>();
+            List<UserEntity> userEntities;
+            Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
+            Page<UserEntity> pageTuts = userDetailsService.findDoctorByHospital(keyword,hosId, pagingSort);
+            userEntities = pageTuts.getContent();
+            if (userEntities.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            userEntities.forEach(user -> {
+                UserInformationForAdmin userInfo = new UserInformationForAdmin();
+                BeanUtils.copyProperties(user,userInfo,"createDate","birthday");
+                userInfo.setSpecialist(user.getSpecialist().getName());
+                userInfo.setGender(user.getGender().toString());
+                userInfo.setStatus(user.getStatus().toString());
+                userInfo.setCreateDate(user.getCreateDate().toString());
+                userInfo.setBirthday(user.getBirthday().toString());
+                userInformation.add(userInfo);
+            });
+            Map<String, Object> response = new HashMap<>();
+            response.put("userInformation", userInformation);
+            response.put("currentPage", pageTuts.getNumber() + 1);
+            response.put("totalItems", pageTuts.getTotalElements());
+            response.put("totalPages", pageTuts.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital() {
@@ -203,12 +240,12 @@ public class ManagerController {
     public ResponseEntity<?> displayEditService(@RequestParam("idService") Long id) {
         try {
             ServicesEntity services;
-            if(servicesService.findById(id).isEmpty()){
+            if (servicesService.findById(id).isEmpty()) {
 
                 return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
             }
-            services=servicesService.findById(id).get();
-            return new ResponseEntity<>(new Service(services.getId(),services.getName(),services.getDescription(), services.getPrice(), services.getDescription()), HttpStatus.OK);
+            services = servicesService.findById(id).get();
+            return new ResponseEntity<>(new Service(services.getId(), services.getName(), services.getDescription(), services.getPrice(), services.getDescription()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
