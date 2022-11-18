@@ -2,12 +2,14 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.request.AddHospital;
+import com.example.doctorcare.api.domain.dto.request.ChangeStatus;
 import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
 import com.example.doctorcare.api.domain.dto.response.MessageResponse;
 import com.example.doctorcare.api.domain.dto.response.UserInformationForAdmin;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.enums.UserStatus;
 import com.example.doctorcare.api.service.HospitalClinicService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import com.example.doctorcare.api.service.UserRoleService;
@@ -66,8 +68,8 @@ public class AdminController {
 
     @GetMapping("/getAllUser")
     public ResponseEntity<?> getAllUsers(
-            @RequestParam(value = "role", required = false,defaultValue = "0") String roleId,
-            @RequestParam(value = "keyword", required = false,defaultValue = "") String keyword,
+            @RequestParam(value = "role", required = false, defaultValue = "0") String roleId,
+            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "7") int size) {
         try {
@@ -82,15 +84,17 @@ public class AdminController {
             }
             userEntities.forEach(user -> {
                 UserInformationForAdmin userInformation = new UserInformationForAdmin();
-                BeanUtils.copyProperties(user,userInformation,"createDate","birthday");
-                userInformation.setSpecialist(user.getSpecialist().getName());
+                BeanUtils.copyProperties(user, userInformation, "createDate", "birthday");
+                if (user.getSpecialist() != null) {
+                    userInformation.setSpecialist(user.getSpecialist().getName());
+                }
                 userInformation.setGender(user.getGender().toString());
                 userInformation.setStatus(user.getStatus().toString());
                 userInformation.setCreateDate(user.getCreateDate().toString());
                 if (user.getHospitalCilinicDoctor() != null) {
                     userInformation.setHospitalName(user.getHospitalCilinicDoctor().getName());
                 }
-                if (user.getHospitalCilinicMangager() != null){
+                if (user.getHospitalCilinicMangager() != null) {
                     userInformation.setHospitalName(user.getHospitalCilinicMangager().getName());
                 }
                 userInformation.setRole(user.getUserRoles().stream().findFirst().get().getRole().toString());
@@ -133,6 +137,18 @@ public class AdminController {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/changeUserStatus")
+    public ResponseEntity<?> changeStatus(@RequestBody ChangeStatus changeStatus){
+        try{
+            userDetailsService.changeStatus(Long.valueOf(changeStatus.getId()), UserStatus.valueOf(changeStatus.getStatus()));
+            return new ResponseEntity<>("Success!!",HttpStatus.OK);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("Error!",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

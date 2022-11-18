@@ -169,4 +169,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         final int end = Math.min((start + pageable.getPageSize()), userEntities.size());
         return new PageImpl<>(userEntities.subList(start, end), pageable, userEntities.size());
     }
+
+    public void changeStatus(Long userId,UserStatus status){
+        UserEntity user = userRepository.findById(userId).get();
+        user.setStatus(status);
+        userRepository.save(user);
+    }
 }

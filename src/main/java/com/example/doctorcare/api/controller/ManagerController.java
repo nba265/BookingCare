@@ -4,7 +4,7 @@ import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
 import com.example.doctorcare.api.domain.dto.request.AddService;
-import com.example.doctorcare.api.domain.dto.request.changeStatus;
+import com.example.doctorcare.api.domain.dto.request.ChangeStatus;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
@@ -262,7 +262,7 @@ public class ManagerController {
     }
 
     @PutMapping("/editStatus")
-    public ResponseEntity<?> changeStatus(@RequestBody changeStatus changeStatus) {
+    public ResponseEntity<?> changeStatus(@RequestBody ChangeStatus changeStatus) {
         try {
             servicesService.toggleStatus(changeStatus.getStatus(), Long.valueOf(changeStatus.getId()));
             return new ResponseEntity<>(null, HttpStatus.OK);
