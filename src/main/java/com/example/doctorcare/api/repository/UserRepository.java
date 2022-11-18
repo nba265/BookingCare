@@ -72,6 +72,9 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     List<UserEntity> findByRole_Id(Long roleId);
 
 
-    Page<UserEntity> findByFullNameOrSpecialist_NameAndHospitalCilinicDoctor_Id(String keyword,String keyword1,Long hosId,Pageable pageable);
+    @Query("""
+            select u from UserEntity u
+            where( upper(u.fullName) like upper(concat('%', ?1, '%')) or upper(u.specialist.name) like upper(concat('%', ?2, '%'))) and u.hospitalCilinicDoctor.id = ?3""")
+    Page<UserEntity> findByFullNameContainingIgnoreCaseOrSpecialist_NameContainingIgnoreCaseAndHospitalCilinicDoctor_Id(String keyword,String keyword1,Long hosId,Pageable pageable);
     Page<UserEntity> findByHospitalCilinicDoctor_Id(Long id,Pageable pageable);
 }

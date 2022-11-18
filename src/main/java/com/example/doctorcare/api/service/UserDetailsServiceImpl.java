@@ -134,7 +134,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return userRepository.findByHospitalCilinicDoctor_Id(hosId,pageable);
 
         }
-        else return userRepository.findByFullNameOrSpecialist_NameAndHospitalCilinicDoctor_Id(keyword,keyword,hosId,pageable);
+        else return userRepository.findByFullNameContainingIgnoreCaseOrSpecialist_NameContainingIgnoreCaseAndHospitalCilinicDoctor_Id(keyword,keyword,hosId,pageable);
     }
     public User findByTimeDoctorId(Long id) {
         UserEntity userEntity = userRepository.findByTimeDoctors_Id(id);

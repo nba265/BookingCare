@@ -220,6 +220,7 @@ public class DoctorController {
                                                    @RequestParam(required = false) String before,
                                                    @RequestParam(required = false) String after) {
         try {
+            System.out.println(page);
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
             List<AppointmentsEntity> appointmentsEntities;
@@ -239,7 +240,7 @@ public class DoctorController {
             Page<AppointmentsEntity> pageTuts = appointmentsService.findByDoctorsId(user.getId(), pagingSort, before1, after1);
             appointmentsEntities = pageTuts.getContent();
             if (appointmentsEntities.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(new MessageResponse("You don't have any appointments"),HttpStatus.NO_CONTENT);
             }
             appointmentsEntities.forEach(appointments -> {
                 AppoinmentHistory appointmentHistory = new AppoinmentHistory();

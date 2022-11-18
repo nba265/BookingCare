@@ -35,6 +35,10 @@ public class ServicesService {
              services1.getServiceEnum().equals(ServiceEnum.UNAVAILABLE)));
         return services;
     }
+    public List<Services> findAllByHospitalCilinic_IdManager(Long id){
+
+        return serviceMapper.convertToDtoList(servicesRepository.findAllByHospitalCilinic_Id(id));
+    }
 
     public Optional<ServicesEntity> findById(Long id){
         return servicesRepository.findById(id);

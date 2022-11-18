@@ -4,6 +4,7 @@ import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
 import com.example.doctorcare.api.domain.dto.request.AddService;
+import com.example.doctorcare.api.domain.dto.request.changeStatus;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
@@ -179,7 +180,7 @@ public class ManagerController {
     @GetMapping("/getAllService")
     public ResponseEntity<?> getAllService() {
         try {
-            return new ResponseEntity<>(servicesService.findAllByHospitalCilinic_Id(hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername()).getId()), HttpStatus.OK);
+            return new ResponseEntity<>(servicesService.findAllByHospitalCilinic_IdManager(hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername()).getId()), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -190,14 +191,14 @@ public class ManagerController {
     public ResponseEntity<?> getAllDoctors(
             @RequestParam(value = "keyword", required = false,defaultValue = "") String keyword,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "7") int size
+            @RequestParam(required = false,defaultValue = "7") int size
     ) {
         try {
             Long hosId= userDetailsService.findByUsername(SecurityUtils.getUsername()).get().getHospitalCilinicMangager().getId();
             List<UserInformationForAdmin> userInformation = new ArrayList<>();
             List<UserEntity> userEntities;
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
-            Page<UserEntity> pageTuts = userDetailsService.findDoctorByHospital(keyword,hosId, pagingSort);
+            Page<UserEntity> pageTuts = userDetailsService.findDoctorByHospital(keyword.trim(),hosId, pagingSort);
             userEntities = pageTuts.getContent();
             if (userEntities.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -261,9 +262,9 @@ public class ManagerController {
     }
 
     @PutMapping("/editStatus")
-    public ResponseEntity<?> changeStatus(@RequestParam("status") String status, @RequestParam("id") Long id) {
+    public ResponseEntity<?> changeStatus(@RequestBody changeStatus changeStatus) {
         try {
-            servicesService.toggleStatus(status, id);
+            servicesService.toggleStatus(changeStatus.getStatus(), Long.valueOf(changeStatus.getId()));
             return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
