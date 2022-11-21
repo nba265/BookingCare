@@ -3,19 +3,17 @@ package com.example.doctorcare.api.controller;
 import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
+import com.example.doctorcare.api.domain.dto.Specialist;
+import com.example.doctorcare.api.domain.dto.request.AddDoctor;
 import com.example.doctorcare.api.domain.dto.request.AddService;
+import com.example.doctorcare.api.domain.dto.request.AddSpecialist;
 import com.example.doctorcare.api.domain.dto.request.ChangeStatus;
 import com.example.doctorcare.api.domain.dto.response.*;
-import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
-import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
-import com.example.doctorcare.api.domain.entity.ServicesEntity;
-import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.domain.entity.*;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.ServiceEnum;
-import com.example.doctorcare.api.service.AppointmentsService;
-import com.example.doctorcare.api.service.HospitalClinicService;
-import com.example.doctorcare.api.service.ServicesService;
-import com.example.doctorcare.api.service.UserDetailsServiceImpl;
+import com.example.doctorcare.api.repository.UserRepository;
+import com.example.doctorcare.api.service.*;
 import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
 import com.example.doctorcare.api.utilis.SecurityUtils;
 import org.springframework.beans.BeanUtils;
@@ -41,17 +39,27 @@ public class ManagerController {
 
     @Autowired
     ServicesService servicesService;
+
     @Autowired
     HospitalClinicService hospitalClinicService;
+
     @Autowired
     ServiceMapper serviceMapper;
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
+
     @Autowired
     AppointmentsService appointmentsService;
+
     @Autowired
     AppointmentMapper appointmentMapper;
+
+    @Autowired
+    SpecialistService specialistService;
+
+    @Autowired
+    UserRepository userRepository;
 
 
     PaginationAndSortUtil paginationAndSortUtil = new PaginationAndSortUtil();
@@ -177,6 +185,58 @@ public class ManagerController {
         }
     }
 
+    @GetMapping("/checkUsername")
+    public ResponseEntity<?> checkExistsUsername(@RequestParam("username") String username) {
+        try {
+            if (userDetailsService.checkExistsUsername(username)) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Error: Username is already taken!"));
+            } else return ResponseEntity.ok().body("Username doesn't exists!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error!");
+        }
+    }
+
+    @GetMapping("/checkEmail")
+    public ResponseEntity<?> checkExistsEmail(@RequestParam("email") String email) {
+        try {
+            if (userDetailsService.checkExistsEmail(email)) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Error: Email is already taken!"));
+            } else return ResponseEntity.ok().body("Email doesn't exists!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error!");
+        }
+    }
+
+
+    @PostMapping("/createEditSpecialist")
+    public ResponseEntity<?> createOrEditSpecialist(@RequestBody AddSpecialist specialist) {
+        try {
+            UserEntity manager = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
+            SpecialistEntity specialistEntity = new SpecialistEntity();
+            Long hospitalId = null;
+            if (specialist.getId() != null) {
+                specialistEntity = specialistService.findById(specialist.getId()).get();
+                hospitalId = specialistEntity.getHospitalCilinic().getId();
+            }
+            HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(manager.getUsername());
+            if (hospitalId == null || Objects.equals(hospitalClinicEntity.getId(), hospitalId)) {
+                specialistEntity.setName(specialist.getName());
+                specialistEntity.setHospitalCilinic(hospitalClinicEntity);
+                specialistService.saveEntity(specialistEntity);
+                return new ResponseEntity<>("Success!", HttpStatus.OK);
+            } else return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/getAllService")
     public ResponseEntity<?> getAllService() {
         try {
@@ -187,25 +247,52 @@ public class ManagerController {
         }
     }
 
+    @GetMapping("/getAllSpecialist")
+    public ResponseEntity<?> getAllSpecialist() {
+        try {
+            List<Specialist> specialist = specialistService.findAllByHospitalCilinicId(hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername()).getId());
+            List<SpecialistResponse> specialistResponses = new ArrayList<>();
+            specialist.forEach(specialist1 -> {
+                specialistResponses.add(new SpecialistResponse(specialist1.getId().toString(), specialist1.getName()));
+            });
+            return new ResponseEntity<>(specialistResponses, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/addDoctor")
+    public ResponseEntity<?> addDoctor(@RequestBody AddDoctor addDoctor){
+        try{
+            userDetailsService.saveDoctor(addDoctor,SecurityUtils.getUsername());
+            return ResponseEntity.ok().body(new MessageResponse("Created!!"));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new MessageResponse("Error!!"));
+        }
+    }
+
     @GetMapping("/getAllDoctors")
     public ResponseEntity<?> getAllDoctors(
-            @RequestParam(value = "keyword", required = false,defaultValue = "") String keyword,
+            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(required = false,defaultValue = "7") int size
+            @RequestParam(required = false, defaultValue = "7") int size
     ) {
         try {
-            Long hosId= userDetailsService.findByUsername(SecurityUtils.getUsername()).get().getHospitalCilinicMangager().getId();
+            Long hosId = userDetailsService.findByUsername(SecurityUtils.getUsername()).get().getHospitalCilinicMangager().getId();
             List<UserInformationForAdmin> userInformation = new ArrayList<>();
             List<UserEntity> userEntities;
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
-            Page<UserEntity> pageTuts = userDetailsService.findDoctorByHospital(keyword.trim(),hosId, pagingSort);
+            Page<UserEntity> pageTuts = userDetailsService.findDoctorByHospital(keyword.trim(), hosId, pagingSort);
             userEntities = pageTuts.getContent();
             if (userEntities.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             userEntities.forEach(user -> {
                 UserInformationForAdmin userInfo = new UserInformationForAdmin();
-                BeanUtils.copyProperties(user,userInfo,"createDate","birthday");
+                BeanUtils.copyProperties(user, userInfo, "createDate", "birthday");
                 userInfo.setSpecialist(user.getSpecialist().getName());
                 userInfo.setGender(user.getGender().toString());
                 userInfo.setStatus(user.getStatus().toString());
@@ -235,7 +322,6 @@ public class ManagerController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @GetMapping("/getServiceById")
     public ResponseEntity<?> displayEditService(@RequestParam("idService") Long id) {

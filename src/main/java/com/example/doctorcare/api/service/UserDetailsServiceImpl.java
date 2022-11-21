@@ -11,11 +11,16 @@ import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.SpecialistMapper;
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.User;
+import com.example.doctorcare.api.domain.dto.request.AddDoctor;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.domain.entity.UserRoleEntity;
+import com.example.doctorcare.api.enums.Gender;
+import com.example.doctorcare.api.enums.Role;
 import com.example.doctorcare.api.enums.UserStatus;
 import com.example.doctorcare.api.repository.UserRepository;
 import com.example.doctorcare.api.repository.UserRoleRepository;
+import com.example.doctorcare.api.utilis.SecurityUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -46,6 +51,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private SpecialistMapper specialistMapper;
 
+    @Autowired
+    private SpecialistService specialistService;
+
+    @Autowired
+    private HospitalClinicService hospitalClinicService;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -57,6 +68,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public boolean checkUser(String name) {
         return (userRepository.existsByUsername(name) && userRepository.findByUsername(name).get().getHospitalCilinicMangager() == null && userRepository.findByUsername(name).get().getUserRoles().stream().anyMatch(userRoleEntity -> userRoleEntity.getRole().toString().equalsIgnoreCase("ROLE_MANAGER")));
+    }
+
+    public boolean checkExistsUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean checkExistsEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public Iterable<UserEntity> findAll() {
@@ -129,13 +148,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         user.setSpecialist(specialistMapper.convertToDto(userEntity.getSpecialist()));
         return user;
     }
-    public Page<UserEntity> findDoctorByHospital(String keyword, Long hosId,Pageable pageable){
-        if(Objects.equals(keyword, ""))  {
-            return userRepository.findByHospitalCilinicDoctor_Id(hosId,pageable);
 
-        }
-        else return userRepository.findByFullNameContainingIgnoreCaseOrSpecialist_NameContainingIgnoreCaseAndHospitalCilinicDoctor_Id(keyword,keyword,hosId,pageable);
+    public Page<UserEntity> findDoctorByHospital(String keyword, Long hosId, Pageable pageable) {
+        if (Objects.equals(keyword, "")) {
+            return userRepository.findByHospitalCilinicDoctor_Id(hosId, pageable);
+
+        } else
+            return userRepository.findByFullNameContainingIgnoreCaseOrSpecialist_NameContainingIgnoreCaseAndHospitalCilinicDoctor_Id(keyword, keyword, hosId, pageable);
     }
+
     public User findByTimeDoctorId(Long id) {
         UserEntity userEntity = userRepository.findByTimeDoctors_Id(id);
         User user = userMapper.convertToDto(userEntity);
@@ -170,9 +191,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new PageImpl<>(userEntities.subList(start, end), pageable, userEntities.size());
     }
 
-    public void changeStatus(Long userId,UserStatus status){
+    public void changeStatus(Long userId, UserStatus status) {
         UserEntity user = userRepository.findById(userId).get();
         user.setStatus(status);
         userRepository.save(user);
+    }
+
+    public void saveDoctor(AddDoctor addDoctor,String managerUsername) {
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(addDoctor, userEntity, "specialist", "gender", "birthday", "experience");
+        userEntity.setStatus(UserStatus.ACTIVE);
+        userEntity.setBirthday(LocalDate.parse(addDoctor.getBirthday()));
+        userEntity.setGender(Gender.valueOf(addDoctor.getGender()));
+        userEntity.setSpecialist(specialistService.findById(Long.valueOf(addDoctor.getSpecialist().trim())).get());
+        userEntity.setExperience(addDoctor.getExperience().concat(" years"));
+        userEntity.setUserRoles(new HashSet<UserRoleEntity>() {
+            {
+                add(userRoleRepository.findByRole(Role.ROLE_DOCTOR).get());
+            }
+        });
+        userEntity.setCreateDate(LocalDate.now());
+        userEntity.setHospitalCilinicDoctor(hospitalClinicService.findByManagerUsername(managerUsername));
+        userRepository.save(userEntity);
     }
 }
