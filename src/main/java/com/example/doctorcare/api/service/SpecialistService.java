@@ -26,6 +26,10 @@ public class SpecialistService {
         return specialists;
     }
 
+    public Iterable<SpecialistEntity> findByHospitalCilinic_Id(Long id){
+        return specialistRepository.findByHospitalCilinic_Id(id);
+    }
+
     public Optional<SpecialistEntity> findById(Long id){
         return specialistRepository.findById(id);
     }

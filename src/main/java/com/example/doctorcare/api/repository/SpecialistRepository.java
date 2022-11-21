@@ -13,4 +13,5 @@ public interface SpecialistRepository extends CrudRepository<SpecialistEntity,Lo
     @Query("select s from SpecialistEntity s join s.userSet u  where u.hospitalCilinicDoctor.id = ?1")
     Set<SpecialistEntity> findAllByHospitalCilinicId(Long id);
 
+    Iterable<SpecialistEntity> findByHospitalCilinic_Id(Long hospitalCilinic_id);
 }

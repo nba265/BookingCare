@@ -58,7 +58,6 @@ public class AdminController {
     @GetMapping("/checkUser")
     public ResponseEntity<?> getUsers(@RequestParam("username") String username) {
         try {
-
             return new ResponseEntity<>(userDetailsService.checkUser(username), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

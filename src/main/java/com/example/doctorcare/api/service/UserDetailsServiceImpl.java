@@ -71,11 +71,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public boolean checkExistsUsername(String username) {
-        return userRepository.existsByUsername(username);
+        return userRepository.existsByUsername(username.trim());
     }
 
     public boolean checkExistsEmail(String email) {
-        return userRepository.existsByEmail(email);
+        return userRepository.existsByEmail(email.trim());
     }
 
     public Iterable<UserEntity> findAll() {
@@ -199,7 +199,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public void saveDoctor(AddDoctor addDoctor,String managerUsername) {
         UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(addDoctor, userEntity, "specialist", "gender", "birthday", "experience");
+        BeanUtils.copyProperties(addDoctor, userEntity, "specialist", "gender", "birthday", "experience","password");
+        userEntity.setPassword(SecurityUtils.encrytePassword(addDoctor.getPassword()));
         userEntity.setStatus(UserStatus.ACTIVE);
         userEntity.setBirthday(LocalDate.parse(addDoctor.getBirthday()));
         userEntity.setGender(Gender.valueOf(addDoctor.getGender()));

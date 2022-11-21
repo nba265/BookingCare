@@ -186,30 +186,32 @@ public class ManagerController {
     }
 
     @GetMapping("/checkUsername")
-    public ResponseEntity<?> checkExistsUsername(@RequestParam("username") String username) {
+    public ResponseEntity<?> checkExistsUsername(@RequestParam(value = "username", required = false) String username) {
         try {
-            if (userDetailsService.checkExistsUsername(username)) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(new MessageResponse("Error: Username is already taken!"));
-            } else return ResponseEntity.ok().body("Username doesn't exists!");
+            if (username != null) {
+                return new ResponseEntity<>(!userDetailsService.checkExistsUsername(username), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(false, HttpStatus.OK);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Error!");
+            return new ResponseEntity<>(false, HttpStatus.OK);
         }
     }
 
     @GetMapping("/checkEmail")
-    public ResponseEntity<?> checkExistsEmail(@RequestParam("email") String email) {
+    public ResponseEntity<?> checkExistsEmail(@RequestParam(value = "email", required = false) String email) {
         try {
-            if (userDetailsService.checkExistsEmail(email)) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(new MessageResponse("Error: Email is already taken!"));
-            } else return ResponseEntity.ok().body("Email doesn't exists!");
+            if (email != null) {
+                return new ResponseEntity<>(!userDetailsService.checkExistsEmail(email), HttpStatus.OK);
+            } else {
+
+                return new ResponseEntity<>(false, HttpStatus.OK);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Error!");
+            return new ResponseEntity<>(false, HttpStatus.OK);
         }
     }
 
@@ -250,7 +252,7 @@ public class ManagerController {
     @GetMapping("/getAllSpecialist")
     public ResponseEntity<?> getAllSpecialist() {
         try {
-            List<Specialist> specialist = specialistService.findAllByHospitalCilinicId(hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername()).getId());
+            List<SpecialistEntity> specialist = (List<SpecialistEntity>) specialistService.findByHospitalCilinic_Id(hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername()).getId());
             List<SpecialistResponse> specialistResponses = new ArrayList<>();
             specialist.forEach(specialist1 -> {
                 specialistResponses.add(new SpecialistResponse(specialist1.getId().toString(), specialist1.getName()));
@@ -263,12 +265,11 @@ public class ManagerController {
     }
 
     @PostMapping("/addDoctor")
-    public ResponseEntity<?> addDoctor(@RequestBody AddDoctor addDoctor){
-        try{
-            userDetailsService.saveDoctor(addDoctor,SecurityUtils.getUsername());
+    public ResponseEntity<?> addDoctor(@RequestBody AddDoctor addDoctor) {
+        try {
+            userDetailsService.saveDoctor(addDoctor, SecurityUtils.getUsername());
             return ResponseEntity.ok().body(new MessageResponse("Created!!"));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(new MessageResponse("Error!!"));
         }

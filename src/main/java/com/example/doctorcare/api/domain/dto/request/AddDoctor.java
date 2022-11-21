@@ -40,4 +40,6 @@ public class AddDoctor {
     private String experience;
 
     private String specialist;
+
+    private String degree;
 }
