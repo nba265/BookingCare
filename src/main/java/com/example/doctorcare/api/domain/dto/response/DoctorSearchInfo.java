@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,6 +29,6 @@ public class DoctorSearchInfo {
 
     private List<Services> servicesList = new ArrayList<>();
 
-    private List<TimeDoctor> timeDoctors = new ArrayList<>();
-
+    private List<TimeDoctor> timeDoctorsAvailable = new ArrayList<>();
+    private Set<String> dayUnavailable = new HashSet<>();
 }

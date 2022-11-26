@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -147,6 +148,7 @@ public class ClientController {
             doctorSearchInfo.setSpecialist(doctor.getSpecialist().getName());
             doctorSearchInfo.setDoctorId(doctorId);
             List<TimeDoctors> timeDoctorsList = timeDoctorService.findByDoctor_IdAndTimeStampAndStatus(doctorId,TimeDoctorStatus.AVAILABLE);
+            Set<String> dayUnvailable=new HashSet<>();
             timeDoctorsList.forEach(timeDoctors -> {
                 TimeDoctor timeDoctor = new TimeDoctor();
                 timeDoctor.setTimeEnd(timeDoctors.getTimeEnd().toString());
@@ -154,8 +156,11 @@ public class ClientController {
                 timeDoctor.setId(timeDoctors.getId());
                 timeDoctor.setDate(timeDoctors.getDate().toString());
                 timeDoctor.setTimeDoctorStatus(timeDoctors.getTimeDoctorStatus().toString());
-                doctorSearchInfo.getTimeDoctors().add(timeDoctor);
+                doctorSearchInfo.getTimeDoctorsAvailable().add(timeDoctor);
+                dayUnvailable.add(timeDoctors.getDate().toString());
             });
+            doctorSearchInfo.setDayUnavailable(dayUnvailable.stream().sorted(Comparator.comparing(LocalDate::parse)).collect(Collectors.toCollection(LinkedHashSet::new)));
+            System.out.println(dayUnvailable);
             doctorSearchInfo.setHosId(doctor.getHospitalClinicDoctor().getId());
             return new ResponseEntity<>(doctorSearchInfo, HttpStatus.OK);
         } catch (Exception e) {
