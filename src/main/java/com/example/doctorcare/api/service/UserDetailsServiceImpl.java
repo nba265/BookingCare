@@ -203,7 +203,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserEntity userEntity = findById(id);
         EditDoctor editDoctor = new EditDoctor();
         BeanUtils.copyProperties(userEntity, editDoctor);
-        editDoctor.setExperience(Long.valueOf(userEntity.getExperience().split(" ")[0]));
+        editDoctor.setExperience(Long.valueOf(userEntity.getExperience().split("\\s")[0]));
         editDoctor.setSpecialist(String.valueOf(userEntity.getSpecialist().getId()));
         return editDoctor;
     }
