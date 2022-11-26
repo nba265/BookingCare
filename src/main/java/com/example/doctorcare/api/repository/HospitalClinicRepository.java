@@ -13,8 +13,17 @@ import java.util.Set;
 @Transactional
 public interface HospitalClinicRepository extends CrudRepository<HospitalClinicEntity,Long> {
 
-    @Query(value = "select h from HospitalClinicEntity h where h.name like %:keyword%")
-    Set<HospitalClinicEntity> findByKeywords(@Param("keyword") String keyword);
+    @Query(value = "select h from HospitalClinicEntity h where h.name like %?1% and h.districtCode = ?2 ")
+    Set<HospitalClinicEntity> findByKeywordsAndDistrictCode(String keyword,String code);
+
+    @Query(value = "select h from HospitalClinicEntity h where h.name like %?1% or h.districtCode = ?2 ")
+    Set<HospitalClinicEntity> findByKeywordsOrDistrictCode(String keyword, String code);
+
+    @Query(value = "select h from HospitalClinicEntity h where h.districtCode = ?1 ")
+    Set<HospitalClinicEntity> findByDistrictCode(String code);
+
+    @Query(value = "select h from HospitalClinicEntity h where h.name like %?1%")
+    Set<HospitalClinicEntity> findByKeywords(String keyword);
     HospitalClinicEntity findByManager_Username(String username);
 
     @Query(value = "select h from HospitalClinicEntity h join h.doctor d join d.timeDoctors t where t.appointments.id = ?1 ")

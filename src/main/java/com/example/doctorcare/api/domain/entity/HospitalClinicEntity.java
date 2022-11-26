@@ -19,6 +19,9 @@ public class HospitalClinicEntity {
     private String address;
 
     private String phone;
+
+    private String districtCode;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     private UserEntity manager;
@@ -99,5 +102,13 @@ public class HospitalClinicEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getDistrictCode() {
+        return districtCode;
+    }
+
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 }

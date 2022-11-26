@@ -50,6 +50,8 @@ public class UserEntity implements Serializable {
 
     private String experience;
 
+    private String districtCode;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 

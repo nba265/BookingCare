@@ -45,9 +45,9 @@ public class HospitalClinicController {
     }
 
     @GetMapping("/searchHospital")
-    public ResponseEntity<?> searchHospital(@RequestParam("keyword")String keyword){
+    public ResponseEntity<?> searchHospital(@RequestParam("keyword")String keyword,@RequestParam(value = "districtCode",required = false) String districtCode){
         try{
-            return new ResponseEntity<>(hospitalClinicService.findByKeywords(keyword),HttpStatus.OK);
+            return new ResponseEntity<>(hospitalClinicService.findByKeywordsOrDistrictCode(keyword,districtCode),HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);

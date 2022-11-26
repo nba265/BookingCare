@@ -18,7 +18,7 @@ public class HospitalClinicService {
 
     @Autowired
     private HospitalClinicRepository hospitalClinicRepository;
-    
+
     @Autowired
     private HospitalClinicMapper hospitalClinicMapper;
 
@@ -28,37 +28,47 @@ public class HospitalClinicService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<HospitalClinicInfoResponse> hospitalCilinicList(){
+    public List<HospitalClinicInfoResponse> hospitalCilinicList() {
         List<HospitalClinicInfoResponse> hospitalClinics = new ArrayList<>();
-        hospitalClinicRepository.findAll().forEach(hospitalCilinicEntity -> hospitalClinics.add( new HospitalClinicInfoResponse(hospitalCilinicEntity.getId(),hospitalCilinicEntity.getName(),hospitalCilinicEntity.getAddress(),hospitalCilinicEntity.getPhone(),hospitalCilinicEntity.getManager().getUsername())));
+        hospitalClinicRepository.findAll().forEach(hospitalCilinicEntity -> hospitalClinics.add(new HospitalClinicInfoResponse(hospitalCilinicEntity.getId(), hospitalCilinicEntity.getName(), hospitalCilinicEntity.getAddress(), hospitalCilinicEntity.getPhone(), hospitalCilinicEntity.getManager().getUsername(), hospitalCilinicEntity.getDistrictCode())));
         return hospitalClinics;
     }
 
-    public List<HospitalClinic> findByKeywords(String keyword){
+    public List<HospitalClinic> findByKeywordsOrDistrictCode(String keyword, String code) {
         List<HospitalClinic> hospitalClinics = new ArrayList<>();
-        hospitalClinicRepository.findByKeywords(keyword).forEach(hospitalCilinicEntity -> hospitalClinics.add(hospitalClinicMapper.convertToDto(hospitalCilinicEntity)));
+        if (keyword.equals("") && code.equals("")) {
+            hospitalClinicRepository.findAll().forEach(hospitalCilinicEntity -> hospitalClinics.add(hospitalClinicMapper.convertToDto(hospitalCilinicEntity)));
+        } else if (!keyword.equals("") && !code.equals("")) {
+            hospitalClinicRepository.findByKeywordsAndDistrictCode(keyword, code).forEach(hospitalCilinicEntity -> hospitalClinics.add(hospitalClinicMapper.convertToDto(hospitalCilinicEntity)));
+        } else if (keyword.equals("")) {
+            hospitalClinicRepository.findByDistrictCode(code).forEach(hospitalCilinicEntity -> hospitalClinics.add(hospitalClinicMapper.convertToDto(hospitalCilinicEntity)));
+        } else {
+            hospitalClinicRepository.findByKeywords(keyword).forEach(hospitalCilinicEntity -> hospitalClinics.add(hospitalClinicMapper.convertToDto(hospitalCilinicEntity)));
+        }
         return hospitalClinics;
     }
 
-    public void save(HospitalClinic hospitalClinic){
+    public void save(HospitalClinic hospitalClinic) {
         hospitalClinicRepository.save(hospitalClinicMapper.convertToEntity(hospitalClinic));
     }
-    public void save(HospitalClinicEntity hospitalClinicEntity){
+
+    public void save(HospitalClinicEntity hospitalClinicEntity) {
         hospitalClinicRepository.save(hospitalClinicEntity);
     }
-    public HospitalClinicEntity findByManagerUsername(String username){
+
+    public HospitalClinicEntity findByManagerUsername(String username) {
         return hospitalClinicRepository.findByManager_Username(username);
     }
 
-    public HospitalClinicEntity findById(Long id){
+    public HospitalClinicEntity findById(Long id) {
         return hospitalClinicRepository.findById(id).get();
     }
 
-    public HospitalClinic findByDoctorId(Long docId){
+    public HospitalClinic findByDoctorId(Long docId) {
         return hospitalClinicMapper.convertToDto(userRepository.findById(docId).get().getHospitalCilinicDoctor());
     }
 
-    public HospitalClinicEntity findByAppointment_Id(Long id){
+    public HospitalClinicEntity findByAppointment_Id(Long id) {
         return hospitalClinicRepository.findByAppointment_Id(id);
     }
 

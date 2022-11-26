@@ -89,11 +89,11 @@ public class ClientController {
     }*/
 
         @GetMapping("/listHospital")
-    public ResponseEntity<?> searchHospital(@RequestParam(name = "keyword", required = false) String keyword) {
+    public ResponseEntity<?> searchHospital(@RequestParam(name = "keyword", required = false,defaultValue = "") String keyword,@RequestParam(name="districtCode",required = false,defaultValue = "") String districtCode) {
         try {
             List<HospitalClinicInfoResponse> responses = new ArrayList<>();
-            hospitalClinicService.findByKeywords(keyword).forEach(hospitalCilinic -> {
-                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(), hospitalCilinic.getName(),hospitalCilinic.getAddress(),hospitalCilinic.getPhone(),null));
+            hospitalClinicService.findByKeywordsOrDistrictCode(keyword,districtCode).forEach(hospitalCilinic -> {
+                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(), hospitalCilinic.getName(),hospitalCilinic.getAddress(),hospitalCilinic.getPhone(),null,hospitalCilinic.getDistrictCode()));
             });
             return new ResponseEntity<>(responses, HttpStatus.OK);
         } catch (Exception e) {
@@ -113,7 +113,7 @@ public class ClientController {
     }
 
     @GetMapping("/listDoctor")
-    public ResponseEntity<?> findDoctor(@RequestParam(name = "hosId", required = true) Long hosId, @RequestParam(name = "specId", required = false) Long specId, @RequestParam(name = "gender", required = false) String gender, @RequestParam(name = "keyword", required = false) String keyword) {
+    public ResponseEntity<?> findDoctor(@RequestParam(name = "hosId", required = false) Long hosId, @RequestParam(name = "specId", required = false) Long specId, @RequestParam(name = "gender", required = false) String gender, @RequestParam(name = "keyword", required = false) String keyword) {
         try {
             List<DoctorInfoResponse> doctorInfoResponses = new ArrayList<>();
             userDetailsService.findDoctor(hosId, specId, gender, keyword).forEach(user -> {

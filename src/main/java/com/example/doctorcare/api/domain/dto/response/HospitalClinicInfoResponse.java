@@ -20,4 +20,6 @@ public class HospitalClinicInfoResponse {
     private String phone;
 
     private String username;
+
+    private String districtCode;
 }

@@ -57,6 +57,8 @@ public class User {
 
     private HospitalClinic hospitalClinicMangager;
 
+    private String districtCode;
+
     @JsonIgnore
     private List<TimeDoctors> timeDoctors = new ArrayList<>();
 

@@ -24,6 +24,8 @@ public class HospitalClinic {
 
     private String phone;
 
+    private String districtCode;
+
     private List<User> doctor = new ArrayList<>();
 
     private List<Services> services = new ArrayList<>();

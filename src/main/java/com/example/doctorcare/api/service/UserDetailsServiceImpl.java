@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -110,7 +111,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public Set<UserEntity> findDoctor(Long hosId, Long specId, String gender, String keyword) {
-        Set<UserEntity> users = userRepository.findDoctorByHospitalCilinicId(hosId);
+        if ((hosId == null || hosId == 0) && (specId == null || specId == 0) && (gender == null || gender.equals("")) && (keyword == null || keyword.equals("")))
+            return new HashSet<>(userRepository.findByRole_Id(3L));
+        Set<UserEntity> users = new HashSet<>();
+        if (hosId == null || hosId == 0){
+            users = new HashSet<>(userRepository.findUserByKeywordAndRole_Id(keyword,3L));
+        }
+        else
+            users = userRepository.findDoctorByHospitalCilinicId(hosId);
         Set<UserEntity> toRemove = new HashSet<>();
         if (specId != null && specId != 0) {
             users.forEach(user -> {
@@ -203,7 +211,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserEntity userEntity = findById(id);
         EditDoctor editDoctor = new EditDoctor();
         BeanUtils.copyProperties(userEntity, editDoctor);
-        editDoctor.setExperience(Long.valueOf(userEntity.getExperience().split("\\s")[0]));
+        editDoctor.setExperience(Long.valueOf(userEntity.getExperience().split(" ")[0]));
         editDoctor.setSpecialist(String.valueOf(userEntity.getSpecialist().getId()));
         return editDoctor;
     }
