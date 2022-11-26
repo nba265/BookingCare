@@ -12,6 +12,7 @@ import com.example.doctorcare.api.domain.Mapper.SpecialistMapper;
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.dto.request.AddDoctor;
+import com.example.doctorcare.api.domain.dto.request.EditDoctor;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.Gender;
@@ -197,15 +198,29 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void saveDoctor(AddDoctor addDoctor,String managerUsername) {
+    public EditDoctor getDoctorInfo(Long id) {
+        UserEntity userEntity = findById(id);
+        EditDoctor editDoctor = new EditDoctor();
+        BeanUtils.copyProperties(userEntity, editDoctor);
+        editDoctor.setExperience(Long.valueOf(userEntity.getExperience()));
+        editDoctor.setSpecialist(String.valueOf(userEntity.getSpecialist().getId()));
+        return editDoctor;
+    }
+    public void updateDoctorInfo(EditDoctor editDoctor){
+        UserEntity userEntity = findById(editDoctor.getId());
+        userEntity.setDegree(editDoctor.getDegree());
+        userEntity.setSpecialist(specialistService.findById(Long.valueOf(editDoctor.getSpecialist().trim())).get());
+        userEntity.setExperience(editDoctor.getExperience().toString());
+        userRepository.save(userEntity);
+    }
+
+    public void saveDoctor(AddDoctor addDoctor, String managerUsername) {
         UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(addDoctor, userEntity, "specialist", "gender", "birthday", "experience","password");
+        BeanUtils.copyProperties(addDoctor, userEntity, "specialist", "gender", "birthday", "experience", "password", "degree");
         userEntity.setPassword(SecurityUtils.encrytePassword(addDoctor.getPassword()));
         userEntity.setStatus(UserStatus.ACTIVE);
         userEntity.setBirthday(LocalDate.parse(addDoctor.getBirthday()));
         userEntity.setGender(Gender.valueOf(addDoctor.getGender()));
-        userEntity.setSpecialist(specialistService.findById(Long.valueOf(addDoctor.getSpecialist().trim())).get());
-        userEntity.setExperience(addDoctor.getExperience().concat(" years"));
         userEntity.setUserRoles(new HashSet<UserRoleEntity>() {
             {
                 add(userRoleRepository.findByRole(Role.ROLE_DOCTOR).get());
@@ -213,6 +228,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         });
         userEntity.setCreateDate(LocalDate.now());
         userEntity.setHospitalCilinicDoctor(hospitalClinicService.findByManagerUsername(managerUsername));
+
+
+        userEntity.setDegree(addDoctor.getDegree());
+        userEntity.setSpecialist(specialistService.findById(Long.valueOf(addDoctor.getSpecialist().trim())).get());
+        userEntity.setExperience(addDoctor.getExperience().concat(" years"));
         userRepository.save(userEntity);
     }
 }

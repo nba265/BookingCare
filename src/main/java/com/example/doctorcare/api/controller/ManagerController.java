@@ -4,10 +4,7 @@ import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
 import com.example.doctorcare.api.domain.dto.Specialist;
-import com.example.doctorcare.api.domain.dto.request.AddDoctor;
-import com.example.doctorcare.api.domain.dto.request.AddService;
-import com.example.doctorcare.api.domain.dto.request.AddSpecialist;
-import com.example.doctorcare.api.domain.dto.request.ChangeStatus;
+import com.example.doctorcare.api.domain.dto.request.*;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.*;
 import com.example.doctorcare.api.enums.AppointmentStatus;
@@ -274,7 +271,6 @@ public class ManagerController {
             return ResponseEntity.badRequest().body(new MessageResponse("Error!!"));
         }
     }
-
     @GetMapping("/getAllDoctors")
     public ResponseEntity<?> getAllDoctors(
             @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
@@ -357,7 +353,23 @@ public class ManagerController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @GetMapping("/getDoctorById")
+    public ResponseEntity<?> getDoctor(@RequestParam("id")Long id){
+        try {
+            return new ResponseEntity<>(userDetailsService.getDoctorInfo(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PutMapping("/updateDoctor")
+    public ResponseEntity<?> getDoctor(@RequestBody EditDoctor editDoctor){
+        try {
+            userDetailsService.updateDoctorInfo(editDoctor);
+            return new ResponseEntity<>(new MessageResponse("Update Succeeded "), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 /*    @PostMapping("/addService")
 
     public ResponseEntity<?> addService(@RequestBody AddService addService) {
