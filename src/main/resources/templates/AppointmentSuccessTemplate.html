@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointment</title>
+</head>
+<body>
+    <h1>Here is your appointment Information</h1>
+    <h4 style="text-align: center; display: inline-block" th:text="${appointmentInfoForUser.getAppointmentHistory().toString()}">
+    </h4>
+    <h4 style="text-align: center; display: inline-block" th:text="${appointmentInfoForUser.toString()}">
+    </h4>
+</body>
+</html>

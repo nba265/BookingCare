@@ -2,7 +2,7 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
-import com.example.doctorcare.api.domain.dto.response.AppoinmentHistory;
+import com.example.doctorcare.api.domain.dto.response.AppointmentHistory;
 import com.example.doctorcare.api.domain.dto.response.AppointmentHistoryForDoctor;
 import com.example.doctorcare.api.domain.dto.response.MessageResponse;
 import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -222,7 +221,7 @@ public class DoctorController {
         try {
             System.out.println(page);
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-            List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
+            List<AppointmentHistory> appointmentHistories = new ArrayList<>();
             List<AppointmentsEntity> appointmentsEntities;
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
             LocalDate before1 = null;
@@ -243,7 +242,7 @@ public class DoctorController {
                 return new ResponseEntity<>(new MessageResponse("You don't have any appointments"),HttpStatus.NO_CONTENT);
             }
             appointmentsEntities.forEach(appointments -> {
-                AppoinmentHistory appointmentHistory = new AppoinmentHistory();
+                AppointmentHistory appointmentHistory = new AppointmentHistory();
                 appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId()).getName());
                 appointmentHistory.setId(appointments.getId());
                 appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());

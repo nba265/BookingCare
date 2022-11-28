@@ -8,15 +8,17 @@ import com.example.doctorcare.api.domain.dto.request.MakeAppointment;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.CustomersEntity;
-import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
+import com.example.doctorcare.api.event.OnSendAppointmentInfoEvent;
 import com.example.doctorcare.api.service.*;
 import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
 import com.example.doctorcare.api.utilis.RandomStringGenaration;
 import com.example.doctorcare.api.utilis.SecurityUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -59,6 +61,9 @@ public class ClientController {
     @Autowired
     AppointmentMapper appointmentMapper;
 
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
     PaginationAndSortUtil paginationAndSortUtil = new PaginationAndSortUtil();
 
 /*    @GetMapping("/listHospital")
@@ -89,12 +94,12 @@ public class ClientController {
         }
     }*/
 
-        @GetMapping("/listHospital")
-    public ResponseEntity<?> searchHospital(@RequestParam(name = "keyword", required = false,defaultValue = "") String keyword,@RequestParam(name="districtCode",required = false,defaultValue = "") String districtCode) {
+    @GetMapping("/listHospital")
+    public ResponseEntity<?> searchHospital(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(name = "districtCode", required = false, defaultValue = "") String districtCode) {
         try {
             List<HospitalClinicInfoResponse> responses = new ArrayList<>();
-            hospitalClinicService.findByKeywordsOrDistrictCode(keyword,districtCode).forEach(hospitalCilinic -> {
-                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(), hospitalCilinic.getName(),hospitalCilinic.getAddress(),hospitalCilinic.getPhone(),null,hospitalCilinic.getDistrictCode()));
+            hospitalClinicService.findByKeywordsOrDistrictCode(keyword, districtCode).forEach(hospitalCilinic -> {
+                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(), hospitalCilinic.getName(), hospitalCilinic.getAddress(), hospitalCilinic.getPhone(), null, hospitalCilinic.getDistrictCode()));
             });
             return new ResponseEntity<>(responses, HttpStatus.OK);
         } catch (Exception e) {
@@ -147,8 +152,8 @@ public class ClientController {
             doctorSearchInfo.setHospName(doctor.getHospitalClinicDoctor().getName());
             doctorSearchInfo.setSpecialist(doctor.getSpecialist().getName());
             doctorSearchInfo.setDoctorId(doctorId);
-            List<TimeDoctors> timeDoctorsList = timeDoctorService.findByDoctor_IdAndTimeStampAndStatus(doctorId,TimeDoctorStatus.AVAILABLE);
-            Set<String> dayUnvailable=new HashSet<>();
+            List<TimeDoctors> timeDoctorsList = timeDoctorService.findByDoctor_IdAndTimeStampAndStatus(doctorId, TimeDoctorStatus.AVAILABLE);
+            Set<String> dayUnvailable = new HashSet<>();
             timeDoctorsList.forEach(timeDoctors -> {
                 TimeDoctor timeDoctor = new TimeDoctor();
                 timeDoctor.setTimeEnd(timeDoctors.getTimeEnd().toString());
@@ -194,6 +199,10 @@ public class ClientController {
             appointments.setUser(user);
             appointments.setAppointmentCode(RandomStringGenaration.randomStringWithLength(10));
             appointmentsService.save(appointments);
+
+            eventPublisher.publishEvent(new OnSendAppointmentInfoEvent(this, SecurityUtils.getUsername().trim(),
+                    appointmentsService.setAppointmentInfoForUser(userDetailsService.findByTimeDoctorId(makeAppointment.getTimeDoctorId()), appointments)));
+
             return new ResponseEntity<>(new MessageResponse("Appointment created successfully! \nPlease check it in history. "), HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -235,7 +244,7 @@ public class ClientController {
     ) {
         try {
             UserEntity userEntity = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-            List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
+            List<AppointmentHistory> appointmentHistories = new ArrayList<>();
             List<AppointmentsEntity> appointmentsEntities;
             LocalDate before1 = null;
             LocalDate after1 = null;
@@ -252,7 +261,7 @@ public class ClientController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             appointmentsEntities.forEach(appointments -> {
-                AppoinmentHistory appointmentHistory = new AppoinmentHistory();
+                AppointmentHistory appointmentHistory = new AppointmentHistory();
                 appointmentHistory.setId(appointments.getId());
                 appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId()).getName());
                 appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
@@ -281,21 +290,8 @@ public class ClientController {
             if (user.isPresent()) {
                 AppointmentsEntity appointment = appointmentsService.findById(id);
                 if (user.get().getId().equals(appointment.getUser().getId())) {
-                    AppointmentInfoForUser appointmentInfoForUser = new AppointmentInfoForUser();
                     User doctor = userDetailsService.findByTimeDoctorId(appointment.getTimeDoctors().getId());
-                    appointmentInfoForUser.setDoctorName(doctor.getFullName());
-                    appointmentInfoForUser.setPhoneDoctor(doctor.getPhone());
-                    appointmentInfoForUser.setGenderDoctor(doctor.getGender().toString());
-                    appointmentInfoForUser.setSpecialistDoctor(doctor.getSpecialist().getName());
-                    appointmentInfoForUser.setGenderCustomer(appointment.getCustomers().getGender().toString());
-                    appointmentInfoForUser.setBirthday(appointment.getCustomers().getBirthday().toString());
-                    appointmentInfoForUser.setNamePatient(appointment.getCustomers().getNamePatient());
-                    appointmentInfoForUser.setPhonePatient(appointment.getCustomers().getPhonePatient());
-                    appointmentInfoForUser.setDescription(appointment.getDescription());
-                    appointmentInfoForUser.setStatus(appointment.getStatus());
-                    appointmentInfoForUser.setService(appointment.getServices().getName());
-                    appointmentInfoForUser.setPrice(appointment.getServices().getPrice().toString());
-                    return new ResponseEntity<>(appointmentInfoForUser, HttpStatus.OK);
+                    return new ResponseEntity<>(appointmentsService.setAppointmentInfoForUser(doctor, appointment), HttpStatus.OK);
                 }
             }
             return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
@@ -306,11 +302,10 @@ public class ClientController {
     }
 
     @GetMapping("/cancelAppointment")
-    public ResponseEntity<?> doCancelAppointment(@RequestParam("appointmentId") Long id){
-        try{
+    public ResponseEntity<?> doCancelAppointment(@RequestParam("appointmentId") Long id) {
+        try {
             return new ResponseEntity<>(new MessageResponse(appointmentsService.cancelAppointment(id)), HttpStatus.OK);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

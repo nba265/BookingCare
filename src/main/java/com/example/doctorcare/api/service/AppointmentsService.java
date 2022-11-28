@@ -1,10 +1,14 @@
 package com.example.doctorcare.api.service;
 
 import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
+import com.example.doctorcare.api.domain.dto.User;
+import com.example.doctorcare.api.domain.dto.response.AppointmentHistory;
+import com.example.doctorcare.api.domain.dto.response.AppointmentInfoForUser;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.repository.AppointmentsRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +25,9 @@ public class AppointmentsService {
 
     @Autowired
     private AppointmentMapper appointmentMapper;
+
+    @Autowired
+    private HospitalClinicService hospitalClinicService;
 
     public void save(AppointmentsEntity appointments) {
         appointmentsRepository.save(appointments);
@@ -109,5 +116,31 @@ public class AppointmentsService {
                 return "Success!!";
             } else return "Error!!";
         } else return "You are only allowed to cancel 1 day in advance!!";
+    }
+
+    public AppointmentInfoForUser setAppointmentInfoForUser(User doctor,AppointmentsEntity appointment){
+        AppointmentInfoForUser appointmentInfoForUser = new AppointmentInfoForUser();
+        appointmentInfoForUser.setDoctorName(doctor.getFullName());
+        appointmentInfoForUser.setPhoneDoctor(doctor.getPhone());
+        appointmentInfoForUser.setGenderDoctor(doctor.getGender().toString());
+        appointmentInfoForUser.setSpecialistDoctor(doctor.getSpecialist().getName());
+        appointmentInfoForUser.setGenderCustomer(appointment.getCustomers().getGender().toString());
+        appointmentInfoForUser.setBirthday(appointment.getCustomers().getBirthday().toString());
+        appointmentInfoForUser.setNamePatient(appointment.getCustomers().getNamePatient());
+        appointmentInfoForUser.setPhonePatient(appointment.getCustomers().getPhonePatient());
+        appointmentInfoForUser.setDescription(appointment.getDescription());
+        appointmentInfoForUser.setStatus(appointment.getStatus());
+        appointmentInfoForUser.setService(appointment.getServices().getName());
+        appointmentInfoForUser.setPrice(appointment.getServices().getPrice().toString());
+        AppointmentHistory appointmentHistory = new AppointmentHistory();
+        appointmentHistory.setId(appointment.getId());
+        appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointment.getId()).getName());
+        appointmentHistory.setDate(appointment.getTimeDoctors().getDate().toString());
+        appointmentHistory.setTimeStart(appointment.getTimeDoctors().getTimeStart().toString());
+        appointmentHistory.setTimeEnd(appointment.getTimeDoctors().getTimeEnd().toString());
+        appointmentHistory.setAppointmentCode(appointment.getAppointmentCode());
+        appointmentHistory.setStatus(appointment.getStatus().toString());
+        appointmentInfoForUser.setAppointmentHistory(appointmentHistory);
+        return appointmentInfoForUser;
     }
 }

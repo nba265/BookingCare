@@ -35,4 +35,24 @@ public class AppointmentInfoForUser {
     private String service;
 
     private String price;
+
+    private AppointmentHistory appointmentHistory;
+
+    @Override
+    public String toString() {
+        return "More Information{" +
+                "\nnamePatient='" + namePatient + '\'' +
+                ", \nphonePatient='" + phonePatient + '\'' +
+                ", \nbirthday='" + birthday + '\'' +
+                ", \ngenderCustomer='" + genderCustomer + '\'' +
+                ", \ndoctorName='" + doctorName + '\'' +
+                ", \ngenderDoctor='" + genderDoctor + '\'' +
+                ", \nphoneDoctor='" + phoneDoctor + '\'' +
+                ", \nspecialistDoctor='" + specialistDoctor + '\'' +
+                ", \nstatus=" + status +
+                ", \ndescription='" + description + '\'' +
+                ", \nservice='" + service + '\'' +
+                ", \nprice='" + price + '\'' +
+                '}';
+    }
 }

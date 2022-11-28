@@ -3,7 +3,6 @@ package com.example.doctorcare.api.controller;
 import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
-import com.example.doctorcare.api.domain.dto.Specialist;
 import com.example.doctorcare.api.domain.dto.request.*;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.*;
@@ -71,7 +70,7 @@ public class ManagerController {
     ) {
         try {
             HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername());
-            List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
+            List<AppointmentHistory> appointmentHistories = new ArrayList<>();
             List<AppointmentsEntity> appointmentsEntities;
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
             Page<AppointmentsEntity> pageTuts = appointmentsService.findByHospitalCustomerCreateDate(hospitalClinicEntity.getId(), pagingSort, before, after);
@@ -80,7 +79,7 @@ public class ManagerController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             appointmentsEntities.forEach(appointments -> {
-                AppoinmentHistory appointmentHistory = new AppoinmentHistory();
+                AppointmentHistory appointmentHistory = new AppointmentHistory();
                 appointmentHistory.setId(appointments.getId());
                 appointmentHistory.setHospitalName(hospitalClinicEntity.getName());
                 appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());

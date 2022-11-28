@@ -2,18 +2,22 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.request.ChangePassword;
+import com.example.doctorcare.api.domain.dto.response.AppointmentInfoForUser;
 import com.example.doctorcare.api.domain.dto.response.MessageResponse;
 import com.example.doctorcare.api.domain.dto.response.UserInformation;
 import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.event.OnSendAppointmentInfoEvent;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import com.example.doctorcare.api.utilis.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDate;
 
@@ -28,6 +32,9 @@ public class UserController {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
 /*    @GetMapping("/userProfile")
     public ResponseEntity<?> getUserProfile(){
@@ -44,6 +51,19 @@ public class UserController {
             userInformation.setGender(user.getGender().toString());
             userInformation.setBirthday(user.getBirthday().toString());
             return new ResponseEntity<>(userInformation, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/testSendMail")
+    public ResponseEntity<?> testSendEmail(HttpSession session) {
+        try {
+            String username = SecurityUtils.getUsername().trim();
+            session.setAttribute("username", username);
+            eventPublisher.publishEvent(new OnSendAppointmentInfoEvent(this, username,new AppointmentInfoForUser()));
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -74,7 +94,7 @@ public class UserController {
     public ResponseEntity<?> doChangePassword(@RequestBody ChangePassword changePassword) {
         try {
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-            if (SecurityUtils.checkOldPassword(user,changePassword.getOldPassword())) {
+            if (SecurityUtils.checkOldPassword(user, changePassword.getOldPassword())) {
                 user.setPassword(SecurityUtils.encrytePassword(changePassword.getNewPassword()));
                 userDetailsService.save(user);
                 return new ResponseEntity<>(new MessageResponse("Success"), HttpStatus.OK);

@@ -10,7 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppoinmentHistory {
+public class AppointmentHistory {
 
     private Long id;
 
@@ -29,4 +29,18 @@ public class AppoinmentHistory {
 
     private String status;
 
+    private String hospitalAddress;
+
+    @Override
+    public String toString() {
+        return "AppointmentHistory{" +
+                "\nhospitalName='" + hospitalName + '\'' +
+                ", \ntimeStart='" + timeStart + '\'' +
+                ", \ntimeEnd='" + timeEnd + '\'' +
+                ", \ndate='" + date + '\'' +
+                ", \nappointmentCode='" + appointmentCode + '\'' +
+                ", \nstatus='" + status + '\'' +
+                ", \nhospitalAddress='" + hospitalAddress + '\'' +
+                '}';
+    }
 }

@@ -14,6 +14,26 @@ spring:
       hibernate:
         enable_lazy_load_no_trans : true
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  # Config properties Mailer
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nguyenbaoanh260599@gmail.com
+    password: xhexrzvgjdbxotcl
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        debug: true
+
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      enabled: true
+
 
 bezkoder:
   app:
