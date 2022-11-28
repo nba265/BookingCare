@@ -82,9 +82,15 @@ public class ManagerController {
                 AppointmentHistory appointmentHistory = new AppointmentHistory();
                 appointmentHistory.setId(appointments.getId());
                 appointmentHistory.setHospitalName(hospitalClinicEntity.getName());
-                appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
-                appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
-                appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                if (appointments.getStatus().equals(AppointmentStatus.CANCEL)) {
+                    appointmentHistory.setDate(appointments.getCancelTimeDoctors().getDate().toString());
+                    appointmentHistory.setTimeStart(appointments.getCancelTimeDoctors().getTimeStart().toString());
+                    appointmentHistory.setTimeEnd(appointments.getCancelTimeDoctors().getTimeEnd().toString());
+                } else {
+                    appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
+                    appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
+                    appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                }
                 appointmentHistory.setStatus(appointments.getStatus().toString());
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistories.add(appointmentHistory);

@@ -5,6 +5,7 @@ import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.dto.response.AppointmentHistory;
 import com.example.doctorcare.api.domain.dto.response.AppointmentInfoForUser;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
+import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.repository.AppointmentsRepository;
@@ -111,7 +112,9 @@ public class AppointmentsService {
         if (LocalDate.now().isBefore(appointment.getTimeDoctors().getDate())) {
             if (appointment.getStatus().equals(AppointmentStatus.PENDING)) {
                 appointment.setStatus(AppointmentStatus.CANCEL);
-                appointment.getTimeDoctors().setTimeDoctorStatus(TimeDoctorStatus.AVAILABLE);
+                appointment.setCancelTimeDoctors(appointment.getTimeDoctors());
+                appointment.getCancelTimeDoctors().setTimeDoctorStatus(TimeDoctorStatus.AVAILABLE);
+                appointment.setTimeDoctors(null);
                 save(appointment);
                 return "Success!!";
             } else return "Error!!";
@@ -132,12 +135,22 @@ public class AppointmentsService {
         appointmentInfoForUser.setStatus(appointment.getStatus());
         appointmentInfoForUser.setService(appointment.getServices().getName());
         appointmentInfoForUser.setPrice(appointment.getServices().getPrice().toString());
+        appointmentInfoForUser.setDoctorEmail(doctor.getEmail());
         AppointmentHistory appointmentHistory = new AppointmentHistory();
         appointmentHistory.setId(appointment.getId());
-        appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointment.getId()).getName());
-        appointmentHistory.setDate(appointment.getTimeDoctors().getDate().toString());
-        appointmentHistory.setTimeStart(appointment.getTimeDoctors().getTimeStart().toString());
-        appointmentHistory.setTimeEnd(appointment.getTimeDoctors().getTimeEnd().toString());
+        HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByAppointment_Id(appointment.getId(),appointment.getStatus());
+        appointmentHistory.setHospitalName(hospitalClinicEntity.getName());
+        appointmentHistory.setHospitalPhone(hospitalClinicEntity.getPhone());
+        appointmentHistory.setHospitalAddress(hospitalClinicEntity.getAddress());
+        if (appointment.getStatus().equals(AppointmentStatus.CANCEL)) {
+            appointmentHistory.setDate(appointment.getCancelTimeDoctors().getDate().toString());
+            appointmentHistory.setTimeStart(appointment.getCancelTimeDoctors().getTimeStart().toString());
+            appointmentHistory.setTimeEnd(appointment.getCancelTimeDoctors().getTimeEnd().toString());
+        } else {
+            appointmentHistory.setDate(appointment.getTimeDoctors().getDate().toString());
+            appointmentHistory.setTimeStart(appointment.getTimeDoctors().getTimeStart().toString());
+            appointmentHistory.setTimeEnd(appointment.getTimeDoctors().getTimeEnd().toString());
+        }
         appointmentHistory.setAppointmentCode(appointment.getAppointmentCode());
         appointmentHistory.setStatus(appointment.getStatus().toString());
         appointmentInfoForUser.setAppointmentHistory(appointmentHistory);

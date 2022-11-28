@@ -16,7 +16,8 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class MailService {
 
-    private final JavaMailSender javaMailSender = new JavaMailSenderImpl();
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @Autowired
     private TemplateEngine htmlTemplateEngine;

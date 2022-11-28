@@ -37,7 +37,7 @@ public class EmailAppointmentInfoService {
             final Context ctx = new Context(LocaleContextHolder.getLocale());
             ctx.setVariable("appointmentInfoForUser", emailDTO.getAppointmentInfoForUser());
 
-            mailService.sendMimeMessage(emailDTO, ctx, "AppointmentSuccessTemplate");
+            mailService.sendMimeMessage(emailDTO, ctx, "Site1/index");
         } catch (Exception e) {
             log.error("Send mail failed: {}", e.getMessage());
         }

@@ -9,6 +9,7 @@ import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.service.AppointmentsService;
 import com.example.doctorcare.api.service.HospitalClinicService;
@@ -243,11 +244,17 @@ public class DoctorController {
             }
             appointmentsEntities.forEach(appointments -> {
                 AppointmentHistory appointmentHistory = new AppointmentHistory();
-                appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId()).getName());
+                appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId(),appointments.getStatus()).getName());
                 appointmentHistory.setId(appointments.getId());
-                appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
-                appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
-                appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                if (appointments.getStatus().equals(AppointmentStatus.CANCEL)) {
+                    appointmentHistory.setDate(appointments.getCancelTimeDoctors().getDate().toString());
+                    appointmentHistory.setTimeStart(appointments.getCancelTimeDoctors().getTimeStart().toString());
+                    appointmentHistory.setTimeEnd(appointments.getCancelTimeDoctors().getTimeEnd().toString());
+                } else {
+                    appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
+                    appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
+                    appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                }
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistory.setStatus(appointments.getStatus().toString());
                 appointmentHistories.add(appointmentHistory);

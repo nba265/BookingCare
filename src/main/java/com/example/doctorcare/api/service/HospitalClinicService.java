@@ -5,6 +5,7 @@ import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.HospitalClinic;
 import com.example.doctorcare.api.domain.dto.response.HospitalClinicInfoResponse;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
+import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.repository.HospitalClinicRepository;
 import com.example.doctorcare.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +69,11 @@ public class HospitalClinicService {
         return hospitalClinicMapper.convertToDto(userRepository.findById(docId).get().getHospitalCilinicDoctor());
     }
 
-    public HospitalClinicEntity findByAppointment_Id(Long id) {
-        return hospitalClinicRepository.findByAppointment_Id(id);
+    public HospitalClinicEntity findByAppointment_Id(Long id, AppointmentStatus status) {
+        if (status.equals(AppointmentStatus.CANCEL))
+            return hospitalClinicRepository.findByCancelAppointment_Id(id);
+        else
+            return hospitalClinicRepository.findByAppointment_Id(id);
     }
 
 }

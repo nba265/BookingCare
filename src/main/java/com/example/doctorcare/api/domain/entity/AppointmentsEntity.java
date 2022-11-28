@@ -39,6 +39,10 @@ public class AppointmentsEntity {
     @JoinColumn(name = "time_doctors_id",referencedColumnName = "id")
     private TimeDoctorsEntity timeDoctors;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cancel_time_doctors_id",referencedColumnName = "id")
+    private TimeDoctorsEntity cancelTimeDoctors;
+
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -52,6 +56,14 @@ public class AppointmentsEntity {
         this.description = description;
         this.status = status;
         this.createDate = createDate;
+    }
+
+    public TimeDoctorsEntity getCancelTimeDoctors() {
+        return cancelTimeDoctors;
+    }
+
+    public void setCancelTimeDoctors(TimeDoctorsEntity cancelTimeDoctors) {
+        this.cancelTimeDoctors = cancelTimeDoctors;
     }
 
     public Long getId() {

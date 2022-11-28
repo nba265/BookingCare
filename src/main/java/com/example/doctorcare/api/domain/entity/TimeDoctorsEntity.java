@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -31,6 +32,9 @@ public class TimeDoctorsEntity {
 
     @OneToOne(mappedBy = "timeDoctors",cascade = CascadeType.ALL)
     private AppointmentsEntity appointments;
+
+    @OneToMany(mappedBy = "cancelTimeDoctors",cascade = CascadeType.ALL)
+    private List<AppointmentsEntity> canelAppointments;
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)

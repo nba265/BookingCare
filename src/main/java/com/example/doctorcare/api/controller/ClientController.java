@@ -210,31 +210,6 @@ public class ClientController {
         }
     }
 
-/*    @GetMapping("/appointmentHistory")
-    public ResponseEntity<?> appointmentHistory() {
-        try {
-            UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-            List<AppoinmentHistory> appointmentHistories = new ArrayList<>();
-            Set<AppointmentsEntity> appointmentHistorySet = user.getAppointmentsEntities();
-            appointmentHistorySet.forEach(appointments -> {
-                AppoinmentHistory appointmentHistory = new AppoinmentHistory();
-                appointmentHistory.setId(appointments.getId());
-                appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId()).getName());
-                appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
-                appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
-                appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
-                appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
-                appointmentHistory.setStatus(appointments.getStatus().toString());
-                appointmentHistories.add(appointmentHistory);
-            });
-            if (appointmentHistories.isEmpty())
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            return new ResponseEntity<>(appointmentHistories, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }*/
-
     @GetMapping("/appointmentHistory")
     public ResponseEntity<?> appointmentHistory(
             @RequestParam(defaultValue = "1") int page,
@@ -263,10 +238,16 @@ public class ClientController {
             appointmentsEntities.forEach(appointments -> {
                 AppointmentHistory appointmentHistory = new AppointmentHistory();
                 appointmentHistory.setId(appointments.getId());
-                appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId()).getName());
-                appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
-                appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
-                appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId(), appointments.getStatus()).getName());
+                if (appointments.getStatus().equals(AppointmentStatus.CANCEL)) {
+                    appointmentHistory.setDate(appointments.getCancelTimeDoctors().getDate().toString());
+                    appointmentHistory.setTimeStart(appointments.getCancelTimeDoctors().getTimeStart().toString());
+                    appointmentHistory.setTimeEnd(appointments.getCancelTimeDoctors().getTimeEnd().toString());
+                } else {
+                    appointmentHistory.setDate(appointments.getTimeDoctors().getDate().toString());
+                    appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
+                    appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
+                }
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistory.setStatus(appointments.getStatus().toString());
                 appointmentHistories.add(appointmentHistory);

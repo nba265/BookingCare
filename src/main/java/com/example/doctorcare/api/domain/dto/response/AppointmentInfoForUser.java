@@ -38,6 +38,8 @@ public class AppointmentInfoForUser {
 
     private AppointmentHistory appointmentHistory;
 
+    private String doctorEmail;
+
     @Override
     public String toString() {
         return "More Information{" +
