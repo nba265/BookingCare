@@ -41,6 +41,7 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     @Query(value = "select u from UserEntity u join u.timeDoctors t where t.id = ?1")
     UserEntity findByTimeDoctors_Id(Long id);
 
+
     Optional<UserEntity> findByUsername(@NotBlank @Size(max = 20) String username);
 
     @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 ", nativeQuery = false)
@@ -48,6 +49,8 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 and u.specialist.id = ?2 and u.gender = ?3")
     Set<UserEntity> findDoctorByHospitalCilinicIdAndSpecIdAndGender(Long hosId, Long specId, Gender gender);
+
+    Set<UserEntity> findByFullNameContainsIgnoreCase(String fullName);
 
     Page<UserEntity> findAll(Pageable pageable);
 
