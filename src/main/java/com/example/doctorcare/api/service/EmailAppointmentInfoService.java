@@ -30,14 +30,15 @@ public class EmailAppointmentInfoService {
             UserEntity userEntity = userRepository.findByUsername(username)
                     .orElseThrow(() -> new UserNotFoundException("Username with: " + username + " not found!"));
 
-            String subject = "Here Is Your Appointment Information!";
+            String subject = "Your upcoming appointment on " + appointment.getAppointmentHistory().getDate() + " ["
+                    + appointment.getAppointmentHistory().getTimeStart() + " " + appointment.getAppointmentHistory().getTimeEnd() + "]";
             EmailDTO emailDTO = EmailDTO.builder().recipients(List.of(userEntity.getEmail()))
                     .subject(subject).appointmentInfoForUser(appointment).build();
 
             final Context ctx = new Context(LocaleContextHolder.getLocale());
             ctx.setVariable("appointmentInfoForUser", emailDTO.getAppointmentInfoForUser());
 
-            mailService.sendMimeMessage(emailDTO, ctx, "Site1/index");
+            mailService.sendMimeMessage(emailDTO, ctx, "beefree-7j6fllkji84/Appointment");
         } catch (Exception e) {
             log.error("Send mail failed: {}", e.getMessage());
         }
