@@ -142,6 +142,7 @@ public class AppointmentsService {
         appointmentHistory.setHospitalName(hospitalClinicEntity.getName());
         appointmentHistory.setHospitalPhone(hospitalClinicEntity.getPhone());
         appointmentHistory.setHospitalAddress(hospitalClinicEntity.getAddress());
+        appointmentHistory.setCreateDate(appointment.getCreateDate().toString());
         if (appointment.getStatus().equals(AppointmentStatus.CANCEL)) {
             appointmentHistory.setDate(appointment.getCancelTimeDoctors().getDate().toString());
             appointmentHistory.setTimeStart(appointment.getCancelTimeDoctors().getTimeStart().toString());

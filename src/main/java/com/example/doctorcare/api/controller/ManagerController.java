@@ -82,6 +82,8 @@ public class ManagerController {
                 AppointmentHistory appointmentHistory = new AppointmentHistory();
                 appointmentHistory.setId(appointments.getId());
                 appointmentHistory.setHospitalName(hospitalClinicEntity.getName());
+                appointmentHistory.setHospitalPhone(hospitalClinicEntity.getPhone());
+                appointmentHistory.setHospitalAddress(hospitalClinicEntity.getAddress());
                 if (appointments.getStatus().equals(AppointmentStatus.CANCEL)) {
                     appointmentHistory.setDate(appointments.getCancelTimeDoctors().getDate().toString());
                     appointmentHistory.setTimeStart(appointments.getCancelTimeDoctors().getTimeStart().toString());
@@ -93,6 +95,7 @@ public class ManagerController {
                 }
                 appointmentHistory.setStatus(appointments.getStatus().toString());
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
+                appointmentHistory.setCreateDate(appointments.getCreateDate().toString());
                 appointmentHistories.add(appointmentHistory);
             });
             Map<String, Object> response = new HashMap<>();

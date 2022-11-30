@@ -33,6 +33,8 @@ public class AppointmentHistory {
 
     private String hospitalPhone;
 
+    private String createDate;
+
     @Override
     public String toString() {
         return "AppointmentHistory{" +

@@ -154,9 +154,7 @@ public class DoctorController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             /* List<TimeDoctor> finalTimeDoctors = timeDoctors;*/
-            timeDoctorsList.forEach(timeDoctors1 -> {
-                timeDoctors.add(new TimeDoctor(timeDoctors1.getId(), timeDoctors1.getTimeStart().toString(), timeDoctors1.getTimeEnd().toString(), timeDoctors1.getDate().toString(), timeDoctors1.getTimeDoctorStatus().toString()));
-            });
+            timeDoctorsList.forEach(timeDoctors1 -> timeDoctors.add(new TimeDoctor(timeDoctors1.getId(), timeDoctors1.getTimeStart().toString(), timeDoctors1.getTimeEnd().toString(), timeDoctors1.getDate().toString(), timeDoctors1.getTimeDoctorStatus().toString())));
 
             /*timeDoctors = finalTimeDoctors.stream().sorted(Comparator.comparing(TimeDoctor::getDate).thenComparing(TimeDoctor::getTimeStart)).collect(Collectors.toList());*/
 
@@ -165,9 +163,7 @@ public class DoctorController {
             response.put("currentPage", pageTuts.getNumber() + 1);
             response.put("totalItems", pageTuts.getTotalElements());
             response.put("totalPages", pageTuts.getTotalPages());
-            timeDoctors.forEach(timeDoctor -> {
-                System.out.println(timeDoctor.getTimeStart());
-            });
+            timeDoctors.forEach(timeDoctor -> System.out.println(timeDoctor.getTimeStart()));
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -244,7 +240,9 @@ public class DoctorController {
             }
             appointmentsEntities.forEach(appointments -> {
                 AppointmentHistory appointmentHistory = new AppointmentHistory();
-                appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId(),appointments.getStatus()).getName());
+                appointmentHistory.setHospitalName(user.getHospitalCilinicDoctor().getName());
+                appointmentHistory.setHospitalPhone(user.getHospitalCilinicDoctor().getPhone());
+                appointmentHistory.setHospitalAddress(user.getHospitalCilinicDoctor().getAddress());
                 appointmentHistory.setId(appointments.getId());
                 if (appointments.getStatus().equals(AppointmentStatus.CANCEL)) {
                     appointmentHistory.setDate(appointments.getCancelTimeDoctors().getDate().toString());
@@ -255,6 +253,7 @@ public class DoctorController {
                     appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
                     appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
                 }
+                appointmentHistory.setCreateDate(appointments.getCreateDate().toString());
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistory.setStatus(appointments.getStatus().toString());
                 appointmentHistories.add(appointmentHistory);

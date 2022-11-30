@@ -8,6 +8,7 @@ import com.example.doctorcare.api.domain.dto.request.MakeAppointment;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.CustomersEntity;
+import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
@@ -16,7 +17,6 @@ import com.example.doctorcare.api.service.*;
 import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
 import com.example.doctorcare.api.utilis.RandomStringGenaration;
 import com.example.doctorcare.api.utilis.SecurityUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -98,9 +98,7 @@ public class ClientController {
     public ResponseEntity<?> searchHospital(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(name = "districtCode", required = false, defaultValue = "") String districtCode) {
         try {
             List<HospitalClinicInfoResponse> responses = new ArrayList<>();
-            hospitalClinicService.findByKeywordsOrDistrictCode(keyword, districtCode).forEach(hospitalCilinic -> {
-                responses.add(new HospitalClinicInfoResponse(hospitalCilinic.getId(), hospitalCilinic.getName(), hospitalCilinic.getAddress(), hospitalCilinic.getPhone(), null, hospitalCilinic.getDistrictCode()));
-            });
+            hospitalClinicService.findByKeywordsOrDistrictCode(keyword, districtCode).forEach(hospitalClinic -> responses.add(new HospitalClinicInfoResponse(hospitalClinic.getId(), hospitalClinic.getName(), hospitalClinic.getAddress(), hospitalClinic.getPhone(), null, hospitalClinic.getDistrictCode())));
             return new ResponseEntity<>(responses, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,9 +120,7 @@ public class ClientController {
     public ResponseEntity<?> findDoctor(@RequestParam(name = "hosId", required = false) Long hosId, @RequestParam(name = "specId", required = false) Long specId, @RequestParam(name = "gender", required = false) String gender, @RequestParam(name = "keyword", required = false) String keyword) {
         try {
             List<DoctorInfoResponse> doctorInfoResponses = new ArrayList<>();
-            userDetailsService.findDoctor(hosId, specId, gender, keyword).forEach(user -> {
-                doctorInfoResponses.add(new DoctorInfoResponse(user.getId(), user.getFullName(), user.getGender(), user.getDegree(), user.getNationality(), user.getExperience(), user.getSpecialist().getName()));
-            });
+            userDetailsService.findDoctor(hosId, specId, gender, keyword).forEach(user -> doctorInfoResponses.add(new DoctorInfoResponse(user.getId(), user.getFullName(), user.getGender(), user.getDegree(), user.getNationality(), user.getExperience(), user.getSpecialist().getName())));
             return new ResponseEntity<>(doctorInfoResponses, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -238,7 +234,10 @@ public class ClientController {
             appointmentsEntities.forEach(appointments -> {
                 AppointmentHistory appointmentHistory = new AppointmentHistory();
                 appointmentHistory.setId(appointments.getId());
-                appointmentHistory.setHospitalName(hospitalClinicService.findByAppointment_Id(appointments.getId(), appointments.getStatus()).getName());
+                HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByAppointment_Id(appointments.getId(),appointments.getStatus());
+                appointmentHistory.setHospitalName(hospitalClinicEntity.getName());
+                appointmentHistory.setHospitalPhone(hospitalClinicEntity.getPhone());
+                appointmentHistory.setHospitalAddress(hospitalClinicEntity.getAddress());
                 if (appointments.getStatus().equals(AppointmentStatus.CANCEL)) {
                     appointmentHistory.setDate(appointments.getCancelTimeDoctors().getDate().toString());
                     appointmentHistory.setTimeStart(appointments.getCancelTimeDoctors().getTimeStart().toString());
