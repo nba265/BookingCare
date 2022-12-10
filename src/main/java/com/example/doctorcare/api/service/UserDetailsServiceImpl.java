@@ -110,9 +110,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public Set<UserEntity> findDoctor(Long hosId, Long specId, String gender, String keyword) {
-        if ((hosId == null || hosId == 0) && (specId == null || specId == 0) && (gender == null || gender.equals("")) && (keyword == null || keyword.equals("")))
+       /* if ((hosId == 0) && (specId == 0) && (gender.equals("")) && (keyword.equals("")))
             return new HashSet<>(userRepository.findByRole_Id(3L));
-        Set<UserEntity> users = new HashSet<>();
+        else*/ return new HashSet<>(userRepository.findDoctorByHospitalCilinicIdAndSpecIdAndGenderAndFullNameAndUserRoles(hosId, specId,gender,keyword,3L));
+    /*    Set<UserEntity> users = new HashSet<>();
         if (hosId == null || hosId == 0){
             users = new HashSet<>(userRepository.findUserByKeywordAndRole_Id(keyword,3L));
         }
@@ -141,7 +142,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             });
         }
         users.removeAll(toRemove);
-        return users;
+        return users;*/
     }
 
     public UserEntity findById(Long id) {

@@ -33,8 +33,8 @@ public class SignupRequest {
     @Size(min = 6, max = 40)
     private String password;
 
-    @NotBlank
+/*    @NotBlank
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private String birthday;
+    private String birthday;*/
 
 }

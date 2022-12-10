@@ -117,7 +117,7 @@ public class ClientController {
     }
 
     @GetMapping("/listDoctor")
-    public ResponseEntity<?> findDoctor(@RequestParam(name = "hosId", required = false) Long hosId, @RequestParam(name = "specId", required = false) Long specId, @RequestParam(name = "gender", required = false) String gender, @RequestParam(name = "keyword", required = false) String keyword) {
+    public ResponseEntity<?> findDoctor(@RequestParam(name = "hosId", required = false,defaultValue = "0") Long hosId, @RequestParam(name = "specId", required = false,defaultValue = "0") Long specId, @RequestParam(name = "gender", required = false,defaultValue = "") String gender, @RequestParam(name = "keyword", required = false,defaultValue = "") String keyword) {
         try {
             List<DoctorInfoResponse> doctorInfoResponses = new ArrayList<>();
             userDetailsService.findDoctor(hosId, specId, gender, keyword).forEach(user -> doctorInfoResponses.add(new DoctorInfoResponse(user.getId(), user.getFullName(), user.getGender(), user.getDegree(), user.getNationality(), user.getExperience(), user.getSpecialist().getName())));

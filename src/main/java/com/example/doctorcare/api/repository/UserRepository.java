@@ -9,6 +9,7 @@ package com.example.doctorcare.api.repository;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.Gender;
+import com.example.doctorcare.api.enums.Role;
 import com.example.doctorcare.api.enums.UserStatus;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
@@ -49,6 +50,9 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h where h.id = ?1 and u.specialist.id = ?2 and u.gender = ?3")
     Set<UserEntity> findDoctorByHospitalCilinicIdAndSpecIdAndGender(Long hosId, Long specId, Gender gender);
+
+    @Query(value = "select u from UserEntity u join u.hospitalCilinicDoctor h join u.userRoles ur where (ur.id = ?5 ) and ( ?1 = 0L or h.id = ?1) and (?2 = 0L or u.specialist.id = ?2) and ( ?3 = '' or u.gender = ?3) and ( ?4 = '' or UPPER(u.fullName) like concat('%',UPPER(?4),'%')) ")
+    Set<UserEntity> findDoctorByHospitalCilinicIdAndSpecIdAndGenderAndFullNameAndUserRoles(Long hosId, Long specId, String gender, String keyword, Long roleId);
 
     Set<UserEntity> findByFullNameContainsIgnoreCase(String fullName);
 
