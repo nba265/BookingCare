@@ -159,16 +159,9 @@ public class ClientController {
             doctorSearchInfo.setDoctorId(doctorId);
             List<TimeDoctors> timeDoctorsList = timeDoctorService.findByDoctor_IdAndTimeStampAndStatus(doctorId, TimeDoctorStatus.AVAILABLE);
             Set<String> dayUnvailable = new HashSet<>();
-            timeDoctorsList.forEach(timeDoctors -> {
-                TimeDoctor timeDoctor = new TimeDoctor();
-                timeDoctor.setTimeEnd(timeDoctors.getTimeEnd().toString());
-                timeDoctor.setTimeStart(timeDoctors.getTimeStart().toString());
-                timeDoctor.setId(timeDoctors.getId());
-                timeDoctor.setDate(timeDoctors.getDate().toString());
-                timeDoctor.setTimeDoctorStatus(timeDoctors.getTimeDoctorStatus().toString());
-                doctorSearchInfo.getTimeDoctorsAvailable().add(timeDoctor);
-                dayUnvailable.add(timeDoctors.getDate().toString());
-            });
+            timeDoctorsList.forEach(timeDoctors ->
+                dayUnvailable.add(timeDoctors.getDate().toString())
+            );
             doctorSearchInfo.setDayUnavailable(dayUnvailable.stream().sorted(Comparator.comparing(LocalDate::parse)).collect(Collectors.toCollection(LinkedHashSet::new)));
             System.out.println(dayUnvailable);
             doctorSearchInfo.setHosId(doctor.getHospitalClinicDoctor().getId());

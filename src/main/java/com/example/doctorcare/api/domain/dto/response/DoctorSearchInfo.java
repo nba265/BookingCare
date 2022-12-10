@@ -29,6 +29,6 @@ public class DoctorSearchInfo {
 
     private List<Services> servicesList = new ArrayList<>();
 
-    private List<TimeDoctor> timeDoctorsAvailable = new ArrayList<>();
+
     private Set<String> dayUnavailable = new HashSet<>();
 }
