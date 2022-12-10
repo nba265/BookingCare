@@ -3,8 +3,7 @@ package com.example.doctorcare.api.service;
 import com.example.doctorcare.api.domain.Mapper.TimeDoctorsMapper;
 import com.example.doctorcare.api.domain.dto.TimeDoctors;
 import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
-import com.example.doctorcare.api.domain.dto.response.MessageResponse;
-import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
+import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
 import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
@@ -14,12 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class TimeDoctorService {
@@ -71,6 +67,11 @@ public class TimeDoctorService {
 
     public void deleteById(Long id) {
         timeDoctorRepository.deleteById(id);
+    }
+
+    public List<TimeDoctor> findByDateAndStatus(LocalDate date) {
+        List<TimeDoctorsEntity> timeDoctorsEntities = timeDoctorRepository.findByDateAndTimeDoctorStatus(date, TimeDoctorStatus.valueOf("AVAILABLE"));
+        return timeDoctorsMapper.convertToResponseList(timeDoctorsMapper.convertToDtoList(timeDoctorsEntities)) ;
     }
 
     public Page<TimeDoctorsEntity> findByDoctorsId(Long id, Pageable pageable, LocalDate before, LocalDate after) {

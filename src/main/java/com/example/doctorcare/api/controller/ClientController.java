@@ -127,7 +127,16 @@ public class ClientController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @GetMapping("/listTimeDoctor")
+    public ResponseEntity<?> findTimeDoctor(@RequestParam(name = "date") String date) {
+        try {
+            List<TimeDoctor> timeDoctorsResponse =timeDoctorService.findByDateAndStatus(LocalDate.parse(date));
+            return new ResponseEntity<>(timeDoctorsResponse, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 /*    @GetMapping("/listService")
     public ResponseEntity<?> listService(@RequestParam("doctor_id")Long docId){
         try {

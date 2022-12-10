@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity, 
     Set<TimeDoctorsEntity> findByDoctor_IdAndTimeStampAndStatus(Long doctorId,String timeDoctorStatus);
 
     Optional<TimeDoctorsEntity> findById(Long id);
-
+    List<TimeDoctorsEntity> findByDateAndTimeDoctorStatus(LocalDate date, TimeDoctorStatus status);
     Page<TimeDoctorsEntity> findByDoctor_IdAndDateIsBefore(Long doctor_id, LocalDate date, Pageable pageable);
 
     Page<TimeDoctorsEntity> findByDoctor_IdAndDateIsAfter(Long doctor_id, LocalDate date, Pageable pageable);
