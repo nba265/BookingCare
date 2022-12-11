@@ -7,7 +7,6 @@ public class RandomStringGenaration {
 
     public static String randomStringWithLength(int length){
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                + "abcdefghijklmnopqrstuvwxyz"
                 + "0123456789";
         return new Random().ints(length, 0, chars.length())
                 .mapToObj(i -> "" + chars.charAt(i))

@@ -18,6 +18,8 @@ target/
 *.iws
 *.iml
 *.ipr
+!**/src/main/resources/*.yml
+src/main/resources/*.yml
 
 ### NetBeans ###
 /nbproject/private/
@@ -37,4 +39,3 @@ build/
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-*.yml
