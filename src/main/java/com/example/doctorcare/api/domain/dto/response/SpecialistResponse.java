@@ -10,6 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SpecialistResponse {
-    private String code;
+    private String id;
     private String name;
 }
