@@ -272,7 +272,7 @@ public class ClientController {
             if (user.isPresent()) {
                 AppointmentsEntity appointment = appointmentsService.findById(id);
                 if (user.get().getId().equals(appointment.getUser().getId())) {
-                    User doctor = userDetailsService.findByTimeDoctorId(appointment.getTimeDoctors().getId());
+                    User doctor = userDetailsService.findByTimeDoctorId(appointment.getStatus().equals(AppointmentStatus.CANCEL) ? appointment.getCancelTimeDoctors().getId() : appointment.getTimeDoctors().getId());
                     return new ResponseEntity<>(appointmentsService.setAppointmentInfoForUser(doctor, appointment), HttpStatus.OK);
                 }
             }

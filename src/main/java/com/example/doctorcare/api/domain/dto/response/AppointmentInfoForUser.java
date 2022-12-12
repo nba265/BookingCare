@@ -40,6 +40,8 @@ public class AppointmentInfoForUser {
 
     private String doctorEmail;
 
+    private String cancelReason;
+
     @Override
     public String toString() {
         return "More Information{" +

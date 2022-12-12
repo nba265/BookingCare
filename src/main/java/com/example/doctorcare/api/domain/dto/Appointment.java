@@ -40,4 +40,6 @@ public class Appointment {
     private User user;
 
     private String appointmentCode;
+
+    private String cancelReason;
 }

@@ -125,6 +125,7 @@ public class ManagerController {
             appointmentInfoForUser.setStatus(appointment.getStatus());
             appointmentInfoForUser.setService(appointment.getServices().getName());
             appointmentInfoForUser.setPrice(appointment.getServices().getPrice().toString());
+            appointmentInfoForUser.setCancelReason(appointment.getCancelReason());
             return new ResponseEntity<>(appointmentInfoForUser, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,7 +146,7 @@ public class ManagerController {
         }
     }
 
-    @PutMapping("/editServiceAppointment")
+/*    @PutMapping("/editServiceAppointment")
     public ResponseEntity<?> editServiceAppointment(@RequestParam("idAppointment") Long idAppointment, @RequestParam("idService") Long idService) {
         try {
             AppointmentsEntity appointmentsEntity = appointmentsService.findById(idAppointment);
@@ -157,7 +158,7 @@ public class ManagerController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 
     @PostMapping("/createEditService")
     public ResponseEntity<?> createOrEditService(@RequestBody AddService service) {
@@ -343,16 +344,16 @@ public class ManagerController {
         }
     }
 
-    @DeleteMapping("/deleteServiceById")
+/*    @DeleteMapping("/deleteServiceById")
     public ResponseEntity<?> deleteService(Long id) {
         try {
             return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 
-    @PutMapping("/editStatus")
+    @PutMapping("/editStatusService")
     public ResponseEntity<?> changeStatus(@RequestBody ChangeStatus changeStatus) {
         try {
             servicesService.toggleStatus(changeStatus.getStatus(), Long.valueOf(changeStatus.getId()));
