@@ -136,6 +136,7 @@ public class AppointmentsService {
         appointmentInfoForUser.setService(appointment.getServices().getName());
         appointmentInfoForUser.setPrice(appointment.getServices().getPrice().toString());
         appointmentInfoForUser.setDoctorEmail(doctor.getEmail());
+        appointmentInfoForUser.setCancelReason(appointment.getCancelReason());
         AppointmentHistory appointmentHistory = new AppointmentHistory();
         appointmentHistory.setId(appointment.getId());
         HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByAppointment_Id(appointment.getId(),appointment.getStatus());

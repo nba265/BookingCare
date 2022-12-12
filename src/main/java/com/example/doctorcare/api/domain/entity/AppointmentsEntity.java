@@ -26,6 +26,8 @@ public class AppointmentsEntity {
 
     private String appointmentCode;
 
+    private String cancelReason;
+
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "services_id")
     private ServicesEntity services;
@@ -46,7 +48,6 @@ public class AppointmentsEntity {
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
-
     public AppointmentsEntity() {
     }
 
@@ -104,6 +105,14 @@ public class AppointmentsEntity {
 
     public void setAppointmentCode(String appointmentCode) {
         this.appointmentCode = appointmentCode;
+    }
+
+    public String getCancelReason() {
+        return cancelReason;
+    }
+
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
     }
 
     public LocalDateTime getCreateDate() {

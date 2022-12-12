@@ -125,6 +125,7 @@ public class ManagerController {
             appointmentInfoForUser.setStatus(appointment.getStatus());
             appointmentInfoForUser.setService(appointment.getServices().getName());
             appointmentInfoForUser.setPrice(appointment.getServices().getPrice().toString());
+            appointmentInfoForUser.setCancelReason(appointment.getCancelReason());
             return new ResponseEntity<>(appointmentInfoForUser, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
