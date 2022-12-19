@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/booking_care
     username: root
-    password: Speedypro99
+    password: baoanh123
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,8 +18,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: anhhuynguyen55@gmail.com
-    password: elpulga99
+    username: nguyenbaoanh260599@gmail.com
+    password: dbafpavxfapudqmb
     properties:
       mail:
         smtp:
