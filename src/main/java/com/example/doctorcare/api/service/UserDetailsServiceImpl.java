@@ -237,8 +237,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         });
         userEntity.setCreateDate(LocalDate.now());
         userEntity.setHospitalCilinicDoctor(hospitalClinicService.findByManagerUsername(managerUsername));
-
-
         userEntity.setDegree(addDoctor.getDegree());
         userEntity.setSpecialist(specialistService.findById(Long.valueOf(addDoctor.getSpecialist().trim())).get());
         userEntity.setExperience(addDoctor.getExperience().concat(" years"));

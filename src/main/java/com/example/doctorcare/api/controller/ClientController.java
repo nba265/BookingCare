@@ -117,7 +117,7 @@ public class ClientController {
     }
 
     @GetMapping("/listDoctor")
-    public ResponseEntity<?> findDoctor(@RequestParam(name = "hosId", required = false,defaultValue = "0") Long hosId, @RequestParam(name = "specId", required = false,defaultValue = "0") Long specId, @RequestParam(name = "gender", required = false,defaultValue = "") String gender, @RequestParam(name = "keyword", required = false,defaultValue = "") String keyword) {
+    public ResponseEntity<?> findDoctor(@RequestParam(name = "hosId", required = false, defaultValue = "0") Long hosId, @RequestParam(name = "specId", required = false, defaultValue = "0") Long specId, @RequestParam(name = "gender", required = false, defaultValue = "") String gender, @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword) {
         try {
             List<DoctorInfoResponse> doctorInfoResponses = new ArrayList<>();
             userDetailsService.findDoctor(hosId, specId, gender, keyword).forEach(user -> doctorInfoResponses.add(new DoctorInfoResponse(user.getId(), user.getFullName(), user.getGender(), user.getDegree(), user.getNationality(), user.getExperience(), user.getSpecialist().getName())));
@@ -127,10 +127,11 @@ public class ClientController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/listTimeDoctor")
     public ResponseEntity<?> findTimeDoctor(@RequestParam(name = "date") String date) {
         try {
-            List<TimeDoctor> timeDoctorsResponse =timeDoctorService.findByDateAndStatus(LocalDate.parse(date));
+            List<TimeDoctor> timeDoctorsResponse = timeDoctorService.findByDateAndStatus(LocalDate.parse(date));
             return new ResponseEntity<>(timeDoctorsResponse, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,7 +237,7 @@ public class ClientController {
             appointmentsEntities.forEach(appointments -> {
                 AppointmentHistory appointmentHistory = new AppointmentHistory();
                 appointmentHistory.setId(appointments.getId());
-                HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByAppointment_Id(appointments.getId(),appointments.getStatus());
+                HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByAppointment_Id(appointments.getId(), appointments.getStatus());
                 appointmentHistory.setHospitalName(hospitalClinicEntity.getName());
                 appointmentHistory.setHospitalPhone(hospitalClinicEntity.getPhone());
                 appointmentHistory.setHospitalAddress(hospitalClinicEntity.getAddress());

@@ -187,7 +187,7 @@ public class ManagerController {
             } else return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -199,7 +199,6 @@ public class ManagerController {
             } else {
                 return new ResponseEntity<>(false, HttpStatus.OK);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(false, HttpStatus.OK);
@@ -212,7 +211,6 @@ public class ManagerController {
             if (email != null) {
                 return new ResponseEntity<>(!userDetailsService.checkExistsEmail(email), HttpStatus.OK);
             } else {
-
                 return new ResponseEntity<>(false, HttpStatus.OK);
             }
         } catch (Exception e) {

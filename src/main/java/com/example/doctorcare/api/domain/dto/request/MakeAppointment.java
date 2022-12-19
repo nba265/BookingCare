@@ -20,7 +20,6 @@ import javax.validation.constraints.Max;
 @AllArgsConstructor
 public class MakeAppointment {
 
-
     private Long doctorId;
 
     private Long servId;
