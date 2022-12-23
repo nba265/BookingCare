@@ -69,8 +69,8 @@ public class TimeDoctorService {
         timeDoctorRepository.deleteById(id);
     }
 
-    public List<TimeDoctor> findByDateAndStatus(LocalDate date) {
-        List<TimeDoctorsEntity> timeDoctorsEntities = timeDoctorRepository.findByDateAndTimeDoctorStatus(date, TimeDoctorStatus.valueOf("AVAILABLE"));
+    public List<TimeDoctor> findByDateAndStatus(LocalDate date,Long doctorId) {
+        List<TimeDoctorsEntity> timeDoctorsEntities = timeDoctorRepository.findByDateAndTimeDoctorStatusAndAndDoctor_Id(date, TimeDoctorStatus.valueOf("AVAILABLE"),doctorId);
         return timeDoctorsMapper.convertToResponseList(timeDoctorsMapper.convertToDtoList(timeDoctorsEntities)) ;
     }
 

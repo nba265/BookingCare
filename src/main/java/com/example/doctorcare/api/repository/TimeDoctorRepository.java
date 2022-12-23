@@ -25,7 +25,7 @@ public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity, 
     Set<TimeDoctorsEntity> findByDoctor_IdAndTimeStampAndStatus(Long doctorId,String timeDoctorStatus);
 
     Optional<TimeDoctorsEntity> findById(Long id);
-    List<TimeDoctorsEntity> findByDateAndTimeDoctorStatus(LocalDate date, TimeDoctorStatus status);
+    List<TimeDoctorsEntity> findByDateAndTimeDoctorStatusAndAndDoctor_Id(LocalDate date, TimeDoctorStatus status,Long doctorId);
     Page<TimeDoctorsEntity> findByDoctor_IdAndDateIsBefore(Long doctor_id, LocalDate date, Pageable pageable);
 
     Page<TimeDoctorsEntity> findByDoctor_IdAndDateIsAfter(Long doctor_id, LocalDate date, Pageable pageable);

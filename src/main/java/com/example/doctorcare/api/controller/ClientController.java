@@ -129,9 +129,9 @@ public class ClientController {
     }
 
     @GetMapping("/listTimeDoctor")
-    public ResponseEntity<?> findTimeDoctor(@RequestParam(name = "date") String date) {
+    public ResponseEntity<?> findTimeDoctor(@RequestParam(name = "date") String date,@RequestParam(name = "doctorId")Long doctorId) {
         try {
-            List<TimeDoctor> timeDoctorsResponse = timeDoctorService.findByDateAndStatus(LocalDate.parse(date));
+            List<TimeDoctor> timeDoctorsResponse = timeDoctorService.findByDateAndStatus(LocalDate.parse(date),doctorId);
             return new ResponseEntity<>(timeDoctorsResponse, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
