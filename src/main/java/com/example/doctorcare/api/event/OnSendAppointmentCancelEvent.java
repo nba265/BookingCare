@@ -5,16 +5,16 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class OnSendAppointmentInfoEvent extends ApplicationEvent {
+public class OnSendAppointmentCancelEvent extends ApplicationEvent {
 
     private String username;
 
     private AppointmentInfoForUser appointmentInfoForUser;
 
-    public OnSendAppointmentInfoEvent(Object source, String username, AppointmentInfoForUser appointmentInfoForUser) {
+
+    public OnSendAppointmentCancelEvent(Object source, String username, AppointmentInfoForUser appointmentInfoForUser) {
         super(source);
         this.username = username;
         this.appointmentInfoForUser = appointmentInfoForUser;
     }
-
 }

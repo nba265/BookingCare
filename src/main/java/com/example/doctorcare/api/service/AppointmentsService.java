@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class AppointmentsService {
@@ -107,8 +108,27 @@ public class AppointmentsService {
         }
     }
 
-    public String cancelAppointment(Long appointmentId) {
-        AppointmentsEntity appointment = findById(appointmentId);
+    public String cancelAppointment(String appointmentCode) {
+        Optional<AppointmentsEntity> appointment = appointmentsRepository.findByAppointmentCode(appointmentCode);
+        if (appointment.isPresent()) {
+            if (LocalDate.now().isBefore(appointment.get().getTimeDoctors().getDate())) {
+                if (appointment.get().getStatus().equals(AppointmentStatus.PENDING)) {
+                    appointment.get().setStatus(AppointmentStatus.CANCEL);
+                    appointment.get().setCancelTimeDoctors(appointment.get().getTimeDoctors());
+                    appointment.get().getCancelTimeDoctors().setTimeDoctorStatus(TimeDoctorStatus.AVAILABLE);
+                    appointment.get().setTimeDoctors(null);
+                    save(appointment.get());
+                    return "Success!";
+                } else return "You are only allowed to cancel PENDING appointment!";
+            } else return "You are only allowed to cancel 1 day in advance!";
+        } else return "Wrong Code!";
+    }
+
+    public Optional<AppointmentsEntity> findByCode(String code) {
+        return appointmentsRepository.findByAppointmentCode(code);
+    }
+
+    public String cancelAppointmentForDoctor(AppointmentsEntity appointment) {
         if (LocalDate.now().isBefore(appointment.getTimeDoctors().getDate())) {
             if (appointment.getStatus().equals(AppointmentStatus.PENDING)) {
                 appointment.setStatus(AppointmentStatus.CANCEL);
@@ -116,12 +136,13 @@ public class AppointmentsService {
                 appointment.getCancelTimeDoctors().setTimeDoctorStatus(TimeDoctorStatus.AVAILABLE);
                 appointment.setTimeDoctors(null);
                 save(appointment);
-                return "Success!!";
-            } else return "Error!!";
-        } else return "You are only allowed to cancel 1 day in advance!!";
+                return "Success!";
+            } else return "You are only allowed to cancel PENDING appointment!";
+        } else return "You are only allowed to cancel 1 day in advance!";
     }
 
-    public AppointmentInfoForUser setAppointmentInfoForUser(User doctor,AppointmentsEntity appointment){
+
+    public AppointmentInfoForUser setAppointmentInfoForUser(User doctor, AppointmentsEntity appointment) {
         AppointmentInfoForUser appointmentInfoForUser = new AppointmentInfoForUser();
         appointmentInfoForUser.setDoctorName(doctor.getFullName());
         appointmentInfoForUser.setPhoneDoctor(doctor.getPhone());
@@ -139,7 +160,7 @@ public class AppointmentsService {
         appointmentInfoForUser.setCancelReason(appointment.getCancelReason());
         AppointmentHistory appointmentHistory = new AppointmentHistory();
         appointmentHistory.setId(appointment.getId());
-        HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByAppointment_Id(appointment.getId(),appointment.getStatus());
+        HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByAppointment_Id(appointment.getId(), appointment.getStatus());
         appointmentHistory.setHospitalName(hospitalClinicEntity.getName());
         appointmentHistory.setHospitalPhone(hospitalClinicEntity.getPhone());
         appointmentHistory.setHospitalAddress(hospitalClinicEntity.getAddress());

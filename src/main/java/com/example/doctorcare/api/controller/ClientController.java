@@ -285,9 +285,9 @@ public class ClientController {
     }
 
     @GetMapping("/cancelAppointment")
-    public ResponseEntity<?> doCancelAppointment(@RequestParam("appointmentId") Long id) {
+    public ResponseEntity<?> doCancelAppointment(@RequestParam("appointmentCode") String code) {
         try {
-            return new ResponseEntity<>(new MessageResponse(appointmentsService.cancelAppointment(id)), HttpStatus.OK);
+            return new ResponseEntity<>(new MessageResponse(appointmentsService.cancelAppointment(code)), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

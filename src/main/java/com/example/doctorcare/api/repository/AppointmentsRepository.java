@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository
 public interface AppointmentsRepository extends CrudRepository<AppointmentsEntity, Long> {
@@ -63,4 +64,6 @@ public interface AppointmentsRepository extends CrudRepository<AppointmentsEntit
     Page<AppointmentsEntity> findByUser_FullNameContainingIgnoreCaseAndCreateDateBetween(String bookName, LocalDateTime before, LocalDateTime after, Pageable pageable);
 */
     AppointmentsEntity findByTimeDoctors_Id(Long timeDoctors_id);
+
+    Optional<AppointmentsEntity> findByAppointmentCode(String appointmentCode);
 }

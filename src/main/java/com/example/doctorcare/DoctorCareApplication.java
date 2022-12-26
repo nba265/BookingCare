@@ -13,7 +13,6 @@ public class DoctorCareApplication implements CommandLineRunner {
 		SpringApplication.run(DoctorCareApplication.class, args);
 	}
 
-
 	@Override
 	public void run(String... args) throws Exception {
 	}

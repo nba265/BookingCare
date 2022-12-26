@@ -43,4 +43,22 @@ public class EmailAppointmentInfoService {
             log.error("Send mail failed: {}", e.getMessage());
         }
     }
+
+    public void sendAppointmentCancelInfo(String username, AppointmentInfoForUser appointment) {
+        try {
+            UserEntity userEntity = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UserNotFoundException("Username with: " + username + " not found!"));
+
+            String subject = "Your upcoming appointment on " + appointment.getAppointmentHistory().getDate() + " ["
+                    + appointment.getAppointmentHistory().getTimeStart() + " " + appointment.getAppointmentHistory().getTimeEnd() + "]" + " has been cancelled";
+            EmailDTO emailDTO = EmailDTO.builder().recipients(List.of(userEntity.getEmail()))
+                    .subject(subject).appointmentInfoForUser(appointment).build();
+
+            final Context ctx = new Context(LocaleContextHolder.getLocale());
+            ctx.setVariable("appointmentInfoForUser", emailDTO.getAppointmentInfoForUser());
+            mailService.sendMimeMessage(emailDTO, ctx, "beefree-7j6fllkji84/CancelAppointment");
+        } catch (Exception e) {
+            log.error("Send mail failed: {}", e.getMessage());
+        }
+    }
 }

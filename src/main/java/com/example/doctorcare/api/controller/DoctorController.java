@@ -2,15 +2,14 @@ package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
-import com.example.doctorcare.api.domain.dto.response.AppointmentHistory;
-import com.example.doctorcare.api.domain.dto.response.AppointmentHistoryForDoctor;
-import com.example.doctorcare.api.domain.dto.response.MessageResponse;
-import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
+import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
+import com.example.doctorcare.api.event.OnSendAppointmentCancelEvent;
+import com.example.doctorcare.api.event.OnSendAppointmentInfoEvent;
 import com.example.doctorcare.api.service.AppointmentsService;
 import com.example.doctorcare.api.service.HospitalClinicService;
 import com.example.doctorcare.api.service.TimeDoctorService;
@@ -18,6 +17,7 @@ import com.example.doctorcare.api.service.UserDetailsServiceImpl;
 import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
 import com.example.doctorcare.api.utilis.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +51,9 @@ public class DoctorController {
 
     @Autowired
     HospitalClinicService hospitalClinicService;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
 
 
@@ -118,7 +121,7 @@ public class DoctorController {
     @PostMapping("/createTimeDoctors")
     public ResponseEntity<?> createTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
         try {
-                    UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
+            UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             timeDoctorService.addTimeDoctor(timeDoctors1, user);
             return new ResponseEntity<>(new MessageResponse("Time doctor has been created successfully! \nPlease check it in history."), HttpStatus.OK);
         } catch (Exception e) {
@@ -132,8 +135,8 @@ public class DoctorController {
     public ResponseEntity<?> getTimeDoctor(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "7") int size,
-            @RequestParam(required = false,defaultValue = "") String before,
-            @RequestParam(required = false,defaultValue = "") String after
+            @RequestParam(required = false, defaultValue = "") String before,
+            @RequestParam(required = false, defaultValue = "") String after
     ) {
         try {
             UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
@@ -147,7 +150,7 @@ public class DoctorController {
             if (!Objects.equals(after, "")) {
                 after1 = LocalDate.parse(after);
             }
-            Pageable pagingSort = PageRequest.of(page - 1, 7, Sort.by("date").ascending().and(Sort.by("timeStart")));
+            Pageable pagingSort = PageRequest.of(page - 1, size, Sort.by("date").ascending().and(Sort.by("timeStart")));
             Page<TimeDoctorsEntity> pageTuts = timeDoctorService.findByDoctorsId(user.getId(), pagingSort, before1, after1);
             timeDoctorsList = pageTuts.getContent();
             if (timeDoctorsList.isEmpty()) {
@@ -236,7 +239,7 @@ public class DoctorController {
             Page<AppointmentsEntity> pageTuts = appointmentsService.findByDoctorsId(user.getId(), pagingSort, before1, after1);
             appointmentsEntities = pageTuts.getContent();
             if (appointmentsEntities.isEmpty()) {
-                return new ResponseEntity<>(new MessageResponse("You don't have any appointments"),HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(new MessageResponse("You don't have any appointments"), HttpStatus.NO_CONTENT);
             }
             appointmentsEntities.forEach(appointments -> {
                 AppointmentHistory appointmentHistory = new AppointmentHistory();
@@ -286,6 +289,26 @@ public class DoctorController {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/cancelAppointment")
+    public ResponseEntity<?> cancelAppointment(@RequestParam("appointmentCode") String code, @RequestParam("reason") String reason) {
+        try {
+            Optional<AppointmentsEntity> appointment = appointmentsService.findByCode(code);
+            if (appointment.isPresent()) {
+                appointment.get().setCancelReason(reason);
+                AppointmentInfoForUser appointmentInfoForUser = appointmentsService.setAppointmentInfoForUser(userDetailsService.findByTimeDoctorId(appointment.get().getTimeDoctors().getId()),appointment.get());
+                String message = appointmentsService.cancelAppointmentForDoctor(appointment.get());
+                if (message.equals("Success!")) {
+                    eventPublisher.publishEvent(new OnSendAppointmentCancelEvent(this, appointment.get().getUser().getUsername().trim(),
+                            appointmentInfoForUser));
+                }
+                return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
+            } else return new ResponseEntity<>(new MessageResponse("Wrong Code!"), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
