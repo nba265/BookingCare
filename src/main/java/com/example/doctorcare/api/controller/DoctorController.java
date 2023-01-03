@@ -1,6 +1,7 @@
 package com.example.doctorcare.api.controller;
 
 import com.example.doctorcare.api.domain.Mapper.UserMapper;
+import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.dto.request.AddTimeDoctor;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
@@ -175,45 +176,6 @@ public class DoctorController {
         }
     }
 
-    /*@PutMapping("/editTimeDoctors")
-    public ResponseEntity<?> editTimeDoctor(@RequestBody AddTimeDoctor timeDoctors1) {
-        try {
-            TimeDoctors timeDoctors = new TimeDoctors();
-            UserEntity user = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
-            timeDoctors.setDoctor(userMapper.convertToDto(user));
-            timeDoctors.setTimeStart(LocalTime.parse(timeDoctors1.getTimeStart()));
-            timeDoctors.setTimeEnd(LocalTime.parse(timeDoctors1.getTimeEnd()));
-            timeDoctors.setDate(LocalDate.parse(timeDoctors1.getCreateDate()));
-            timeDoctorService.save(timeDoctors);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(null, HttpStatus.OK);
-    }
-*/
-    /*@GetMapping("/displayEditTimeDoctors")
-    public ResponseEntity<?> editTimeDoctor(@RequestParam("id") Long id) {
-        TimeDoctors timeDoctors = timeDoctorService.findById(id);
-        try {
-            return new ResponseEntity<>(new TimeDoctor(timeDoctors.getId(), timeDoctors.getTimeStart().toString(), timeDoctors.getTimeEnd().toString(), timeDoctors.getDate().toString(), timeDoctors.getTimeDoctorStatus().toString()), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(null, HttpStatus.OK);
-    }*/
-
-/*    @DeleteMapping("/deleteTimeDoctors")
-    public ResponseEntity<?> deleteTimeDoctor(@RequestParam("id") Long id) {
-        try {
-            timeDoctorService.deleteById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(null, HttpStatus.OK);
-    }*/
-
     @GetMapping("/displayListAppointment")
     public ResponseEntity<?> getAppointmentHistory(@RequestParam(defaultValue = "1") int page,
                                                    @RequestParam(defaultValue = "7") int size,
@@ -245,6 +207,7 @@ public class DoctorController {
                 appointmentHistory.setHospitalPhone(user.getHospitalCilinicDoctor().getPhone());
                 appointmentHistory.setHospitalAddress(user.getHospitalCilinicDoctor().getAddress());
                 appointmentHistory.setId(appointments.getId());
+                appointmentHistory.setCreateDate(appointments.getCreateDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
                 if (appointments.getStatus().equals(AppointmentStatus.CANCEL)) {
                     appointmentHistory.setDate(appointments.getCancelTimeDoctors().getDate().toString());
                     appointmentHistory.setTimeStart(appointments.getCancelTimeDoctors().getTimeStart().toString());
@@ -275,18 +238,19 @@ public class DoctorController {
     @GetMapping("/displayAppointmentInfo")
     public ResponseEntity<?> getAppointmentInfo(@RequestParam("appointmentId") Long id) {
         try {
-            AppointmentsEntity appointments = appointmentsService.findById(id);
-            return new ResponseEntity<>(new AppointmentHistoryForDoctor(appointments.getCustomers().getNamePatient(),
-                    appointments.getCustomers().getPhonePatient(),
-                    appointments.getCustomers().getBirthday().toString(),
-                    appointments.getCustomers().getGender(),
-                    userDetailsService.findByTimeDoctorId(appointments.getTimeDoctors().getId()).getSpecialist().getName(),
-                    appointments.getAppointmentCode(),
-                    appointments.getStatus().toString(),
-                    appointments.getDescription(), appointments.getServices().getName()), HttpStatus.OK);
+            Optional<UserEntity> user = userDetailsService.findByUsername(SecurityUtils.getUsername());
+            if (user.isPresent()) {
+                AppointmentsEntity appointment = appointmentsService.findById(id);
+                if (user.get().getId().equals(appointment.getStatus().equals(AppointmentStatus.CANCEL) ?
+                        appointment.getCancelTimeDoctors().getDoctor().getId() : appointment.getTimeDoctors().getDoctor().getId())) {
+                    User doctor = userDetailsService.findByTimeDoctorId(appointment.getStatus().equals(AppointmentStatus.CANCEL) ? appointment.getCancelTimeDoctors().getId() : appointment.getTimeDoctors().getId());
+                    return new ResponseEntity<>(appointmentsService.setAppointmentInfoForDoctor(doctor, appointment), HttpStatus.OK);
+                }
+            }
+            return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

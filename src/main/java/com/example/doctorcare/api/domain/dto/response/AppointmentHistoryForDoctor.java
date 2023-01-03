@@ -30,4 +30,8 @@ public class AppointmentHistoryForDoctor {
     private String description;
 
     private String service;
+
+    private String cancelReason;
+
+    private AppointmentHistory appointmentHistory;
 }
