@@ -108,7 +108,7 @@ public class AppointmentsService {
         }
     }
 
-    public String cancelAppointment(String appointmentCode) {
+    public String cancelAppointment(String appointmentCode,String reason) {
         Optional<AppointmentsEntity> appointment = appointmentsRepository.findByAppointmentCode(appointmentCode);
         if (appointment.isPresent()) {
             if (LocalDate.now().isBefore(appointment.get().getTimeDoctors().getDate())) {
@@ -117,6 +117,7 @@ public class AppointmentsService {
                     appointment.get().setCancelTimeDoctors(appointment.get().getTimeDoctors());
                     appointment.get().getCancelTimeDoctors().setTimeDoctorStatus(TimeDoctorStatus.AVAILABLE);
                     appointment.get().setTimeDoctors(null);
+                    appointment.get().setCancelReason(reason);
                     save(appointment.get());
                     return "Success!";
                 } else return "You are only allowed to cancel PENDING appointment!";
