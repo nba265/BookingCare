@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -253,7 +254,7 @@ public class DoctorController {
                     appointmentHistory.setTimeStart(appointments.getTimeDoctors().getTimeStart().toString());
                     appointmentHistory.setTimeEnd(appointments.getTimeDoctors().getTimeEnd().toString());
                 }
-                appointmentHistory.setCreateDate(appointments.getCreateDate().toString());
+                appointmentHistory.setCreateDate(appointments.getCreateDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
                 appointmentHistory.setStatus(appointments.getStatus().toString());
                 appointmentHistories.add(appointmentHistory);

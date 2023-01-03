@@ -22,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -95,7 +96,7 @@ public class ManagerController {
                 }
                 appointmentHistory.setStatus(appointments.getStatus().toString());
                 appointmentHistory.setAppointmentCode(appointments.getAppointmentCode());
-                appointmentHistory.setCreateDate(appointments.getCreateDate().toString());
+                appointmentHistory.setCreateDate(appointments.getCreateDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
                 appointmentHistories.add(appointmentHistory);
             });
             Map<String, Object> response = new HashMap<>();
