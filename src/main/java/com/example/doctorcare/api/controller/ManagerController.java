@@ -66,15 +66,15 @@ public class ManagerController {
     public ResponseEntity<?> appointmentHistory(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "7") int size,
-            @RequestParam(required = false) LocalDate before,
-            @RequestParam(required = false) LocalDate after
+            @RequestParam(required = false) String before,
+            @RequestParam(required = false) String after
     ) {
         try {
             HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername());
             List<AppointmentHistory> appointmentHistories = new ArrayList<>();
             List<AppointmentsEntity> appointmentsEntities;
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
-            Page<AppointmentsEntity> pageTuts = appointmentsService.findByHospitalCustomerCreateDate(hospitalClinicEntity.getId(), pagingSort, before, after);
+            Page<AppointmentsEntity> pageTuts = appointmentsService.findByHospitalCustomerCreateDate(hospitalClinicEntity.getId(), pagingSort, before!=""?LocalDate.parse(before):null, after!=""?LocalDate.parse(after):null);
             appointmentsEntities = pageTuts.getContent();
             if (appointmentsEntities.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
