@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -241,6 +242,7 @@ public class ClientController {
                 appointmentHistory.setHospitalName(hospitalClinicEntity.getName());
                 appointmentHistory.setHospitalPhone(hospitalClinicEntity.getPhone());
                 appointmentHistory.setHospitalAddress(hospitalClinicEntity.getAddress());
+                appointmentHistory.setCreateDate(appointments.getCreateDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
                 if (appointments.getStatus().equals(AppointmentStatus.CANCEL)) {
                     appointmentHistory.setDate(appointments.getCancelTimeDoctors().getDate().toString());
                     appointmentHistory.setTimeStart(appointments.getCancelTimeDoctors().getTimeStart().toString());
