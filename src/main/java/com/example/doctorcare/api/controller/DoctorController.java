@@ -226,14 +226,11 @@ public class DoctorController {
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
             LocalDate before1 = null;
             LocalDate after1 = null;
-
             if (before != null) {
                 before1 = LocalDate.parse(before);
-
             }
             if (after != null) {
                 after1 = LocalDate.parse(after);
-
             }
             /*      System.out.println(after1);*/
             Page<AppointmentsEntity> pageTuts = appointmentsService.findByDoctorsId(user.getId(), pagingSort, before1, after1);
@@ -293,7 +290,7 @@ public class DoctorController {
     }
 
     @GetMapping("/cancelAppointment")
-    public ResponseEntity<?> cancelAppointment(@RequestParam("appointmentCode") String code, @RequestParam("reason") String reason) {
+    public ResponseEntity<?> cancelAppointment(@RequestParam(name = "appointmentCode") String code, @RequestParam(name="reason") String reason) {
         try {
             Optional<AppointmentsEntity> appointment = appointmentsService.findByCode(code);
             if (appointment.isPresent()) {
@@ -305,7 +302,7 @@ public class DoctorController {
                             appointmentInfoForUser));
                 }
                 return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
-            } else return new ResponseEntity<>(new MessageResponse("Wrong Code!"), HttpStatus.OK);
+            } else return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
