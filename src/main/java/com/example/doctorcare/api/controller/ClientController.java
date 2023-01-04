@@ -13,6 +13,7 @@ import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.event.OnSendAppointmentInfoEvent;
+import com.example.doctorcare.api.exception.CancelAppointmentException;
 import com.example.doctorcare.api.service.*;
 import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
 import com.example.doctorcare.api.utilis.RandomStringGenaration;
@@ -130,9 +131,9 @@ public class ClientController {
     }
 
     @GetMapping("/listTimeDoctor")
-    public ResponseEntity<?> findTimeDoctor(@RequestParam(name = "date") String date,@RequestParam(name = "doctorId")Long doctorId) {
+    public ResponseEntity<?> findTimeDoctor(@RequestParam(name = "date") String date, @RequestParam(name = "doctorId") Long doctorId) {
         try {
-            List<TimeDoctor> timeDoctorsResponse = timeDoctorService.findByDateAndStatus(LocalDate.parse(date),doctorId);
+            List<TimeDoctor> timeDoctorsResponse = timeDoctorService.findByDateAndStatus(LocalDate.parse(date), doctorId);
             return new ResponseEntity<>(timeDoctorsResponse, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,7 +163,7 @@ public class ClientController {
             List<TimeDoctors> timeDoctorsList = timeDoctorService.findByDoctor_IdAndTimeStampAndStatus(doctorId, TimeDoctorStatus.AVAILABLE);
             Set<String> dayUnvailable = new HashSet<>();
             timeDoctorsList.forEach(timeDoctors ->
-                dayUnvailable.add(timeDoctors.getDate().toString())
+                    dayUnvailable.add(timeDoctors.getDate().toString())
             );
             doctorSearchInfo.setDayUnavailable(dayUnvailable.stream().sorted(Comparator.comparing(LocalDate::parse)).collect(Collectors.toCollection(LinkedHashSet::new)));
             System.out.println(dayUnvailable);
@@ -203,7 +204,7 @@ public class ClientController {
             eventPublisher.publishEvent(new OnSendAppointmentInfoEvent(this, SecurityUtils.getUsername().trim(),
                     appointmentsService.setAppointmentInfoForUser(userDetailsService.findByTimeDoctorId(makeAppointment.getTimeDoctorId()), appointments)));
 
-            return new ResponseEntity<>(new MessageResponse("Appointment created successfully! \nPlease check it in history. "), HttpStatus.CREATED);
+            return new ResponseEntity<>(new MessageResponse("Appointment created successfully! \nPlease check it in history. "), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -221,16 +222,17 @@ public class ClientController {
             UserEntity userEntity = userDetailsService.findByUsername(SecurityUtils.getUsername()).get();
             List<AppointmentHistory> appointmentHistories = new ArrayList<>();
             List<AppointmentsEntity> appointmentsEntities;
-            LocalDate before1 = null;
+   /*         LocalDate before1 = null;
             LocalDate after1 = null;
             if (before != null) {
                 before1 = LocalDate.parse(before);
             }
             if (after != null) {
                 after1 = LocalDate.parse(after);
-            }
-            Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
-            Page<AppointmentsEntity> pageTuts = appointmentsService.findByUserCreateDate(userEntity.getId(), pagingSort, before1, after1);
+            }*/
+            Pageable pagingSort = paginationAndSortUtil.paginate(page, size,  new String[]{"createDate","desc"});
+            Page<AppointmentsEntity> pageTuts = appointmentsService.findByUserCreateDate(userEntity.getId(), pagingSort,
+                    !Objects.equals(before, "") ? LocalDate.parse(before) : null, !Objects.equals(after, "") ? LocalDate.parse(after) : null);
             appointmentsEntities = pageTuts.getContent();
             if (appointmentsEntities.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -287,9 +289,13 @@ public class ClientController {
     }
 
     @GetMapping("/cancelAppointment")
-    public ResponseEntity<?> doCancelAppointment(@RequestParam("appointmentCode") String code,@RequestParam(name="reason") String reason) {
+    public ResponseEntity<?> doCancelAppointment(@RequestParam("appointmentCode") String code, @RequestParam(name = "reason") String reason) {
         try {
-            return new ResponseEntity<>(new MessageResponse(appointmentsService.cancelAppointment(code,reason)), HttpStatus.OK);
+            appointmentsService.cancelAppointment(code, reason);
+            return new ResponseEntity<>(new MessageResponse("Success!"), HttpStatus.OK);
+        } catch (
+                CancelAppointmentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -3,6 +3,7 @@ package com.example.doctorcare.api.controller;
 import com.example.doctorcare.api.domain.Mapper.AppointmentMapper;
 import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
 import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
+import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.dto.request.*;
 import com.example.doctorcare.api.domain.dto.response.*;
 import com.example.doctorcare.api.domain.entity.*;
@@ -73,8 +74,9 @@ public class ManagerController {
             HospitalClinicEntity hospitalClinicEntity = hospitalClinicService.findByManagerUsername(SecurityUtils.getUsername());
             List<AppointmentHistory> appointmentHistories = new ArrayList<>();
             List<AppointmentsEntity> appointmentsEntities;
-            Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
-            Page<AppointmentsEntity> pageTuts = appointmentsService.findByHospitalCustomerCreateDate(hospitalClinicEntity.getId(), pagingSort, before!=""?LocalDate.parse(before):null, after!=""?LocalDate.parse(after):null);
+            Pageable pagingSort = paginationAndSortUtil.paginate(page, size,  new String[]{"createDate","desc"});
+            Page<AppointmentsEntity> pageTuts = appointmentsService.findByHospitalCustomerCreateDate(hospitalClinicEntity.getId(), pagingSort,
+                    !Objects.equals(before, "") ?LocalDate.parse(before):null, !Objects.equals(after, "") ?LocalDate.parse(after):null);
             appointmentsEntities = pageTuts.getContent();
             if (appointmentsEntities.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -113,7 +115,7 @@ public class ManagerController {
 
     @GetMapping("/appointmentInfo")
     public ResponseEntity<?> appointmentInfo(@RequestParam("appointmentId") Long id) {
-        try {
+  /*      try {
             AppointmentInfoForUser appointmentInfoForUser = new AppointmentInfoForUser();
             AppointmentsEntity appointment = appointmentsService.findById(id);
             appointmentInfoForUser.setDoctorName(appointment.getUser().getFullName());
@@ -128,6 +130,20 @@ public class ManagerController {
             appointmentInfoForUser.setPrice(appointment.getServices().getPrice().toString());
             appointmentInfoForUser.setCancelReason(appointment.getCancelReason());
             return new ResponseEntity<>(appointmentInfoForUser, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }*/
+        try {
+            Optional<UserEntity> user = userDetailsService.findByUsername(SecurityUtils.getUsername());
+            if (user.isPresent()) {
+                AppointmentsEntity appointment = appointmentsService.findById(id);
+                if (user.get().getId().equals(appointment.getServices().getHospitalCilinic().getManager().getId())) {
+                    User doctor = userDetailsService.findByTimeDoctorId(appointment.getStatus().equals(AppointmentStatus.CANCEL) ? appointment.getCancelTimeDoctors().getId() : appointment.getTimeDoctors().getId());
+                    return new ResponseEntity<>(appointmentsService.setAppointmentInfoForUser(doctor, appointment), HttpStatus.OK);
+                }
+            }
+            return new ResponseEntity<>(new MessageResponse("Not Found!"), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -358,6 +374,7 @@ public class ManagerController {
             servicesService.toggleStatus(changeStatus.getStatus(), Long.valueOf(changeStatus.getId()));
             return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

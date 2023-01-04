@@ -9,8 +9,8 @@ import com.example.doctorcare.api.domain.entity.AppointmentsEntity;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
+import com.example.doctorcare.api.exception.CancelAppointmentException;
 import com.example.doctorcare.api.repository.AppointmentsRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -99,17 +99,17 @@ public class AppointmentsService {
             afterCreateDate = null;
         } else afterCreateDate = after.atStartOfDay();
         if (beforeCreateDate == null && afterCreateDate == null) {
-            return appointmentsRepository.findByTimeDoctors_Doctor_Id(id, pageable);
+            return appointmentsRepository.findByTimeDoctors_Doctor_IdOrCancelTimeDoctors_Doctor_Id(id,id, pageable);
         } else if (beforeCreateDate != null && afterCreateDate == null) {
-            return appointmentsRepository.findByTimeDoctors_Doctor_IdAndCreateDateAfter(id, beforeCreateDate, pageable);
+            return appointmentsRepository.findByTimeDoctors_Doctor_IdOrCancelTimeDoctors_Doctor_IdAndCreateDateAfter(id,id, beforeCreateDate, pageable);
         } else if (beforeCreateDate == null) {
-            return appointmentsRepository.findByTimeDoctors_Doctor_IdAndCreateDateBefore(id, afterCreateDate, pageable);
+            return appointmentsRepository.findByTimeDoctors_Doctor_IdOrCancelTimeDoctors_Doctor_IdAndCreateDateBefore(id,id, afterCreateDate, pageable);
         } else {
-            return appointmentsRepository.findByTimeDoctors_Doctor_IdAndCreateDateBetween(id, beforeCreateDate, afterCreateDate, pageable);
+            return appointmentsRepository.findByTimeDoctors_Doctor_IdOrCancelTimeDoctors_Doctor_IdAndCreateDateBetween(id,id, beforeCreateDate, afterCreateDate, pageable);
         }
     }
 
-    public String cancelAppointment(String appointmentCode,String reason) {
+    public void cancelAppointment(String appointmentCode, String reason) throws CancelAppointmentException {
         Optional<AppointmentsEntity> appointment = appointmentsRepository.findByAppointmentCode(appointmentCode);
         if (appointment.isPresent()) {
             if (LocalDate.now().isBefore(appointment.get().getTimeDoctors().getDate())) {
@@ -120,17 +120,16 @@ public class AppointmentsService {
                     appointment.get().setTimeDoctors(null);
                     appointment.get().setCancelReason(reason);
                     save(appointment.get());
-                    return "Success!";
-                } else return "You are only allowed to cancel PENDING appointment!";
-            } else return "You are only allowed to cancel 1 day in advance!";
-        } else return "Wrong Code!";
+                } else throw new CancelAppointmentException("You are only allowed to cancel PENDING appointment!");
+            } else throw new CancelAppointmentException("You are only allowed to cancel 1 day in advance!");
+        } else throw new CancelAppointmentException("Wrong Code!");
     }
 
     public Optional<AppointmentsEntity> findByCode(String code) {
         return appointmentsRepository.findByAppointmentCode(code);
     }
 
-    public String cancelAppointmentForDoctor(AppointmentsEntity appointment) {
+    public boolean cancelAppointmentForDoctor(AppointmentsEntity appointment) throws CancelAppointmentException {
         if (LocalDate.now().isBefore(appointment.getTimeDoctors().getDate())) {
             if (appointment.getStatus().equals(AppointmentStatus.PENDING)) {
                 appointment.setStatus(AppointmentStatus.CANCEL);
@@ -138,9 +137,9 @@ public class AppointmentsService {
                 appointment.getCancelTimeDoctors().setTimeDoctorStatus(TimeDoctorStatus.AVAILABLE);
                 appointment.setTimeDoctors(null);
                 save(appointment);
-                return "Success!";
-            } else return "You are only allowed to cancel PENDING appointment!";
-        } else return "You are only allowed to cancel 1 day in advance!";
+                return true;
+            } else throw new CancelAppointmentException("You are only allowed to cancel PENDING appointment!");
+        } else throw new CancelAppointmentException("You are only allowed to cancel 1 day in advance!");
     }
 
 

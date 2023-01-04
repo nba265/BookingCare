@@ -219,7 +219,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserEntity userEntity = findById(editDoctor.getId());
         userEntity.setDegree(editDoctor.getDegree());
         userEntity.setSpecialist(specialistService.findById(Long.valueOf(editDoctor.getSpecialist().trim())).get());
-        userEntity.setExperience(editDoctor.getExperience().toString());
+        userEntity.setExperience(editDoctor.getExperience().toString() + " years");
         userRepository.save(userEntity);
     }
 

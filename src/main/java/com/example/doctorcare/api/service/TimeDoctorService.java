@@ -7,6 +7,7 @@ import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
 import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
+import com.example.doctorcare.api.exception.TimeDoctorException;
 import com.example.doctorcare.api.repository.TimeDoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,12 @@ public class TimeDoctorService {
             timeDoctorsList.removeIf(timeDoctors -> !date.isEqual(timeDoctors.getDate()));
         }
         return timeDoctorsList;
+    }
+
+    public void checkExistTimeDoctor(TimeDoctorsEntity timeDoctors) throws TimeDoctorException {
+        if (timeDoctorRepository.existsByDateAndTimeEndAndTimeStartAndDoctor_IdAndIdIsNot(
+                timeDoctors.getDate(), timeDoctors.getTimeEnd(), timeDoctors.getTimeStart(), timeDoctors.getDoctor().getId(),timeDoctors.getId()))
+         throw new TimeDoctorException("Already Exist!");
     }
 
     public List<TimeDoctors> findByDoctor_IdAndTimeStampAndStatus(Long doctorId, TimeDoctorStatus timeDoctorStatus) {

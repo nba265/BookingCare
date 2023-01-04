@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,6 +34,12 @@ public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity, 
     Page<TimeDoctorsEntity> findByDoctor_IdAndDateBetween(Long doctor_id, LocalDate date, LocalDate date2, Pageable pageable);
 
     Set<TimeDoctorsEntity> findByDoctor_IdAndDateBetween(Long doctor_id, LocalDate date, LocalDate date2);
+
+
+    @Query("""
+            select (count(t) > 0) from TimeDoctorsEntity t
+            where t.date = ?1 and t.timeEnd = ?2 and t.timeStart = ?3 and t.doctor.id = ?4 and t.id = ?5""")
+    Boolean existsByDateAndTimeEndAndTimeStartAndDoctor_IdAndIdIsNot(LocalDate date, LocalTime timeEnd, LocalTime timeStart, Long doctor_id, Long id);
 
     void deleteById(Long id);
 
