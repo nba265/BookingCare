@@ -44,8 +44,8 @@ public class TimeDoctorService {
     }
 
     public void checkExistTimeDoctor(TimeDoctorsEntity timeDoctors) throws TimeDoctorException {
-        if (timeDoctorRepository.existsByDateAndTimeEndAndTimeStartAndDoctor_Id(
-                timeDoctors.getDate(), timeDoctors.getTimeEnd(), timeDoctors.getTimeStart(), timeDoctors.getDoctor().getId()))
+        if (timeDoctorRepository.existsByDateAndTimeEndAndTimeStartAndDoctor_IdAndIdIsNot(
+                timeDoctors.getDate(), timeDoctors.getTimeEnd(), timeDoctors.getTimeStart(), timeDoctors.getDoctor().getId(),timeDoctors.getId()))
          throw new TimeDoctorException("Already Exist!");
     }
 

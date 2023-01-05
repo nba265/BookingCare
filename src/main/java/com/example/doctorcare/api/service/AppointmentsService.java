@@ -112,7 +112,8 @@ public class AppointmentsService {
     public void cancelAppointment(String appointmentCode, String reason) throws CancelAppointmentException {
         Optional<AppointmentsEntity> appointment = appointmentsRepository.findByAppointmentCode(appointmentCode);
         if (appointment.isPresent()) {
-            if (LocalDate.now().isBefore(appointment.get().getTimeDoctors().getDate())) {
+            LocalDateTime datetime = LocalDateTime.of(appointment.get().getTimeDoctors().getDate(), appointment.get().getTimeDoctors().getTimeStart());
+            if (LocalDateTime.now().plusDays(1).isBefore(datetime)) {
                 if (appointment.get().getStatus().equals(AppointmentStatus.PENDING)) {
                     appointment.get().setStatus(AppointmentStatus.CANCEL);
                     appointment.get().setCancelTimeDoctors(appointment.get().getTimeDoctors());
@@ -130,7 +131,8 @@ public class AppointmentsService {
     }
 
     public boolean cancelAppointmentForDoctor(AppointmentsEntity appointment) throws CancelAppointmentException {
-        if (LocalDate.now().isBefore(appointment.getTimeDoctors().getDate())) {
+        LocalDateTime datetime = LocalDateTime.of(appointment.getTimeDoctors().getDate(), appointment.getTimeDoctors().getTimeStart());
+        if (LocalDateTime.now().plusDays(1).isBefore(datetime)) {
             if (appointment.getStatus().equals(AppointmentStatus.PENDING)) {
                 appointment.setStatus(AppointmentStatus.CANCEL);
                 appointment.setCancelTimeDoctors(appointment.getTimeDoctors());

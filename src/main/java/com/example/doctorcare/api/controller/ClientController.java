@@ -294,8 +294,7 @@ public class ClientController {
         try {
             appointmentsService.cancelAppointment(code, reason);
             return new ResponseEntity<>(new MessageResponse("Success!"), HttpStatus.OK);
-        } catch (
-                CancelAppointmentException e) {
+        } catch (CancelAppointmentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
