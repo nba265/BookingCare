@@ -123,7 +123,11 @@ public class AdminController {
     @PostMapping("/addHospital")
     public ResponseEntity<?> addHospital(@RequestBody AddHospital hospitalCilinic) {
         try {
+<<<<<<< Updated upstream
 
+=======
+            if (userDetailsService.checkEditUsername(hospitalCilinic.getId(),hospitalCilinic.getUsername())) {
+>>>>>>> Stashed changes
                 UserEntity user = userDetailsService.findByUsername(hospitalCilinic.getUsername()).get();
                 HospitalClinicEntity hospitalClinicEntity;
                 if (hospitalCilinic.getId() == null) {
