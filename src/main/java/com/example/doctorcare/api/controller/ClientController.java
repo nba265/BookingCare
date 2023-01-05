@@ -100,7 +100,8 @@ public class ClientController {
     public ResponseEntity<?> searchHospital(@RequestParam(name = "keyword", required = false, defaultValue = "") String keyword, @RequestParam(name = "districtCode", required = false, defaultValue = "") String districtCode) {
         try {
             List<HospitalClinicInfoResponse> responses = new ArrayList<>();
-            hospitalClinicService.findByKeywordsOrDistrictCode(keyword, districtCode).forEach(hospitalClinic -> responses.add(new HospitalClinicInfoResponse(hospitalClinic.getId(), hospitalClinic.getName(), hospitalClinic.getAddress(), hospitalClinic.getPhone(), null, hospitalClinic.getDistrictCode())));
+            hospitalClinicService.findByKeywordsOrDistrictCode(keyword, districtCode).forEach(hospitalClinic -> responses.add(new
+                    HospitalClinicInfoResponse(hospitalClinic.getId(), hospitalClinic.getName(), hospitalClinic.getAddress(), hospitalClinic.getPhone(), null, hospitalClinic.getDistrictCode())));
             return new ResponseEntity<>(responses, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

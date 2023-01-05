@@ -8,6 +8,7 @@ import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.repository.HospitalClinicRepository;
 import com.example.doctorcare.api.repository.UserRepository;
+import com.example.doctorcare.api.utilis.DistrictCodeConst;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,9 @@ public class HospitalClinicService {
 
     public List<HospitalClinicInfoResponse> hospitalCilinicList() {
         List<HospitalClinicInfoResponse> hospitalClinics = new ArrayList<>();
-        hospitalClinicRepository.findAll().forEach(hospitalCilinicEntity -> hospitalClinics.add(new HospitalClinicInfoResponse(hospitalCilinicEntity.getId(), hospitalCilinicEntity.getName(), hospitalCilinicEntity.getAddress(), hospitalCilinicEntity.getPhone(), hospitalCilinicEntity.getManager().getUsername(), hospitalCilinicEntity.getDistrictCode())));
+        hospitalClinicRepository.findAll().forEach(hospitalCilinicEntity -> hospitalClinics.add(new
+                HospitalClinicInfoResponse(hospitalCilinicEntity.getId(), hospitalCilinicEntity.getName(), hospitalCilinicEntity.getAddress(),
+                hospitalCilinicEntity.getPhone(), hospitalCilinicEntity.getManager().getUsername(),DistrictCodeConst.district.get(hospitalCilinicEntity.getDistrictCode()))));
         return hospitalClinics;
     }
 

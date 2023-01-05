@@ -18,6 +18,7 @@ import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import com.example.doctorcare.api.enums.Gender;
 import com.example.doctorcare.api.enums.Role;
 import com.example.doctorcare.api.enums.UserStatus;
+import com.example.doctorcare.api.repository.HospitalClinicRepository;
 import com.example.doctorcare.api.repository.UserRepository;
 import com.example.doctorcare.api.repository.UserRoleRepository;
 import com.example.doctorcare.api.utilis.SecurityUtils;
@@ -57,6 +58,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private HospitalClinicService hospitalClinicService;
+    @Autowired
+    private HospitalClinicRepository hospitalClinicRepository;
 
 
     @Override
@@ -69,6 +72,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public boolean checkUser(String name) {
         return (userRepository.existsByUsername(name) && userRepository.findByUsername(name).get().getHospitalCilinicMangager() == null && userRepository.findByUsername(name).get().getUserRoles().stream().anyMatch(userRoleEntity -> userRoleEntity.getRole().toString().equalsIgnoreCase("ROLE_MANAGER")));
+    }
+
+    public boolean checkEditUsername(Long hosId,String username){
+        if (hosId == null)
+            return checkUser(username);
+        else if(hospitalClinicRepository.findById(hosId).get().getManager().getUsername().equals(username)){
+            return true;
+        }
+        else return checkUser(username);
     }
 
     public boolean checkExistsUsername(String username) {

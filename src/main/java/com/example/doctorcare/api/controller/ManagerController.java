@@ -334,7 +334,7 @@ public class ManagerController {
         }
     }
 
-    @GetMapping("/listHospital")
+/*    @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital() {
         try {
             return new ResponseEntity<>(hospitalClinicService.hospitalCilinicList(), HttpStatus.OK);
@@ -342,7 +342,7 @@ public class ManagerController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 
     @GetMapping("/getServiceById")
     public ResponseEntity<?> displayEditService(@RequestParam("idService") Long id) {
