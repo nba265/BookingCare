@@ -91,11 +91,11 @@ public class TimeDoctorService {
             beforeCreateDate = before;
         }
         if (beforeCreateDate == null && after == null) {
-            return timeDoctorRepository.findByDoctor_IdAndDateIsAfter(id, LocalDate.now(), pageable);
+            return timeDoctorRepository.findByDoctor_IdAndDateIsAfterAndTimeDoctorStatus(id, LocalDate.now(),TimeDoctorStatus.AVAILABLE, pageable);
         } else if (beforeCreateDate != null && after == null) {
-            return timeDoctorRepository.findByDoctor_IdAndDateIsAfter(id, beforeCreateDate, pageable);
+            return timeDoctorRepository.findByDoctor_IdAndDateIsAfterAndTimeDoctorStatus(id, beforeCreateDate,TimeDoctorStatus.AVAILABLE, pageable);
         } else
-            return timeDoctorRepository.findByDoctor_IdAndDateBetween(id, Objects.requireNonNullElseGet(beforeCreateDate, LocalDate::now), after, pageable);
+            return timeDoctorRepository.findByDoctor_IdAndDateBetweenAndTimeDoctorStatus(id, Objects.requireNonNullElseGet(beforeCreateDate, LocalDate::now), after, TimeDoctorStatus.AVAILABLE, pageable);
     }
 
     public void addTimeDoctor(AddTimeDoctor addTimeDoctor, UserEntity doctor) {

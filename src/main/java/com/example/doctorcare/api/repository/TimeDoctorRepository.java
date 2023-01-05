@@ -27,11 +27,12 @@ public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity, 
 
     Optional<TimeDoctorsEntity> findById(Long id);
     List<TimeDoctorsEntity> findByDateAndTimeDoctorStatusAndAndDoctor_Id(LocalDate date, TimeDoctorStatus status,Long doctorId);
-    Page<TimeDoctorsEntity> findByDoctor_IdAndDateIsBefore(Long doctor_id, LocalDate date, Pageable pageable);
+    Page<TimeDoctorsEntity> findByDoctor_IdAndDateIsBeforeAndTimeDoctorStatus(Long doctor_id, LocalDate date, TimeDoctorStatus timeDoctorStatus, Pageable pageable);
 
-    Page<TimeDoctorsEntity> findByDoctor_IdAndDateIsAfter(Long doctor_id, LocalDate date, Pageable pageable);
 
-    Page<TimeDoctorsEntity> findByDoctor_IdAndDateBetween(Long doctor_id, LocalDate date, LocalDate date2, Pageable pageable);
+    Page<TimeDoctorsEntity> findByDoctor_IdAndDateIsAfterAndTimeDoctorStatus(Long doctor_id, LocalDate date, TimeDoctorStatus timeDoctorStatus, Pageable pageable);
+
+    Page<TimeDoctorsEntity> findByDoctor_IdAndDateBetweenAndTimeDoctorStatus(Long doctor_id, LocalDate date,  LocalDate date2,TimeDoctorStatus timeDoctorStatus, Pageable pageable);
 
     Set<TimeDoctorsEntity> findByDoctor_IdAndDateBetween(Long doctor_id, LocalDate date, LocalDate date2);
 
