@@ -53,11 +53,10 @@ public class AdminController {
     }
 
     @GetMapping("/checkUser")
-    public ResponseEntity<?> checkUserCreate(@RequestParam("username") String username) {
+    public ResponseEntity<?> checkUserCreate(@RequestParam(value = "username") String username) {
         try {
-            return new ResponseEntity<>(userDetailsService.checkUser(username), HttpStatus.OK);
+                return new ResponseEntity<>(userDetailsService.checkUser(username), HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -79,7 +78,6 @@ public class AdminController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "7") int size) {
         try {
-
             List<UserInformationForAdmin> userInformationForAdmins = new ArrayList<>();
             List<UserEntity> userEntities;
             Pageable pagingSort = paginationAndSortUtil.paginate(page, size, null);
