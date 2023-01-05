@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 
 @Setter
@@ -18,7 +19,9 @@ public class AddService {
 
     private String description;
 
-    private Double price;
+    private String price;
+
+    private String serviceEnum;
 
 
 }

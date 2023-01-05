@@ -193,7 +193,7 @@ public class ManagerController {
                     servicesEntity.setId(0L);
                 } else servicesEntity.setId(service.getId());*/
                 servicesEntity.setName(service.getName());
-                servicesEntity.setPrice(service.getPrice());
+                servicesEntity.setPrice(Double.parseDouble(service.getPrice()));
                 servicesEntity.setDescription(service.getDescription());
                 servicesEntity.setHospitalCilinic(hospitalClinicEntity);
                 if (servicesEntity.getServiceEnum() == null) {

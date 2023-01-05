@@ -21,4 +21,6 @@ public class AddHospital {
 
     private String phone;
 
+    private String districtCode;
+
 }

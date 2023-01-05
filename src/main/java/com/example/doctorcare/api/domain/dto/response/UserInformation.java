@@ -23,7 +23,9 @@ public class UserInformation {
 
     public Long id;
 
-    public String birthday; 
+    public String birthday;
+
+    public String username;
 
     @Email
     public String email;

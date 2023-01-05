@@ -31,6 +31,9 @@ public class UserInformationForAdmin {
     @Email
     public String email;
 
+    public String username;
+
+    @Nullable
     private String address;
 
     @NotEmpty

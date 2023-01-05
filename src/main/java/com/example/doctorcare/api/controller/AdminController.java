@@ -126,6 +126,7 @@ public class AdminController {
                 hospitalClinicEntity.setPhone(hospitalCilinic.getPhone());
                 hospitalClinicEntity.setManager(user);
                 hospitalClinicEntity.setName(hospitalCilinic.getName());
+                hospitalClinicEntity.setDistrictCode(hospitalCilinic.getDistrictCode());
                 hospitalClinicService.save(hospitalClinicEntity);
                 user.setHospitalCilinicDoctor(hospitalClinicEntity);
                 return new ResponseEntity<>(new MessageResponse("success"), HttpStatus.OK);

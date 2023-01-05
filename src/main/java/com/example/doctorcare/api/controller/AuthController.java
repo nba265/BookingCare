@@ -7,6 +7,7 @@ import com.example.doctorcare.api.domain.dto.request.SignupRequest;
 import com.example.doctorcare.api.domain.dto.response.JwtResponse;
 import com.example.doctorcare.api.domain.dto.response.MessageResponse;
 import com.example.doctorcare.api.domain.entity.UserEntity;
+import com.example.doctorcare.api.enums.Gender;
 import com.example.doctorcare.api.enums.Role;
 import com.example.doctorcare.api.enums.UserStatus;
 import com.example.doctorcare.api.repository.UserRepository;
@@ -110,6 +111,10 @@ public class AuthController {
             user.setStatus(UserStatus.ACTIVE);
 
             user.setCreateDate(LocalDate.now());
+
+            user.setBirthday(LocalDate.now());
+
+            user.setGender(Gender.OTHER);
 
             userRepository.save(user);
 
