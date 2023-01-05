@@ -53,7 +53,16 @@ public class AdminController {
     }
 
     @GetMapping("/checkUser")
-    public ResponseEntity<?> getUsers(@RequestParam("username") String username) {
+    public ResponseEntity<?> checkUserCreate(@RequestParam("username") String username) {
+        try {
+            return new ResponseEntity<>(userDetailsService.checkUser(username), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/checkUserUpdate")
+    public ResponseEntity<?> checkUserUpdate(@RequestParam("username") String username) {
         try {
             return new ResponseEntity<>(userDetailsService.checkUser(username), HttpStatus.OK);
         } catch (Exception e) {
@@ -114,7 +123,7 @@ public class AdminController {
     @PostMapping("/addHospital")
     public ResponseEntity<?> addHospital(@RequestBody AddHospital hospitalCilinic) {
         try {
-            if (userDetailsService.checkUser(hospitalCilinic.getUsername())) {
+
                 UserEntity user = userDetailsService.findByUsername(hospitalCilinic.getUsername()).get();
                 HospitalClinicEntity hospitalClinicEntity;
                 if (hospitalCilinic.getId() == null) {
@@ -130,7 +139,7 @@ public class AdminController {
                 hospitalClinicService.save(hospitalClinicEntity);
                 user.setHospitalCilinicDoctor(hospitalClinicEntity);
                 return new ResponseEntity<>(new MessageResponse("success"), HttpStatus.OK);
-            } else return ResponseEntity.badRequest().body(new MessageResponse("Error: Wrong Manager Username"));
+
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
