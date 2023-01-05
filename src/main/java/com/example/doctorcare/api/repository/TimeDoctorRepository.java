@@ -40,9 +40,10 @@ public interface TimeDoctorRepository extends CrudRepository<TimeDoctorsEntity, 
     @Query("""
             select (count(t) > 0) from TimeDoctorsEntity t
             where t.date = ?1  and t.doctor.id = ?4 and
-            ((?3 <= t.timeStart and ?2 >= t.timeStart)
-            or (?2 >= t.timeEnd and ?3 <= t.timeEnd)
-            or (?2 >= t.timeStart and ?3 <= t.timeEnd)) and t.id <> ?5""")
+            ((?2 = t.timeEnd and ?3 = t.timeStart )
+            or (?3 < t.timeStart and ?2 > t.timeStart)
+            or (?2 > t.timeEnd and ?3 < t.timeEnd)
+            or (?3 > t.timeStart and ?2 < t.timeEnd)) and t.id <> ?5""")
     Boolean existsByDateAndTimeEndAndTimeStartAndDoctor_IdAndIdIsNot(LocalDate date, LocalTime timeEnd, LocalTime timeStart, Long doctor_id,Long id);
 
     void deleteById(Long id);
