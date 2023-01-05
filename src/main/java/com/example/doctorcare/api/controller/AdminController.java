@@ -61,7 +61,8 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/checkUserUpdate")
+
+/*    @GetMapping("/checkUserUpdate")
     public ResponseEntity<?> checkUserUpdate(@RequestParam("username") String username) {
         try {
             return new ResponseEntity<>(userDetailsService.checkUser(username), HttpStatus.OK);
@@ -69,7 +70,7 @@ public class AdminController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 
     @GetMapping("/getAllUser")
     public ResponseEntity<?> getAllUsers(
@@ -123,27 +124,21 @@ public class AdminController {
     @PostMapping("/addHospital")
     public ResponseEntity<?> addHospital(@RequestBody AddHospital hospitalCilinic) {
         try {
-<<<<<<< Updated upstream
-
-=======
-            if (userDetailsService.checkEditUsername(hospitalCilinic.getId(),hospitalCilinic.getUsername())) {
->>>>>>> Stashed changes
-                UserEntity user = userDetailsService.findByUsername(hospitalCilinic.getUsername()).get();
-                HospitalClinicEntity hospitalClinicEntity;
-                if (hospitalCilinic.getId() == null) {
-                    hospitalClinicEntity = new HospitalClinicEntity();
-                } else {
-                    hospitalClinicEntity = hospitalClinicService.findById(hospitalCilinic.getId());
-                }
-                hospitalClinicEntity.setAddress(hospitalCilinic.getAddress());
-                hospitalClinicEntity.setPhone(hospitalCilinic.getPhone());
-                hospitalClinicEntity.setManager(user);
-                hospitalClinicEntity.setName(hospitalCilinic.getName());
-                hospitalClinicEntity.setDistrictCode(hospitalCilinic.getDistrictCode());
-                hospitalClinicService.save(hospitalClinicEntity);
-                user.setHospitalCilinicDoctor(hospitalClinicEntity);
-                return new ResponseEntity<>(new MessageResponse("success"), HttpStatus.OK);
-
+            UserEntity user = userDetailsService.findByUsername(hospitalCilinic.getUsername()).get();
+            HospitalClinicEntity hospitalClinicEntity;
+            if (hospitalCilinic.getId() == null) {
+                hospitalClinicEntity = new HospitalClinicEntity();
+            } else {
+                hospitalClinicEntity = hospitalClinicService.findById(hospitalCilinic.getId());
+            }
+            hospitalClinicEntity.setAddress(hospitalCilinic.getAddress());
+            hospitalClinicEntity.setPhone(hospitalCilinic.getPhone());
+            hospitalClinicEntity.setManager(user);
+            hospitalClinicEntity.setName(hospitalCilinic.getName());
+            hospitalClinicEntity.setDistrictCode(hospitalCilinic.getDistrictCode());
+            hospitalClinicService.save(hospitalClinicEntity);
+            user.setHospitalCilinicDoctor(hospitalClinicEntity);
+            return new ResponseEntity<>(new MessageResponse("success"), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -151,14 +146,13 @@ public class AdminController {
     }
 
     @PostMapping("/changeUserStatus")
-    public ResponseEntity<?> changeStatus(@RequestBody ChangeStatus changeStatus){
-        try{
+    public ResponseEntity<?> changeStatus(@RequestBody ChangeStatus changeStatus) {
+        try {
             userDetailsService.changeStatus(Long.valueOf(changeStatus.getId()), UserStatus.valueOf(changeStatus.getStatus()));
-            return new ResponseEntity<>("Success!!",HttpStatus.OK);
-        }
-        catch (Exception e){
+            return new ResponseEntity<>("Success!!", HttpStatus.OK);
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Error!",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
