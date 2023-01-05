@@ -167,7 +167,7 @@ public class ClientController {
                     dayUnvailable.add(timeDoctors.getDate().toString())
             );
             doctorSearchInfo.setDayUnavailable(dayUnvailable.stream().sorted(Comparator.comparing(LocalDate::parse)).collect(Collectors.toCollection(LinkedHashSet::new)));
-            System.out.println(dayUnvailable);
+
             doctorSearchInfo.setHosId(doctor.getHospitalClinicDoctor().getId());
             return new ResponseEntity<>(doctorSearchInfo, HttpStatus.OK);
         } catch (Exception e) {
