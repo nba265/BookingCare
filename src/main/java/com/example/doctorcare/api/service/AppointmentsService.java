@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.chrono.ChronoZonedDateTime;
 import java.util.Optional;
 
 @Service
@@ -113,7 +115,8 @@ public class AppointmentsService {
         Optional<AppointmentsEntity> appointment = appointmentsRepository.findByAppointmentCode(appointmentCode);
         if (appointment.isPresent()) {
             LocalDateTime datetime = LocalDateTime.of(appointment.get().getTimeDoctors().getDate(), appointment.get().getTimeDoctors().getTimeStart());
-            if (LocalDateTime.now().plusDays(1).isBefore(datetime)) {
+            System.out.println(LocalDateTime.now().atZone(ZoneId.of("Asia/Ho_Chi_Minh")));
+            if (LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")).plusDays(1).isBefore(datetime)) {
                 if (appointment.get().getStatus().equals(AppointmentStatus.PENDING)) {
                     appointment.get().setStatus(AppointmentStatus.CANCEL);
                     appointment.get().setCancelTimeDoctors(appointment.get().getTimeDoctors());
@@ -132,7 +135,8 @@ public class AppointmentsService {
 
     public boolean cancelAppointmentForDoctor(AppointmentsEntity appointment) throws CancelAppointmentException {
         LocalDateTime datetime = LocalDateTime.of(appointment.getTimeDoctors().getDate(), appointment.getTimeDoctors().getTimeStart());
-        if (LocalDateTime.now().plusDays(1).isBefore(datetime)) {
+        System.out.println(LocalDateTime.now().atZone(ZoneId.of("Asia/Ho_Chi_Minh")));
+        if (LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh")).plusDays(1).isBefore(datetime)) {
             if (appointment.getStatus().equals(AppointmentStatus.PENDING)) {
                 appointment.setStatus(AppointmentStatus.CANCEL);
                 appointment.setCancelTimeDoctors(appointment.getTimeDoctors());
