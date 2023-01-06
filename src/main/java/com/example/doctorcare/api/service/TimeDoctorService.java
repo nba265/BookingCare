@@ -46,8 +46,8 @@ public class TimeDoctorService {
 
     public void checkExistTimeDoctor(TimeDoctorsEntity timeDoctors) throws TimeDoctorException {
         if (timeDoctorRepository.existsByDateAndTimeEndAndTimeStartAndDoctor_IdAndIdIsNot(
-                timeDoctors.getDate(), timeDoctors.getTimeEnd(), timeDoctors.getTimeStart(), timeDoctors.getDoctor().getId(),timeDoctors.getId()))
-         throw new TimeDoctorException("Already Exist!");
+                timeDoctors.getDate(), timeDoctors.getTimeEnd(), timeDoctors.getTimeStart(), timeDoctors.getDoctor().getId(), timeDoctors.getId()))
+            throw new TimeDoctorException("Already Exist!");
     }
 
     public List<TimeDoctors> findByDoctor_IdAndTimeStampAndStatus(Long doctorId, TimeDoctorStatus timeDoctorStatus) {
@@ -77,9 +77,15 @@ public class TimeDoctorService {
         timeDoctorRepository.deleteById(id);
     }
 
-    public List<TimeDoctor> findByDateAndStatus(LocalDate date,Long doctorId) {
-        List<TimeDoctorsEntity> timeDoctorsEntities = timeDoctorRepository.findByDateAndTimeDoctorStatusAndAndDoctor_Id(date, TimeDoctorStatus.valueOf("AVAILABLE"),doctorId);
-        return timeDoctorsMapper.convertToResponseList(timeDoctorsMapper.convertToDtoList(timeDoctorsEntities)) ;
+    public List<TimeDoctor> findByDateAndStatus(LocalDate date, Long doctorId) {
+        List<TimeDoctor> timeDoctorsList = new ArrayList<>();
+        timeDoctorRepository.findByDateAndTimeDoctorStatusAndAndDoctor_Id(date, TimeDoctorStatus.valueOf("AVAILABLE"), doctorId).stream().
+                sorted(Comparator.comparing(TimeDoctorsEntity::getTimeStart)).forEach(timeDoctors ->
+                {
+                    TimeDoctor timeDoctor = new TimeDoctor(timeDoctors.getId(), timeDoctors.getTimeStart().toString(), timeDoctors.getTimeEnd().toString(), timeDoctors.getDate().toString(), timeDoctors.getTimeDoctorStatus().toString());
+                    timeDoctorsList.add(timeDoctor);
+                });
+        return timeDoctorsList;
     }
 
     public Page<TimeDoctorsEntity> findByDoctorsId(Long id, Pageable pageable, LocalDate before, LocalDate after) {
@@ -92,9 +98,9 @@ public class TimeDoctorService {
             beforeCreateDate = before;
         }
         if (beforeCreateDate == null && after == null) {
-            return timeDoctorRepository.findByDoctor_IdAndDateIsAfterAndTimeDoctorStatus(id, LocalDate.now(),TimeDoctorStatus.AVAILABLE, pageable);
+            return timeDoctorRepository.findByDoctor_IdAndDateIsAfterAndTimeDoctorStatus(id, LocalDate.now(), TimeDoctorStatus.AVAILABLE, pageable);
         } else if (beforeCreateDate != null && after == null) {
-            return timeDoctorRepository.findByDoctor_IdAndDateIsAfterAndTimeDoctorStatus(id, beforeCreateDate,TimeDoctorStatus.AVAILABLE, pageable);
+            return timeDoctorRepository.findByDoctor_IdAndDateIsAfterAndTimeDoctorStatus(id, beforeCreateDate, TimeDoctorStatus.AVAILABLE, pageable);
         } else
             return timeDoctorRepository.findByDoctor_IdAndDateBetweenAndTimeDoctorStatus(id, Objects.requireNonNullElseGet(beforeCreateDate, LocalDate::now), after, TimeDoctorStatus.AVAILABLE, pageable);
     }
