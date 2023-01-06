@@ -98,7 +98,7 @@ public class UserController {
                 user.setPassword(SecurityUtils.encrytePassword(changePassword.getNewPassword()));
                 userDetailsService.save(user);
                 return new ResponseEntity<>(new MessageResponse("Success"), HttpStatus.OK);
-            } else return new ResponseEntity<>(new MessageResponse("Wrong password"), HttpStatus.FORBIDDEN);
+            } else return new ResponseEntity<>(new MessageResponse("Wrong password"), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new MessageResponse("Error"), HttpStatus.INTERNAL_SERVER_ERROR);
