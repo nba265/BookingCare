@@ -1,6 +1,5 @@
 package com.example.doctorcare.api.domain.dto;
 
-import com.example.doctorcare.api.domain.dto.response.AppointmentHistory;
 import com.example.doctorcare.api.domain.dto.response.AppointmentInfoForUser;
 import lombok.Builder;
 import lombok.Getter;

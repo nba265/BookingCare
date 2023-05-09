@@ -1,8 +1,5 @@
 package com.example.doctorcare.api.domain.dto;
 
-import com.example.doctorcare.api.domain.entity.CustomersEntity;
-import com.example.doctorcare.api.domain.entity.ServicesEntity;
-import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -10,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter

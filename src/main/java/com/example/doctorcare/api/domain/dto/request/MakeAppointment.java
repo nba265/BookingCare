@@ -1,6 +1,5 @@
 package com.example.doctorcare.api.domain.dto.request;
 
-import com.example.doctorcare.api.domain.dto.response.TimeDoctor;
 import com.example.doctorcare.api.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 
 @Getter

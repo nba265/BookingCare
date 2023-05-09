@@ -27,8 +27,6 @@ public class HospitalClinicService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserMapper userMapper;
 
     public List<HospitalClinicInfoResponse> hospitalCilinicList() {
         List<HospitalClinicInfoResponse> hospitalClinics = new ArrayList<>();

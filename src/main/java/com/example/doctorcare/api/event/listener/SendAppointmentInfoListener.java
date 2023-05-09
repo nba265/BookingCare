@@ -1,6 +1,5 @@
 package com.example.doctorcare.api.event.listener;
 
-import com.example.doctorcare.api.domain.dto.response.AppointmentInfoForUser;
 import com.example.doctorcare.api.event.OnSendAppointmentInfoEvent;
 import com.example.doctorcare.api.service.EmailAppointmentInfoService;
 import org.springframework.beans.factory.annotation.Autowired;

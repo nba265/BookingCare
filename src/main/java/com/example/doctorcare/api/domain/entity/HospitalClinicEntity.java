@@ -1,7 +1,6 @@
 package com.example.doctorcare.api.domain.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity

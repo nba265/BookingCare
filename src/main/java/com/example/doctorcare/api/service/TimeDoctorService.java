@@ -9,7 +9,6 @@ import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.exception.TimeDoctorException;
 import com.example.doctorcare.api.repository.TimeDoctorRepository;
-import com.example.doctorcare.api.utilis.TimeDoctorComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

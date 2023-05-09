@@ -7,9 +7,7 @@ package com.example.doctorcare.api.utilis;
 
 import com.example.doctorcare.api.domain.dto.request.LoginRequest;
 import com.example.doctorcare.api.domain.entity.UserEntity;
-import com.example.doctorcare.api.repository.UserRepository;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

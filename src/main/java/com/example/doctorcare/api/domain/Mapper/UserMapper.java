@@ -2,7 +2,6 @@ package com.example.doctorcare.api.domain.Mapper;
 
 import com.example.doctorcare.api.domain.dto.User;
 import com.example.doctorcare.api.domain.entity.UserEntity;
-import com.example.doctorcare.api.domain.entity.UserRoleEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 

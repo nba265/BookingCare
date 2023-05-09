@@ -3,7 +3,6 @@ package com.example.doctorcare.api.domain.Mapper;
 import com.example.doctorcare.api.domain.dto.Specialist;
 import com.example.doctorcare.api.domain.entity.SpecialistEntity;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

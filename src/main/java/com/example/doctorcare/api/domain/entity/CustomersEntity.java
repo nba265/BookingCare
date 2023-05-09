@@ -2,11 +2,9 @@ package com.example.doctorcare.api.domain.entity;
 
 
 import com.example.doctorcare.api.enums.Gender;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Set;
 

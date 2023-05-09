@@ -1,7 +1,6 @@
 package com.example.doctorcare.api.repository;
 
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
-import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

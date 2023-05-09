@@ -2,7 +2,6 @@ package com.example.doctorcare.api.utilis;
 
 import com.example.doctorcare.api.domain.entity.TimeDoctorsEntity;
 
-import java.time.LocalTime;
 import java.util.Comparator;
 
 public class TimeDoctorComparator implements Comparator<TimeDoctorsEntity> {

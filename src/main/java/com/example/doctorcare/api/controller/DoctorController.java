@@ -10,7 +10,6 @@ import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.AppointmentStatus;
 import com.example.doctorcare.api.enums.TimeDoctorStatus;
 import com.example.doctorcare.api.event.OnSendAppointmentCancelEvent;
-import com.example.doctorcare.api.event.OnSendAppointmentInfoEvent;
 import com.example.doctorcare.api.exception.CancelAppointmentException;
 import com.example.doctorcare.api.exception.TimeDoctorException;
 import com.example.doctorcare.api.service.AppointmentsService;

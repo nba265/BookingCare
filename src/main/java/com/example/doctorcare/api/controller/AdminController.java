@@ -1,6 +1,5 @@
 package com.example.doctorcare.api.controller;
 
-import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.request.AddHospital;
 import com.example.doctorcare.api.domain.dto.request.ChangeStatus;
 import com.example.doctorcare.api.domain.dto.response.MessageResponse;
@@ -10,7 +9,6 @@ import com.example.doctorcare.api.domain.entity.UserEntity;
 import com.example.doctorcare.api.enums.UserStatus;
 import com.example.doctorcare.api.service.HospitalClinicService;
 import com.example.doctorcare.api.service.UserDetailsServiceImpl;
-import com.example.doctorcare.api.service.UserRoleService;
 import com.example.doctorcare.api.utilis.PaginationAndSortUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +32,8 @@ public class AdminController {
     private HospitalClinicService hospitalClinicService;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private UserRoleService userRoleService;
 
     PaginationAndSortUtil paginationAndSortUtil = new PaginationAndSortUtil();
-
 
     @GetMapping("/listHospital")
     public ResponseEntity<?> getAllHospital() {
