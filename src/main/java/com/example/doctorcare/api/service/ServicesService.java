@@ -4,7 +4,6 @@ import com.example.doctorcare.api.domain.Mapper.ServiceMapper;
 import com.example.doctorcare.api.domain.dto.Services;
 import com.example.doctorcare.api.domain.entity.ServicesEntity;
 import com.example.doctorcare.api.enums.ServiceEnum;
-import com.example.doctorcare.api.repository.HospitalClinicRepository;
 import com.example.doctorcare.api.repository.ServicesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

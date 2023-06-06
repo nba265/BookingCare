@@ -1,7 +1,6 @@
 package com.example.doctorcare.api.service;
 
 import com.example.doctorcare.api.domain.Mapper.HospitalClinicMapper;
-import com.example.doctorcare.api.domain.Mapper.UserMapper;
 import com.example.doctorcare.api.domain.dto.HospitalClinic;
 import com.example.doctorcare.api.domain.dto.response.HospitalClinicInfoResponse;
 import com.example.doctorcare.api.domain.entity.HospitalClinicEntity;
